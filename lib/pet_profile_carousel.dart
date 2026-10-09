@@ -1,3 +1,4 @@
+import 'design_system.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'store.dart';
@@ -104,9 +105,9 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Color(0x14000000),
-                            Color(0x00000000),
-                            Color(0xCC000000),
+                            AppColors.scrimLight,
+                            AppColors.transparent,
+                            AppColors.scrimDark,
                           ],
                           stops: [0, .3, 1],
                         ),
@@ -130,7 +131,7 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: AppColors.surface,
                                   fontSize: 28,
                                   fontWeight: FontWeight.w800,
                                 ),
@@ -140,10 +141,7 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
                                 "${pet['breed']} · 생일 ${pet['birthday']}",
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                ),
+                                style: AppText.captionOnPhoto,
                               ),
                               if (widget.pets.length > 1) ...[
                                 const SizedBox(height: 12),
@@ -158,8 +156,8 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: index == selectedIndex
-                                              ? Colors.white
-                                              : Colors.white.withValues(
+                                              ? AppColors.surface
+                                              : AppColors.surface.withValues(
                                                   alpha: .35,
                                                 ),
                                         ),
@@ -169,8 +167,8 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
                                     const Text(
                                       '좌우로 넘겨 보세요',
                                       style: TextStyle(
-                                        color: Colors.white70,
-                                        fontSize: 10,
+                                        fontSize: AppText.minimumSize,
+                                        color: AppColors.onPhotoMuted,
                                       ),
                                     ),
                                   ],
@@ -183,8 +181,8 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
                         FilledButton(
                           key: const ValueKey('home-record-memory'),
                           style: FilledButton.styleFrom(
-                            backgroundColor: const Color(0xFFE77D63),
-                            foregroundColor: Colors.white,
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: AppColors.surface,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 24,
                               vertical: 13,
@@ -201,7 +199,7 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
               ),
             ),
             Material(
-              color: Colors.white,
+              color: AppColors.surface,
               child: InkWell(
                 key: const ValueKey('home-family'),
                 onTap: widget.onFamily,
@@ -215,7 +213,7 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
                       const Icon(
                         Icons.pets_outlined,
                         size: 18,
-                        color: Color(0xFFE77D63),
+                        color: AppColors.primary,
                       ),
                       const SizedBox(width: 10),
                       Text(
@@ -229,7 +227,7 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
                       const Icon(
                         Icons.chevron_right,
                         size: 18,
-                        color: Color(0xFF899083),
+                        color: AppColors.muted,
                       ),
                     ],
                   ),

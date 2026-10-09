@@ -1,10 +1,11 @@
+import 'design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'meeting_location.dart';
 
-const _coral = Color(0xFFE77D63);
+const _coral = AppColors.primary;
 
 class PetMeetingMap extends StatefulWidget {
   const PetMeetingMap({
@@ -110,7 +111,7 @@ class _PetMeetingMapState extends State<PetMeetingMap> {
                             ? widget.markerLabels[i]
                             : '${widget.locations[i].name} 선택',
                         style: IconButton.styleFrom(
-                          backgroundColor: Colors.white,
+                          backgroundColor: AppColors.surface,
                           foregroundColor: _coral,
                         ),
                         icon: const Icon(Icons.pets, size: 25),
@@ -143,7 +144,7 @@ class _PetMeetingMapState extends State<PetMeetingMap> {
             bottom: 0,
             left: 0,
             child: Container(
-              color: Colors.white.withValues(alpha: .9),
+              color: AppColors.surface.withValues(alpha: .9),
               child: InkWell(
                 onTap: () => launchUrl(
                   Uri.parse('https://www.openstreetmap.org/copyright'),
@@ -152,7 +153,10 @@ class _PetMeetingMapState extends State<PetMeetingMap> {
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                   child: Text(
                     '© OpenStreetMap contributors',
-                    style: TextStyle(fontSize: 10, color: Color(0xFF343D34)),
+                    style: TextStyle(
+                      fontSize: AppText.minimumSize,
+                      color: AppColors.ink,
+                    ),
                   ),
                 ),
               ),
@@ -189,7 +193,7 @@ class _PetMeetingMapState extends State<PetMeetingMap> {
               left: 8,
               right: 8,
               child: Material(
-                color: Colors.white,
+                color: AppColors.surface,
                 borderRadius: BorderRadius.circular(12),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 12),
@@ -198,7 +202,7 @@ class _PetMeetingMapState extends State<PetMeetingMap> {
                       const Expanded(
                         child: Text(
                           '지도 배경을 불러오지 못했어요.',
-                          style: TextStyle(fontSize: 11),
+                          style: AppText.caption,
                         ),
                       ),
                       TextButton(
@@ -278,7 +282,7 @@ class _MeetingPlacePickerState extends State<MeetingPlacePicker> {
           if (selected != null)
             Text(
               '${selected!.latitude.toStringAsFixed(5)}, ${selected!.longitude.toStringAsFixed(5)}',
-              style: const TextStyle(fontSize: 11, color: Color(0xFF899083)),
+              style: AppText.captionMuted,
             ),
           Padding(
             padding: const EdgeInsets.all(16),

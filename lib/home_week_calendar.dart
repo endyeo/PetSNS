@@ -1,3 +1,4 @@
+import 'design_system.dart';
 import 'package:flutter/material.dart';
 import 'store.dart';
 
@@ -40,7 +41,7 @@ class _HomeWeekCalendarState extends State<HomeWeekCalendar> {
       key: const ValueKey('home-week-calendar'),
       padding: const EdgeInsets.fromLTRB(10, 4, 10, 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
@@ -56,10 +57,7 @@ class _HomeWeekCalendarState extends State<HomeWeekCalendar> {
                 child: Text(
                   '${week.month}.${week.day} – ${end.month}.${end.day} · 추억과 약속',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppText.captionStrong,
                 ),
               ),
               if (offset != 0)
@@ -68,7 +66,7 @@ class _HomeWeekCalendarState extends State<HomeWeekCalendar> {
                     setState(() => offset = 0);
                     widget.onDateSelected(widget.today);
                   },
-                  child: const Text('오늘', style: TextStyle(fontSize: 11)),
+                  child: const Text('오늘', style: AppText.caption),
                 ),
               IconButton(
                 tooltip: '다음 주',
@@ -98,10 +96,7 @@ class _HomeWeekCalendarState extends State<HomeWeekCalendar> {
                     children: [
                       Text(
                         const ['월', '화', '수', '목', '금', '토', '일'][index],
-                        style: const TextStyle(
-                          color: Color(0xFF899083),
-                          fontSize: 11,
-                        ),
+                        style: AppText.captionMuted,
                       ),
                       const SizedBox(height: 6),
                       InkWell(
@@ -114,21 +109,21 @@ class _HomeWeekCalendarState extends State<HomeWeekCalendar> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             color: appointment
-                                ? const Color(0xFFFFE59B)
+                                ? AppColors.anniversary
                                 : today
-                                ? const Color(0xFFFFF0EB)
-                                : Colors.transparent,
+                                ? AppColors.today
+                                : AppColors.transparent,
                             borderRadius: BorderRadius.circular(12),
                             border: selected
                                 ? Border.all(
-                                    color: const Color(0xFFE77D63),
+                                    color: AppColors.primary,
                                     width: 1.5,
                                   )
                                 : today
                                 ? Border.all(
-                                    color: const Color(
-                                      0xFFE77D63,
-                                    ).withValues(alpha: .35),
+                                    color: AppColors.primary.withValues(
+                                      alpha: .35,
+                                    ),
                                   )
                                 : null,
                           ),
@@ -155,10 +150,7 @@ class _HomeWeekCalendarState extends State<HomeWeekCalendar> {
                                       child: Text(
                                         'Day $count',
                                         key: const ValueKey('home-today-day'),
-                                        style: const TextStyle(
-                                          fontSize: 9,
-                                          color: Color(0xFFE77D63),
-                                        ),
+                                        style: AppText.captionPrimary,
                                       ),
                                     )
                                   : InkWell(
@@ -167,8 +159,8 @@ class _HomeWeekCalendarState extends State<HomeWeekCalendar> {
                                         child: Text(
                                           '기준 설정',
                                           style: TextStyle(
-                                            fontSize: 9,
-                                            color: Color(0xFFE77D63),
+                                            fontSize: AppText.minimumSize,
+                                            color: AppColors.primary,
                                           ),
                                         ),
                                       ),

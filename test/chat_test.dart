@@ -249,8 +249,11 @@ void main() {
         await tester.tap(thumbnail);
         await tester.pumpAndSettle();
         expect(find.byType(InteractiveViewer), findsOneWidget);
-        now = chatClose(DateTime.parse(store.meeting('walk')['at']));
-        await tester.pump(const Duration(seconds: 1));
+        final remaining = chatClose(
+          DateTime.parse(store.meeting('walk')['at']),
+        ).difference(now);
+        now = now.add(remaining);
+        await tester.pump(remaining);
         expect(find.byType(InteractiveViewer), findsNothing);
         expect(find.text('채팅방 접근이 차단되었습니다'), findsOneWidget);
         expect(tester.takeException(), isNull);

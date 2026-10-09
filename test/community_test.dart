@@ -261,6 +261,15 @@ void main() {
         );
         expect(find.text('약속 만들기'), findsNothing);
         expect(find.text('꼬리 흔들며, 한강 산책'), findsOneWidget);
+        expect(find.text('고양이 만남'), findsOneWidget);
+        expect(
+          tester
+              .widget<SegmentedButton<String>>(
+                find.byKey(const ValueKey('meeting-categories')),
+              )
+              .selected,
+          {'전체'},
+        );
         await tester.tap(find.text('고양이'));
         await tester.pumpAndSettle();
         expect(find.text('고양이 만남'), findsOneWidget);

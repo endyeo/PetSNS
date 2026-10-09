@@ -1,3 +1,4 @@
+import 'design_system.dart';
 import 'package:flutter/material.dart';
 import 'store.dart';
 
@@ -71,9 +72,9 @@ class _MemoryDayCalendarState extends State<MemoryDayCalendar> {
       key: const ValueKey('memory-day-calendar'),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE9E7DE)),
+        border: Border.all(color: AppColors.divider),
       ),
       child: widget.origin == null
           ? Column(
@@ -86,7 +87,7 @@ class _MemoryDayCalendarState extends State<MemoryDayCalendar> {
                 const SizedBox(height: 8),
                 const Text(
                   '첫 만남 또는 첫 사진부터 함께한 날을 세어요.',
-                  style: TextStyle(fontSize: 12),
+                  style: AppText.caption,
                 ),
                 const SizedBox(height: 8),
                 TextButton(
@@ -103,7 +104,7 @@ class _MemoryDayCalendarState extends State<MemoryDayCalendar> {
                     Expanded(
                       child: Text(
                         'Day 0 · ${widget.originLabel}\n${dayKey(widget.origin!)}',
-                        style: const TextStyle(fontSize: 12, height: 1.6),
+                        style: AppText.captionComfortable,
                       ),
                     ),
                     IconButton(
@@ -115,7 +116,7 @@ class _MemoryDayCalendarState extends State<MemoryDayCalendar> {
                 ),
                 const SizedBox(height: 8),
                 SizedBox(
-                  height: 112,
+                  height: 140,
                   child: PageView.builder(
                     key: const ValueKey('memory-weeks'),
                     controller: controller,
@@ -188,7 +189,10 @@ class _MemoryDayCalendarState extends State<MemoryDayCalendar> {
                     Expanded(
                       child: Text(
                         '사진이 있는 Day만 진하게 · 좌우로 밀어 이동',
-                        style: TextStyle(fontSize: 10, color: primary),
+                        style: TextStyle(
+                          fontSize: AppText.minimumSize,
+                          color: primary,
+                        ),
                       ),
                     ),
                     TextButton(
