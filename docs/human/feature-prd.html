@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PetSNS · 기능별 PRD 한글 보기</title>
+<style>
+:root{--ink:#233d38;--muted:#5e716d;--line:#dce4df;--paper:#fff;--bg:#f4f6f2;--green:#15654c;--green-bg:#edf7f0;--red:#a43636;--red-bg:#fff0ef;--amber:#84531b;--amber-bg:#fff5e4}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.75 'Malgun Gothic','Segoe UI',sans-serif}a{color:#226653;text-underline-offset:3px}button,input{font:inherit}a,button,input,summary{outline-offset:4px}a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #246956}h1,h2,h3,p{margin:0}h1{font-size:32px;line-height:1.35;letter-spacing:-1px}h2{font-size:25px;line-height:1.5;letter-spacing:-.7px}h3{font-size:16px}p+p{margin-top:12px}.skip{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;background:white;z-index:10}.skip:focus{position:fixed;top:10px;left:16px;width:auto;height:auto;padding:10px;clip:auto;overflow:visible}.top{border-bottom:1px solid var(--line);background:#fff;padding:26px 32px}.top-inner{max-width:1380px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:2px;color:var(--muted);margin-bottom:8px}.top p{color:var(--muted);margin-top:9px;font-size:13px}.pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;border:1px solid var(--line);background:white;font-size:11px;font-weight:700;white-space:nowrap}.tagline{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.shell{max-width:1380px;display:grid;grid-template-columns:290px minmax(0,1fr);margin:auto}.sidebar{padding:25px 18px;border-right:1px solid var(--line);min-width:0}.sidebar-inner{position:sticky;top:20px;max-height:calc(100vh - 40px);overflow:auto;padding:0 6px 4px 0}.search-label{display:block;font-size:12px;font-weight:bold;margin-bottom:7px}.search{width:100%;background:white;border:1px solid #cbd8d0;border-radius:9px;padding:10px 12px;font-size:13px;margin-bottom:15px}.nav-link{display:flex;gap:8px;align-items:baseline;text-decoration:none;color:var(--ink);padding:8px 10px;border-radius:8px;font-size:12px;line-height:1.5;margin-bottom:3px}.nav-link:hover{background:#e7eee7}.nav-link[aria-current=page]{background:#dcece1;color:#16563f;font-weight:bold;box-shadow:inset 3px 0 #276c50}.nav-code{color:var(--muted);font:11px/1.5 'Segoe UI',sans-serif;flex-shrink:0}.nav-group{font-size:11px;color:var(--muted);font-weight:700;margin:19px 10px 8px}.nav-pending .nav-code{color:var(--amber)}.nav-note{font-size:11px;color:var(--muted);padding:10px}.main{padding:30px 32px 70px;min-width:0}.page{scroll-margin-top:20px;max-width:940px}.page+.page{margin-top:40px}.js .page+.page{margin-top:0}.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:20px}.page-meta{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px}.status{font-size:12px;padding:4px 10px;border-radius:6px;background:#eaf0eb;color:#4b6157}.status.pending{background:var(--amber-bg);color:var(--amber)}.subtext{color:var(--muted);font-size:12px;margin-top:8px}.card{background:white;border:1px solid var(--line);border-radius:14px;padding:23px;margin:16px 0}.card-title{display:flex;align-items:center;gap:8px;margin-bottom:12px}.number{font:11px 'Segoe UI',sans-serif;color:#6c8178;background:#eef3ee;border-radius:5px;padding:4px 6px}.requires{font-size:13px;border-left:3px solid #87a694;background:#edf2ec;padding:12px 15px;margin:18px 0;border-radius:0 8px 8px 0}.flow{display:flex;flex-wrap:wrap;list-style:none;padding:0;margin:0;gap:8px;align-items:center}.flow li{background:#f0f4ee;border:1px solid #e0e8dd;padding:9px 13px;border-radius:8px;font-size:13px}.flow li+li:before{content:'→';color:#6a8074;margin-right:10px}.rule-list,.plain-list{padding-left:20px;margin:0}.rule-list li,.plain-list li{padding-left:4px;margin:7px 0;font-size:13px}.result{background:#edf5ed;border-color:#d5e3d5}.result p{font-size:14px}.legend{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}.legend-item{border-radius:10px;padding:15px;border:1px solid var(--line);font-size:12px}.legend-item b{display:block;font-size:14px;margin-bottom:4px}.done{--tone:var(--green);--tone-bg:var(--green-bg)}.reject{--tone:var(--red);--tone-bg:var(--red-bg)}.error{--tone:var(--amber);--tone-bg:var(--amber-bg)}.legend-item,.criterion{background:var(--tone-bg);color:var(--tone)}.criteria{padding:0;list-style:none;margin:15px 0 0;display:grid;gap:10px}.criterion{border:1px solid color-mix(in srgb,var(--tone) 20%,white);border-left:4px solid var(--tone);border-radius:9px;padding:13px 15px;display:grid;grid-template-columns:30px minmax(0,1fr);gap:8px}.criterion-index{display:flex;justify-content:center;align-items:center;width:26px;height:26px;border:1px solid currentColor;border-radius:50%;font-size:11px;opacity:.8}.criterion-label{font-size:10px;font-weight:800;letter-spacing:.2px;margin-bottom:3px}.criterion p{font-size:13px;color:var(--ink)}.check-note{font-size:12px;color:var(--muted);margin:10px 0}.no-extra{padding:10px 0 0;color:var(--muted);font-size:11px}.divider{border:0;border-top:1px solid var(--line);margin:24px 0}.source{border-top:1px solid var(--line);margin-top:20px;padding-top:15px}.source summary{cursor:pointer;color:var(--muted);font-size:12px;font-weight:bold}.source pre{font:12px/1.8 'Segoe UI',sans-serif;white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--line);background:#f9faf7;padding:17px;border-radius:8px;margin-top:12px;color:#41534e}.evidence{font-size:12px;margin-top:12px}.evidence a{margin-right:12px;overflow-wrap:anywhere}.notice{background:var(--amber-bg);border:1px solid #ecd9b4;border-left:4px solid var(--amber);border-radius:8px;padding:14px 16px;font-size:13px;color:#724b1f;margin:15px 0}.intro{font-size:14px;color:var(--muted);margin:14px 0}.quick-stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.quick-stats span{background:white;border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-size:12px}.quick-stats b{font-size:17px;margin-right:5px}.decisions details{border-bottom:1px solid var(--line);padding:13px 0}.decisions details:last-child{border:0}.decisions summary{cursor:pointer;list-style-position:outside;margin-left:16px;font-size:14px;font-weight:700}.decisions p{font-size:13px;margin:12px 0 0 16px;color:var(--muted)}.btn{background:white;border:1px solid #cbd8d0;border-radius:7px;padding:7px 12px;color:var(--ink);font-size:12px;cursor:pointer}.feature-groups{display:grid;grid-template-columns:1fr 1fr;gap:12px}.feature-group{margin:0}.feature-group h3{margin-bottom:10px}.feature-group a{font-size:12px;display:block;margin:7px 0}.empty-search{font-size:12px;color:var(--muted);padding:14px 10px}.page-footer{font-size:11px;color:var(--muted);padding-top:16px;border-top:1px solid var(--line)}[hidden]{display:none!important}
+@media(max-width:1000px){.shell{grid-template-columns:240px minmax(0,1fr)}.main{padding:25px 22px}.legend{gap:8px}.legend-item{padding:12px}.top{padding:24px}.tagline{display:none}}
+@media(max-width:700px){.top{padding:22px 18px}.top-inner{display:block}h1{font-size:27px}h2{font-size:23px}.shell{display:block}.sidebar{padding:16px 18px;border-right:0;border-bottom:1px solid var(--line)}.sidebar-inner{position:static;max-height:none;overflow:visible;padding:0}.nav-items{max-height:205px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:5px;background:#fafbf7}.nav-group{margin-top:12px}.nav-link{font-size:13px}.search{margin-bottom:10px}.main{padding:22px 16px 45px}.card{padding:19px 17px}.legend{grid-template-columns:1fr;gap:7px}.legend-item{padding:10px 13px}.legend-item b{display:inline;font-size:12px;margin-right:8px}.feature-groups{grid-template-columns:1fr}.page-head{flex-wrap:wrap;gap:8px}.criterion{padding:12px;grid-template-columns:24px minmax(0,1fr)}.criterion-index{width:22px;height:22px}.flow li{font-size:12px;padding:8px 10px}.requires{font-size:12px}.rule-list li{font-size:13px}.no-extra{line-height:1.8}}
+@media print{body{background:white;font-size:11px}.sidebar,.skip,.btn,.source,.top .tagline{display:none!important}.shell{display:block}.top{padding:0 0 16px}.main{padding:0}.page,.page[hidden]{display:block!important;margin:25px 0!important;break-before:page;max-width:none}.page:first-child{break-before:auto}.card{break-inside:avoid;margin:12px 0;padding:14px;border-radius:5px}.criterion{break-inside:avoid;print-color-adjust:exact}.legend-item{print-color-adjust:exact}.decisions details p{display:block!important}.feature-groups{display:none}a{color:inherit}.page-footer{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">본문으로 바로 이동</a>
+<header class="top"><div class="top-inner"><div><div class="eyebrow">PETSNS · FEATURE PRD</div><h1>기능별 개발 완료 기준</h1><p>영문 PRD의 한글 보기 · 필요한 기능 하나씩 읽기</p></div><div class="tagline"><span class="pill">26개 기능</span><span class="pill">98개 확인 기준</span><span class="pill">원문 기준 2026.10.09</span></div></div></header>
+<div class="shell">
+<aside class="sidebar"><div class="sidebar-inner"><label class="search-label" for="feature-search">기능 찾기</label><input class="search" id="feature-search" type="search" placeholder="예: T03, 로그인, 사진" autocomplete="off"><a class="nav-link" href="#overview" data-page="overview"><span class="nav-code">START</span>공통 기준·결정할 내용</a><nav class="nav-items" aria-label="기능별 PRD"><div class="nav-section"><h2 class="nav-group">G · 공통 구조</h2><a class="nav-link " href="#T01" data-page="T01"><span class="nav-code">T01</span><span>앱 시작과 저장 데이터 복원</span></a></div><div class="nav-section"><h2 class="nav-group">L · 로그인·회원가입</h2><a class="nav-link " href="#T02" data-page="T02"><span class="nav-code">T02</span><span>회원가입</span></a><a class="nav-link " href="#T03" data-page="T03"><span class="nav-code">T03</span><span>이메일·비밀번호 로그인</span></a><a class="nav-link " href="#T04" data-page="T04"><span class="nav-code">T04</span><span>테스트 계정으로 이용</span></a><a class="nav-link " href="#T05" data-page="T05"><span class="nav-code">T05</span><span>로그아웃</span></a></div><div class="nav-section"><h2 class="nav-group">H · 홈 · 우리의 하루</h2><a class="nav-link " href="#T08" data-page="T08"><span class="nav-code">T08</span><span>홈에서 선택한 날의 추억·약속 보기</span></a></div><div class="nav-section"><h2 class="nav-group">M · 추억 보관함</h2><a class="nav-link " href="#T09" data-page="T09"><span class="nav-code">T09</span><span>반려동물의 Day 0 설정</span></a><a class="nav-link " href="#T10" data-page="T10"><span class="nav-code">T10</span><span>반려동물 추억 달력·사진 보기</span></a></div><div class="nav-section"><h2 class="nav-group">MV · 추억 보기</h2><a class="nav-link " href="#T13" data-page="T13"><span class="nav-code">T13</span><span>하루 글 작성·수정</span></a></div><div class="nav-section"><h2 class="nav-group">ME · 추억 사진 기록·수정</h2><a class="nav-link " href="#T11" data-page="T11"><span class="nav-code">T11</span><span>추억 사진 추가</span></a><a class="nav-link " href="#T12" data-page="T12"><span class="nav-code">T12</span><span>추억 사진 수정·날짜 이동·삭제</span></a></div><div class="nav-section"><h2 class="nav-group">P · 약속</h2><a class="nav-link " href="#T14" data-page="T14"><span class="nav-code">T14</span><span>약속 목록·지도·상세 보기</span></a><a class="nav-link " href="#T19" data-page="T19"><span class="nav-code">T19</span><span>약속 상태·채팅 종료 적용</span></a><a class="nav-link nav-pending" href="#T26" data-page="T26"><span class="nav-code">T26</span><span>마지막 참여자 탈퇴 시 약속 자동 취소</span></a></div><div class="nav-section"><h2 class="nav-group">PD · 약속 상세</h2><a class="nav-link " href="#T17" data-page="T17"><span class="nav-code">T17</span><span>약속 참여</span></a><a class="nav-link " href="#T18" data-page="T18"><span class="nav-code">T18</span><span>약속 나가기·재참여</span></a></div><div class="nav-section"><h2 class="nav-group">PC · 약속 만들기</h2><a class="nav-link " href="#T15" data-page="T15"><span class="nav-code">T15</span><span>약속 장소 선택</span></a><a class="nav-link " href="#T16" data-page="T16"><span class="nav-code">T16</span><span>약속 만들기</span></a></div><div class="nav-section"><h2 class="nav-group">C · 게시글·모임·약속방</h2><a class="nav-link " href="#T20" data-page="T20"><span class="nav-code">T20</span><span>게시글 읽기</span></a><a class="nav-link " href="#T21" data-page="T21"><span class="nav-code">T21</span><span>게시글 작성</span></a><a class="nav-link " href="#T22" data-page="T22"><span class="nav-code">T22</span><span>지속 모임 찾기·가입·나가기</span></a></div><div class="nav-section"><h2 class="nav-group">CR · 채팅방</h2><a class="nav-link " href="#T23" data-page="T23"><span class="nav-code">T23</span><span>글 메시지 읽기·보내기</span></a><a class="nav-link " href="#T24" data-page="T24"><span class="nav-code">T24</span><span>채팅 사진 첨부·전송</span></a></div><div class="nav-section"><h2 class="nav-group">CG · 모임방</h2><a class="nav-link " href="#T25" data-page="T25"><span class="nav-code">T25</span><span>채팅방 멤버·공유 사진 보기</span></a></div><div class="nav-section"><h2 class="nav-group">F · 반려동물 프로필</h2><a class="nav-link " href="#T07" data-page="T07"><span class="nav-code">T07</span><span>반려동물 프로필 삭제</span></a></div><div class="nav-section"><h2 class="nav-group">FE · 반려동물 프로필 등록·수정</h2><a class="nav-link " href="#T06" data-page="T06"><span class="nav-code">T06</span><span>반려동물 프로필 등록·수정</span></a></div><div class="nav-section"><h2 class="nav-group">S · 상태·오류</h2><p class="nav-note">별도 작업 없음 · 공통 상태 기준 참조</p></div></nav><p id="empty-search" class="empty-search" hidden>검색에 맞는 기능이 없습니다.</p><p class="nav-note">각 기능의 원문과 근거는 본문 아래에서 확인할 수 있습니다.</p></div></aside>
+<main class="main" id="content" tabindex="-1"><article class="page" id="overview" aria-labelledby="overview-title"><div class="page-head"><div><div class="eyebrow">READ FIRST</div><h2 id="overview-title">한 기능씩, 무엇을 확인할지</h2></div><button class="btn" id="print-prd" type="button">전체 인쇄</button></div><p class="intro">연결된 기능 PRD 하나를 선택해 해당 동작만 구현하거나 변경합니다. 선행 조건·사용 과정·규칙·결과·눈으로 확인할 완료 기준을 함께 읽습니다. 선행 기능이 있거나 시험용 데이터를 제공해야 하며, 각 작업이 별도의 앱은 아닙니다.</p><p class="subtext">화면 가이드의 화면·영역별로 작업을 분류합니다. T 번호는 고정 작업 ID이며 분류명이 아닙니다. 여러 화면에 걸친 작업은 주 진입 화면에 한 번만 배치합니다. 공통 구조·상태와 오류 영역은 여러 화면이 공유하는 동작·상태에만 사용합니다.</p><div class="quick-stats"><span><b>26</b>기능 PRD</span><span><b>98</b>확인할 기준</span><span><b>5</b>결정할 항목</span></div><div class="legend" aria-label="기준 색상 설명"><div class="legend-item done"><b>완료 기준 · 정상 동작</b>정상 흐름·결과·기록 보존</div><div class="legend-item reject"><b>실패 방지 · 거부 조건</b>차단할 입력·접근·중복 동작</div><div class="legend-item error"><b>오류 처리 기준</b>문제가 생겼을 때의 표시·대응</div></div><div class="notice"><strong>색상은 실제 검증 결과가 아닙니다.</strong> T01~T25는 현재 구현의 기준이며 새로 승인한 제품 결정이 아닙니다. T26은 기획에 확정됐지만 코드에 없는 요구사항입니다. 아래 기준의 테스트를 실행하거나 통과했다고 주장하지 않습니다. 영향을 받는 동작을 바꾸기 전에 미결정 사항을 해결합니다.</div><section class="card"><h3 class="card-title">공통 기준</h3><ul class="plain-list"><li>범위는 웹·Android용 로컬 Flutter 데모이며 한 기기와 한 활성 앱에서 사용합니다. 계정·세션·기록·참여·메시지는 기기의 SharedPreferences에서 petsns.v1로 저장합니다. 서버나 다른 기기 사이의 통신은 없습니다.</li><li>앱 시작과 인증 외의 작업은 로그인된 계정이 필요합니다. 개인 프로필·사진·하루 글은 소유자별로 구분하며 공유 게시글·방 참여에는 아래 각 기능의 규칙을 적용합니다.</li><li>저장 성공은 같은 저장소·주소에서 다시 열어도 유지됩니다. 거부되거나 실패한 저장 변경은 오류를 알리고 이전 메모리 내 데이터를 복원합니다. 겹치는 저장 변경은 거부합니다. 저장하지 않은 양식을 취소하면 기록을 만들지 않습니다.</li><li>약속 날짜·참여 마감·채팅 종료·추억의 오늘은 한국 시간(KST)을 사용합니다. 반려동물 생일 선택은 현재 기기 현지 날짜의 오늘을 사용합니다. Day 0는 달력 날짜의 차이이며 시작일은 0입니다.</li><li>프로필·추억 사진은 선택 단계에서 검사하고 채팅 사진은 저장 계층에서도 검사합니다. 선택한 파일을 읽은 뒤 장당 3 * 1024 * 1024바이트(3,145,728바이트)로 제한합니다. 검증 단계가 서로 같다고 가정하지 않습니다.</li><li>완료하려면 해당 기능의 성공 흐름, 지정된 입력·접근 거부, 변경한 저장 데이터의 유지를 확인합니다. 코드 변경 검증은 coding.md를 따르며 이 PRD는 그 절차를 중복하지 않습니다.</li></ul><p class="subtext">하나의 작업은 기존 선행 기능이나 시험용 데이터로 개발할 수 있습니다. 작업들은 lib/main.dart·lib/store.dart를 공유하므로 파일을 나눴다고 동시 수정 충돌이 사라지지는 않습니다. 공유 파일의 수정은 조율합니다.</p></section><section class="card decisions"><h3 class="card-title">결정할 내용 · 원문 D1~D5</h3><details id="D1"><summary>D1 · 이전 기획과 현재 데모의 차이 정리</summary><p>기획서는 2026년 9월 30일의 팀 검토용 초안입니다. 개설자가 참여 마감 시각을 선택하고 동반 마릿수를 숫자로 입력하도록 명시하며, 지도·약속 사진 공유는 MVP에서 제외합니다. 지속 모임은 미정입니다. 현재 코드는 고정 6시간 마감, 내 반려동물 프로필 선택, 지도·채팅 사진·모임·게시글을 포함합니다. 이 문서는 둘 다 기록하며 어느 쪽도 조용히 승인하지 않습니다. <a href="#T14" data-page="T14">T14</a>~T25를 다시 만들기 전에 원하는 범위를 결정합니다.</p></details><details id="D2"><summary>D2 · 로그인 버튼 동작 결정</summary><p>요청 예시는 두 입력란을 채워야 로그인 버튼을 누를 수 있도록 합니다. 현재 T03은 로그인 버튼을 누른 뒤 검증 오류를 알립니다. 예시가 변경 요구인지 PRD 형식 예시인지 확인해야 합니다. 로그인 식별자를 바꾼다면 이메일과 별도 아이디 중 무엇을 사용할지도 명시적으로 결정해야 합니다.</p></details><details id="D3"><summary>D3 · 반려동물 삭제·미지정 입력 제한 결정</summary><p>반려동물 삭제는 현재 연관 기록·참조를 유지하지만 지원되는 복원 흐름은 없습니다. T07을 바꾸기 전에 삭제 차단·접근 가능한 보관 기록·연관 데이터 함께 삭제 중 정책을 정하고 참여 정보 처리도 정의합니다. 총 사진 수 제한·하루 글자 수 제한·반복 기념일 알림은 정의되지 않았습니다. 일부 프로필·약속 입력 제한은 화면에만 있으므로 이를 바꾸기 전에 저장 계층에도 같은 검증이 필요한지 결정합니다.</p></details><details id="D4"><summary>D4 · 닫힌·취소된 데이터 보관과 안내 결정</summary><p>나가기·종료 후 기록은 현재 내부에 남습니다. 기획에서는 실제 보관·삭제와 접속하지 않은 참여자의 안내 시점이 미정입니다. 현재는 채팅을 열었을 때 화면에 종료 안내를 표시합니다. 푸시·읽지 않은 메시지 알림·참여와 탈퇴 시스템 메시지 흐름은 없습니다. 추가 동작은 개발 작업을 배정하기 전에 결정합니다.</p></details><details id="D5"><summary>D5 · 운영용 또는 추가 계정 기능 범위 정의</summary><p>실제 인증·이메일 인증, 비밀번호 찾기, 계정 삭제, 사용자 프로필 수정, 여러 기기 동기화, 서버 기반 실시간 채팅, 전달·읽음 확인은 미구현입니다. 이전 기획은 사용자 프로필 수정을 언급하며 계정 삭제 처리도 미정입니다. 이런 기능을 작업으로 만들면 필수 입력·복구와 보관 규칙·서버 환경·최종 제출 대상의 결정이 필요합니다. 완료된 것으로 취급하거나 로컬 데모 PRD에 조용히 추가하지 않습니다.</p></details></section><section class="feature-groups" aria-label="전체 기능 목록"><div class="card feature-group"><h3>G · 공통 구조</h3><a href="#T01" data-page="T01">T01 · 앱 시작과 저장 데이터 복원</a></div><div class="card feature-group"><h3>L · 로그인·회원가입</h3><a href="#T02" data-page="T02">T02 · 회원가입</a><a href="#T03" data-page="T03">T03 · 이메일·비밀번호 로그인</a><a href="#T04" data-page="T04">T04 · 테스트 계정으로 이용</a><a href="#T05" data-page="T05">T05 · 로그아웃</a></div><div class="card feature-group"><h3>H · 홈 · 우리의 하루</h3><a href="#T08" data-page="T08">T08 · 홈에서 선택한 날의 추억·약속 보기</a></div><div class="card feature-group"><h3>M · 추억 보관함</h3><a href="#T09" data-page="T09">T09 · 반려동물의 Day 0 설정</a><a href="#T10" data-page="T10">T10 · 반려동물 추억 달력·사진 보기</a></div><div class="card feature-group"><h3>MV · 추억 보기</h3><a href="#T13" data-page="T13">T13 · 하루 글 작성·수정</a></div><div class="card feature-group"><h3>ME · 추억 사진 기록·수정</h3><a href="#T11" data-page="T11">T11 · 추억 사진 추가</a><a href="#T12" data-page="T12">T12 · 추억 사진 수정·날짜 이동·삭제</a></div><div class="card feature-group"><h3>P · 약속</h3><a href="#T14" data-page="T14">T14 · 약속 목록·지도·상세 보기</a><a href="#T19" data-page="T19">T19 · 약속 상태·채팅 종료 적용</a><a href="#T26" data-page="T26">T26 · 마지막 참여자 탈퇴 시 약속 자동 취소</a></div><div class="card feature-group"><h3>PD · 약속 상세</h3><a href="#T17" data-page="T17">T17 · 약속 참여</a><a href="#T18" data-page="T18">T18 · 약속 나가기·재참여</a></div><div class="card feature-group"><h3>PC · 약속 만들기</h3><a href="#T15" data-page="T15">T15 · 약속 장소 선택</a><a href="#T16" data-page="T16">T16 · 약속 만들기</a></div><div class="card feature-group"><h3>C · 게시글·모임·약속방</h3><a href="#T20" data-page="T20">T20 · 게시글 읽기</a><a href="#T21" data-page="T21">T21 · 게시글 작성</a><a href="#T22" data-page="T22">T22 · 지속 모임 찾기·가입·나가기</a></div><div class="card feature-group"><h3>CR · 채팅방</h3><a href="#T23" data-page="T23">T23 · 글 메시지 읽기·보내기</a><a href="#T24" data-page="T24">T24 · 채팅 사진 첨부·전송</a></div><div class="card feature-group"><h3>CG · 모임방</h3><a href="#T25" data-page="T25">T25 · 채팅방 멤버·공유 사진 보기</a></div><div class="card feature-group"><h3>F · 반려동물 프로필</h3><a href="#T07" data-page="T07">T07 · 반려동물 프로필 삭제</a></div><div class="card feature-group"><h3>FE · 반려동물 프로필 등록·수정</h3><a href="#T06" data-page="T06">T06 · 반려동물 프로필 등록·수정</a></div><div class="card feature-group"><h3>S · 상태·오류</h3><p class="subtext">공통 로딩·빈 상태·오류·삭제 확인·이미지 대체·약속 및 채팅 상태 동작은 연결된 기능 PRD와 공통 기준에 명시되어 있습니다. 화면을 가로지르며 주 진입 화면에 배정할 수 없는 동작일 때만 이 영역에 별도 작업을 추가합니다.</p></div></section><section class="card"><h3 class="card-title">원문과 근거</h3><p class="subtext">2026년 10월 9일에 검토한 코드·기존 테스트·기획서가 영문 PRD의 근거입니다. 기능 파일의 근거 링크는 각 기능 아래에 유지했습니다. 기존 테스트가 있다는 사실만으로 모든 완료 기준을 검증한 것은 아닙니다. 기획서 HTML은 유지하며 이 보기는 수정하지 않습니다.</p><div class="evidence"><a href="../../PRD.md">영문 PRD 목록·공통 기준</a><a href="../../.agents/rules/coding.md">코딩 원칙</a><a href="service-plan.html">서비스 기획서</a></div><details class="source"><summary>영문 공통 문서 전체 펼쳐서 대조</summary><pre># PetSNS Feature PRD and Acceptance Criteria
+
+Basis: repository code, existing test cases, and the service plan, reviewed on October 9, 2026.
+
+## How to use this document
+
+Choose one linked task PRD and implement or change only that behavior. Each task defines prerequisites, the user flow, rules, the result, and observable acceptance criteria. Dependencies must exist or be supplied as test fixtures; a task is not a separate application.
+
+**T01–T25 describe the current implementation as a baseline, not newly approved product decisions. T26 is a confirmed planning requirement missing from the code.** Acceptance criteria are checks to perform, not a claim that this review ran or passed tests. Resolve the decisions at the end before changing affected behavior.
+
+Each linked file is one assignable feature PRD. Shared boundaries and unresolved decisions live here to avoid repeating them in every task. Existing Korean interface labels remain unchanged.
+
+## Shared boundaries
+
+- Scope: a local Flutter demo for web and Android, one device and one active instance. Accounts, sessions, records, memberships, and messages use local SharedPreferences data under `petsns.v1`. There is no server or communication between different devices.
+- All tasks except startup and authentication require a signed-in account. Personal profiles, photos, and journals are scoped to their owner; shared posts and room membership have their own rules below.
+- Successful stored changes survive reopening on the same storage/origin. A rejected or failed stored change reports an error and restores the previous in-memory data; an overlapping store mutation is rejected. Canceling an unsaved form does not create a record.
+- Meetup dates, deadlines, chat closure, and memory “today” use Korean time (KST). The pet birthday picker currently uses device-local today. Day 0 counts calendar days, with the starting date equal to 0.
+- Selected profile/memory photos are checked in the picker; chat photos are also checked by the store. The byte limit is `3 * 1024 * 1024` (3,145,728 bytes) per image after reading the selected file. Do not assume these validation layers are identical.
+- Completion requires checking the task&#x27;s successful path, rejected inputs/access where specified, and persistence for changed stored data. Relevant code-change verification follows `coding.md`; this PRD does not duplicate its workflow.
+
+**Assignment boundary:** a single task can be developed against existing prerequisites or fixtures. Tasks share `lib/main.dart` and `lib/store.dart`; this split does not make simultaneous edits to those files conflict-free. Coordinate shared-file edits.
+
+## Feature PRDs
+
+Group tasks by the screen or UI area used in the [UI guide](docs/human/ui-guide.html). Keep T numbers as stable task identifiers, not as category names. Place a task under the screen where its main user action occurs; when it spans screens, list it once under its primary entry screen. Use the common-structure and state/error sections only for behavior shared across multiple screens or for cross-screen states.
+
+### G — Common structure
+
+- [T01 — Load and restore the application](docs/prd/t01-load-and-restore-the-application.md)
+
+### L — Log in / sign up
+
+- [T02 — Register an account](docs/prd/t02-register-an-account.md)
+- [T03 — Log in with email and password](docs/prd/t03-log-in-with-email-and-password.md)
+- [T04 — Enter the demo account](docs/prd/t04-enter-the-demo-account.md)
+- [T05 — Log out](docs/prd/t05-log-out.md)
+
+### H — Home · our day
+
+- [T08 — View the home day&#x27;s memories and appointments](docs/prd/t08-view-the-home-day-s-memories-and-appointments.md)
+
+### M — Memory library
+
+- [T09 — Set a pet&#x27;s Day 0](docs/prd/t09-set-a-pet-s-day-0.md)
+- [T10 — Browse a pet&#x27;s memory calendar and gallery](docs/prd/t10-browse-a-pet-s-memory-calendar-and-gallery.md)
+
+### MV — View memories
+
+- [T13 — Write or edit a daily journal](docs/prd/t13-write-or-edit-a-daily-journal.md)
+
+### ME — Record / edit memory photos
+
+- [T11 — Add memory photos](docs/prd/t11-add-memory-photos.md)
+- [T12 — Edit, move, or delete a memory photo](docs/prd/t12-edit-move-or-delete-a-memory-photo.md)
+
+### P — Meetups
+
+- [T14 — Browse meetup lists, maps, and details](docs/prd/t14-browse-meetup-lists-maps-and-details.md)
+- [T19 — Enforce meetup status and chat closure](docs/prd/t19-enforce-meetup-status-and-chat-closure.md)
+- [T26 — Automatically cancel a meetup after its last member leaves](docs/prd/t26-automatically-cancel-a-meetup-after-its-last-member-leaves.md)
+
+### PD — Meetup details
+
+- [T17 — Join a meetup](docs/prd/t17-join-a-meetup.md)
+- [T18 — Leave and rejoin a meetup](docs/prd/t18-leave-and-rejoin-a-meetup.md)
+
+### PC — Create a meetup
+
+- [T15 — Select a meetup location](docs/prd/t15-select-a-meetup-location.md)
+- [T16 — Create a meetup](docs/prd/t16-create-a-meetup.md)
+
+### C — Posts · groups · meetup rooms
+
+- [T20 — Read posts](docs/prd/t20-read-posts.md)
+- [T21 — Publish a post](docs/prd/t21-publish-a-post.md)
+- [T22 — Discover, join, and leave a persistent group](docs/prd/t22-discover-join-and-leave-a-persistent-group.md)
+
+### CR — Chat room
+
+- [T23 — Read and send text messages](docs/prd/t23-read-and-send-text-messages.md)
+- [T24 — Attach and send a chat photo](docs/prd/t24-attach-and-send-a-chat-photo.md)
+
+### CG — Group room
+
+- [T25 — View room members and shared photos](docs/prd/t25-view-room-members-and-shared-photos.md)
+
+### F — Pet profile
+
+- [T07 — Delete a pet profile](docs/prd/t07-delete-a-pet-profile.md)
+
+### FE — Create / edit pet profile
+
+- [T06 — Create or edit a pet profile](docs/prd/t06-create-or-edit-a-pet-profile.md)
+
+### S — States and errors
+
+Shared loading, empty, error, deletion-confirmation, image-fallback, and meetup/chat status behavior is specified in the linked task PRDs and the shared boundaries above. Add a separate task here only when the behavior is cross-screen and cannot be assigned to a primary screen.
+
+## Decisions and missing information
+
+### D1 — Resolve differences between the older plan and current demo
+
+The service plan is a team-review draft dated September 30, 2026. It specifies a creator-selected registration deadline and numeric companion count, and excludes maps and meetup photo sharing from MVP; persistent groups are undecided. Current code uses a fixed 6-hour cutoff, selects owned pet profiles, and includes maps, chat photos, groups, and posts. This document records both; it does not silently approve either scope. Decide the intended scope before rebuilding T14–T25.
+
+### D2 — Decide login button behavior
+
+The request&#x27;s example requires both fields before pressing login. Current T03 instead allows pressing login and then reports validation errors. Confirm whether the example describes a desired change or only the PRD format; email versus a separate username also needs an explicit decision if changing the identifier.
+
+### D3 — Decide pet deletion and unspecified input limits
+
+Deleting a pet currently retains associated records/references without a supported restore flow. Choose whether to prevent deletion, retain accessible archives, or cascade, and define membership handling before changing T07. No total-photo limit, journal text limit, or recurring anniversary reminder is defined. Several profile/meetup field limits are UI-only; decide whether equivalent store validation is required before changing those contracts.
+
+### D4 — Decide closed/canceled data retention and notices
+
+History is currently retained internally after leaving/closure. The plan leaves physical retention/deletion and notification timing for absent participants undecided. Current chat shows an on-screen closure notice while open; there is no push/unread notification or join/leave system-message flow. Choose any additional behavior before assigning implementation.
+
+### D5 — Define any production or additional account scope
+
+Real authentication/email verification, password recovery, account deletion, user profile editing, multi-device sync, server-backed real-time chat, and delivery/read receipts are not implemented. The older plan mentions user profile editing and leaves account-deletion handling open. Required fields, recovery/retention rules, infrastructure, and final delivery targets need decisions if these become tasks. Do not treat them as completed or silently add them to this local-demo PRD.
+
+## Evidence for maintenance
+
+- [Screens and flows](lib/main.dart): `PetApp`, `Login`, `Home`, profile/memory/meetup/post/group forms, `ChatScreen`, `ChatRoomDetails`, `MemoryView`.
+- [Storage and business rules](lib/store.dart): `load`, migrations, `login`, `testLogin`, `logout`, `saveOwned`, `deleteOwned`, memory methods, `createMeeting`, `join`, `leave`, `status`, `canChat`, `messages`, `send`, `joinGroup`, `createPost`.
+- [Home calendar](lib/home_week_calendar.dart), [memory calendar](lib/memory_calendar.dart), [pet carousel](lib/pet_profile_carousel.dart), [map/place picker](lib/meeting_map.dart), [location validation](lib/meeting_location.dart).
+- Existing tests: [store](test/store_test.dart), [screens](test/widget_test.dart), [community](test/community_test.dart), [chat](test/chat_test.dart). These support particular rules; their existence does not certify every acceptance criterion above.
+- [Service plan](docs/human/service-plan.html): explicit planning rules and unresolved scope, used for T26 and D1–D5. HTML is preserved; this PRD does not edit it.
+</pre></details></section></article><article class="page" id="T01" aria-labelledby="T01-title" data-source="t01-load-and-restore-the-application.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T01</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T01-title">앱 시작과 저장 데이터 복원</h2><p class="subtext">5개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t01-load-and-restore-the-application.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 기기 저장소.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>앱 열기</li><li>저장 데이터 불러오기</li><li>세션이 없으면 로그인, 있으면 홈 표시.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>저장 데이터 없음</strong>: 데모 데이터 생성</li><li><strong>기존 기록</strong>: 재생성 없이 변환</li><li><strong>지원하지 않는 버전·불러오기 실패</strong>: 오류 + 다시 시도</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li><strong>세션 있음</strong>: 저장 데이터로 이용 재개</li><li><strong>세션 없음</strong>: 로그인 화면</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T01-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>첫 실행은 로그인 화면에 도착합니다.</p></div></li><li class="criterion done" data-origin="T01-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>저장된 세션이 있으면 홈에 도착합니다.</p></div></li><li class="criterion done" data-origin="T01-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>다시 불러와도 기록을 유지합니다.</p></div></li><li class="criterion done" data-origin="T01-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>반복 변환해도 변환된 하루 글·데모 기록이 중복되지 않습니다.</p></div></li><li class="criterion error" data-origin="T01-C5"><span class="criterion-index" aria-hidden="true">5</span><div><div class="criterion-label">오류 처리 기준</div><p>불러오기가 실패하면 데이터를 조용히 초기화하지 않고 다시 시도를 표시합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 실패 방지 · 거부 조건 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a><a href="../../test/community_test.dart">test/community_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T01 — Load and restore the application
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** local storage.
+- **Flow:** open app → load saved data → show login without a session, or the home screen with a session.
+- **Rules:** missing storage creates demo collections; supported existing records are migrated without recreating them on every load. Unsupported stored versions or load failures show an error and a retry action.
+- **Result:** the user resumes stored data or reaches login.
+
+## Acceptance criteria
+
+- [ ] First launch reaches login.
+- [ ] A saved session reaches home.
+- [ ] Reload preserves records.
+- [ ] Repeated migration does not duplicate migrated journals/demo records.
+- [ ] A load failure displays retry rather than silently resetting data.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+- [test/community_test.dart](../../test/community_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T02" aria-labelledby="T02-title" data-source="t02-register-an-account.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T02</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T02-title">회원가입</h2><p class="subtext">2개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t02-register-an-account.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · <a href="#T01" data-page="T01">T01</a>. 로그인된 세션이 없어야 합니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>회원가입으로 전환</li><li>이름·이메일·비밀번호 입력</li><li>제출.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>이름</strong>: 필수 · 앞뒤 공백 제거 · 화면 최대 30자</li><li><strong>이메일</strong>: 유효한 형식 · 앞뒤 공백 제거 · 소문자 변환 · 중복 불가</li><li><strong>비밀번호</strong>: 8자 이상</li><li><strong>제출·모드 전환</strong>: 처리 중 비활성화 · 빈 입력은 제출 가능</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>기기에 계정·세션 저장 → 별도 로그인 없이 홈 이동</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T02-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>유효한 회원가입은 홈을 열며 다시 불러와도 유지됩니다.</p></div></li><li class="criterion error" data-origin="T02-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">오류 처리 기준</div><p>빈 이름, 잘못된 형식·중복 이메일, 짧은 비밀번호는 오류를 표시하며 계정이나 세션을 추가하지 않습니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 실패 방지 · 거부 조건 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T02 — Register an account
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** T01; no active session.
+- **Flow:** switch to registration → enter name, email, password → submit.
+- **Rules:** trimmed name is required (UI limit: 30 characters); email must match the implemented email format and is trimmed/lowercased; password needs at least 8 characters; duplicate normalized email is rejected. Submission and mode switching are disabled while processing, not while fields are empty.
+- **Result:** a new local account and active session; home opens without requiring separate login.
+
+## Acceptance criteria
+
+- [ ] Valid registration opens home and survives reload.
+- [ ] Blank name, malformed/duplicate email, and short password produce errors without adding an account or session.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T03" aria-labelledby="T03-title" data-source="t03-log-in-with-email-and-password.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T03</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T03-title">이메일·비밀번호 로그인</h2><p class="subtext">3개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t03-log-in-with-email-and-password.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · T01과 기기에 있는 기존 계정. 로그인된 세션이 없어야 합니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>이메일·비밀번호 입력</li><li>로그인 버튼 누르기 또는 비밀번호 입력란에서 제출.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>로그인 식별자</strong>: 이메일 사용 · 정규화된 유효한 형식</li><li><strong>비밀번호</strong>: 8자 이상 · 계정 정보 일치</li><li><strong>로그인 버튼</strong>: 처리 중에만 비활성화</li><li><strong>빈 입력</strong>: 제출 후 검증</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li><strong>성공</strong>: 홈 이동</li><li><strong>실패</strong>: 로그인 화면 유지 + 오류 표시</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T03-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>올바른 계정 정보는 홈을 열며 다시 불러온 뒤에도 로그인 상태를 복원합니다.</p></div></li><li class="criterion reject" data-origin="T03-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>빈 입력, 잘못된 형식, 짧은 비밀번호, 없는 계정, 틀린 계정 정보는 세션을 만들지 않습니다.</p></div></li><li class="criterion reject" data-origin="T03-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>처리 중에는 반복 제출을 막습니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T03 — Log in with email and password
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** T01 and an existing local account; no active session.
+- **Flow:** enter email and password → press login or submit from the password field.
+- **Rules:** use email, not a separate username; normalized email, valid format, and password of at least 8 characters are required; credentials must match. The button is disabled only during processing; empty fields currently trigger validation after submission.
+- **Result:** successful login opens home; failed login keeps the user on login with an error.
+
+## Acceptance criteria
+
+- [ ] Correct credentials open home and restore after reload.
+- [ ] Empty, malformed, short, unknown, or incorrect credentials do not create a session.
+- [ ] Repeated submissions are blocked during processing.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T04" aria-labelledby="T04-title" data-source="t04-enter-the-demo-account.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T04</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T04-title">테스트 계정으로 이용</h2><p class="subtext">2개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t04-enter-the-demo-account.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · <a href="#T01" data-page="T01">T01</a>. 로그인된 세션이 없어야 합니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>테스트 계정 버튼 누르기</li><li>홈 열기.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>입력</strong>: 불필요</li><li><strong>예시 계정·반려동물·추억</strong>: 필요할 때 추가</li><li><strong>재방문</strong>: 기존 테스트 데이터 보존</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>저장된 테스트 계정으로 로그인</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T04-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>처음 이용하면 예시 반려동물과 추억을 표시합니다.</p></div></li><li class="criterion done" data-origin="T04-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>로그아웃 후 재접속·다시 불러오기는 기존 수정을 유지하고 예시를 중복시키지 않습니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 실패 방지 · 거부 조건·오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a><a href="../../test/widget_test.dart">test/widget_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T04 — Enter the demo account
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** T01; no active session.
+- **Flow:** press the test-account button → open home.
+- **Rules:** no input is needed; demo setup adds the example account/pets/memories as needed and preserves existing demo data on later visits.
+- **Result:** the stored demo account becomes the active session.
+
+## Acceptance criteria
+
+- [ ] First use shows demo pets and memories.
+- [ ] Logout/reentry and reload retain previous edits without duplicating examples.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+- [test/widget_test.dart](../../test/widget_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T05" aria-labelledby="T05-title" data-source="t05-log-out.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T05</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T05-title">로그아웃</h2><p class="subtext">2개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t05-log-out.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 로그인된 세션.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>로그아웃 누르기</li><li>로그인 화면으로 돌아가기.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>삭제</strong>: 세션만</li><li><strong>보존</strong>: 계정·반려동물·추억·참여 정보·메시지</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>로그인 화면 이동 · 다시 불러와도 로그인 화면 유지</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T05-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>로그아웃은 세션을 지웁니다.</p></div></li><li class="criterion done" data-origin="T05-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>같은 계정으로 다시 로그인하면 기존 기록과 참여 이력을 복원합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 실패 방지 · 거부 조건·오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T05 — Log out
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** any active session.
+- **Flow:** press logout → return to login.
+- **Rules:** clear the session, not stored accounts, pets, memories, memberships, or messages.
+- **Result:** login is shown and remains shown after reload.
+
+## Acceptance criteria
+
+- [ ] Logout clears the session.
+- [ ] Logging into the same account again restores its previous records and membership history.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T08" aria-labelledby="T08-title" data-source="t08-view-the-home-day-s-memories-and-appointments.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T08</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T08-title">홈에서 선택한 날의 추억·약속 보기</h2><p class="subtext">4개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t08-view-the-home-day-s-memories-and-appointments.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 로그인된 세션. 해당하는 경우 <a href="#T06" data-page="T06">T06</a>·<a href="#T11" data-page="T11">T11</a>·<a href="#T13" data-page="T13">T13</a>·<a href="#T17" data-page="T17">T17</a> 데이터.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>좌우 넘김 영역에서 반려동물 선택</li><li>주간 달력에서 날짜 선택</li><li>해당 추억과 참여 약속 확인.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>주간 달력</strong>: 월~일 · 이전·다음·밀기로 이동 · 오늘 버튼으로 복귀</li><li><strong>추억·하루 글</strong>: 선택한 반려동물 + 날짜 기준 · 사진 미리보기 최대 3장</li><li><strong>약속</strong>: 계정 참여 + 한국 날짜 기준 · 취소 제외 · 시작 시간순</li><li><strong>주간 Day 일수</strong>: 오늘만 표시</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li><strong>사진 클릭</strong>: 사진 보기</li><li><strong>추억 있는 카드</strong>: 해당 날짜 추억 화면</li><li><strong>과거·오늘의 빈 카드</strong>: 사진 추가 · 반려동물 없으면 프로필 등록</li><li><strong>미래 빈 카드</strong>: 기록 시작 불가</li><li><strong>약속 클릭</strong>: 상세 보기</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T08-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>반려동물·날짜를 바꾸면 올바른 미리보기로 바뀌며 하루 글이 섞이지 않습니다.</p></div></li><li class="criterion done" data-origin="T08-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>계정의 약속은 반려동물 선택과 독립적으로 유지됩니다.</p></div></li><li class="criterion done" data-origin="T08-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>빈 상태·미래 상태와 모든 이동 대상이 설명한 대로 동작합니다.</p></div></li><li class="criterion done" data-origin="T08-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>가족 영역의 하단을 누르면 프로필을 엽니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 실패 방지 · 거부 조건·오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../lib/home_week_calendar.dart">lib/home_week_calendar.dart</a><a href="../../lib/pet_profile_carousel.dart">lib/pet_profile_carousel.dart</a><a href="../../test/widget_test.dart">test/widget_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T08 — View the home day&#x27;s memories and appointments
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** active session; T06, T11, T13, and T17 data as applicable.
+- **Flow:** select a pet in the carousel → choose a date in the week view → inspect its memories and participating appointments.
+- **Rules:** weeks run Monday–Sunday; previous/next/swipe navigates weeks and “today” returns to today. Memories/journal use the selected pet and date; preview shows at most 3 photos. Appointments use account participation and KST date, exclude canceled meetings, and sort by start time. Only today shows the Day count in the week row.
+- **Result:** a photo opens its viewer; a populated memory card opens that date&#x27;s memory screen; an empty past/today card opens photo creation, or profile registration when no pet exists. Future empty cards cannot start recording. An appointment opens its detail.
+
+## Acceptance criteria
+
+- [ ] Pet/date switching changes the correct preview without mixing journals.
+- [ ] Account appointments remain independent of pet selection.
+- [ ] Empty/future states and all destinations behave as described.
+- [ ] The family footer opens profiles.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [lib/home_week_calendar.dart](../../lib/home_week_calendar.dart)
+- [lib/pet_profile_carousel.dart](../../lib/pet_profile_carousel.dart)
+- [test/widget_test.dart](../../test/widget_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T09" aria-labelledby="T09-title" data-source="t09-set-a-pet-s-day-0.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T09</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T09-title">반려동물의 Day 0 설정</h2><p class="subtext">4개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t09-set-a-pet-s-day-0.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 내 반려동물. 기존 사진은 선택 사항입니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>Day 0 설정 열기</li><li>첫 만남 또는 첫 사진 선택</li><li>허용 날짜 선택</li><li>확인.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>시작일</strong>: 1990년~한국 시간 오늘 · 가장 오래된 사진 날짜 이하</li><li><strong>첫 사진 기준</strong>: 가장 오래된 사진 날짜 사용 · 사진 없으면 직접 선택</li><li><strong>더 오래된 사진 추가</strong>: 첫 사진 기준 Day 0 앞당김</li><li><strong>가장 오래된 사진 삭제</strong>: Day 0 유지</li><li><strong>첫 만남 기준</strong>: Day 0 이전 사진 불가</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>해당 반려동물에만 시작 기준·날짜 저장</li><li><strong>시작일</strong>: Day 0 · 다음 날: Day 1</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T09-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>두 시작 기준과 날짜 경계가 동작합니다.</p></div></li><li class="criterion done" data-origin="T09-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>이전 날짜 사진 추가·삭제가 명시한 규칙을 따릅니다.</p></div></li><li class="criterion done" data-origin="T09-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>다른 반려동물의 설정은 바뀌지 않습니다.</p></div></li><li class="criterion done" data-origin="T09-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>다시 불러와도 기준과 날짜를 유지합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 실패 방지 · 거부 조건·오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a><a href="../../test/widget_test.dart">test/widget_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T09 — Set a pet&#x27;s Day 0
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** an owned pet; optional existing photos.
+- **Flow:** open Day 0 settings → choose first meeting or first photo → choose an allowed date → confirm.
+- **Rules:** dates range from 1990 through KST today and cannot be later than the oldest saved photo. First-photo mode uses that oldest date when available; otherwise a date is selected. Earlier photo backfill moves first-photo Day 0 earlier; deleting its oldest photo does not reset Day 0. First-meeting mode blocks photo dates earlier than Day 0.
+- **Result:** that pet alone gets the saved starting basis/date; start day is Day 0, the next day is Day 1.
+
+## Acceptance criteria
+
+- [ ] Both bases and date boundaries work.
+- [ ] Backfill/delete follow the stated rules.
+- [ ] Another pet&#x27;s setting stays unchanged.
+- [ ] Reload preserves the basis and date.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+- [test/widget_test.dart](../../test/widget_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T10" aria-labelledby="T10-title" data-source="t10-browse-a-pet-s-memory-calendar-and-gallery.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T10</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T10-title">반려동물 추억 달력·사진 보기</h2><p class="subtext">5개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t10-browse-a-pet-s-memory-calendar-and-gallery.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 내 반려동물. Day 달력에는 <a href="#T09" data-page="T09">T09</a>, 해당하는 경우 <a href="#T11" data-page="T11">T11</a>·<a href="#T13" data-page="T13">T13</a> 데이터.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>추억 열기</li><li>반려동물·날짜 선택</li><li>하루 글과 사진 격자 보기</li><li>사진 누르기 또는 수정 모드 켜기.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>달력</strong>: Day 0~오늘 · 7일씩 표시 · 미래 날짜 비활성화</li><li><strong>사진 있는 날</strong>: 강조</li><li><strong>Day 0 없음</strong>: 설정 안내 + 선택한 날의 기록</li><li><strong>반려동물 변경</strong>: 오늘로 초기화 + 수정 모드 종료</li><li><strong>사진 클릭</strong>: 일반 모드는 보기 · 수정 모드는 수정</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>선택한 반려동물·날짜의 사진·하루 글만 표시</li><li><strong>사진 보기</strong>: 사진·날짜 표시 · 최대 5× 확대</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T10-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>두 반려동물의 기록을 분리해서 유지합니다.</p></div></li><li class="criterion done" data-origin="T10-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>주·날짜·오늘 이동이 동작합니다.</p></div></li><li class="criterion done" data-origin="T10-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>비어 있는 날은 빈 상태를 표시합니다.</p></div></li><li class="criterion done" data-origin="T10-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>보기·수정은 동일한 사진을 선택합니다.</p></div></li><li class="criterion done" data-origin="T10-C5"><span class="criterion-index" aria-hidden="true">5</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>사진 보기에서 돌아와도 기록을 유지합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 실패 방지 · 거부 조건·오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../lib/memory_calendar.dart">lib/memory_calendar.dart</a><a href="../../test/widget_test.dart">test/widget_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T10 — Browse a pet&#x27;s memory calendar and gallery
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** an owned pet; T09 for the Day calendar; T11/T13 data as applicable.
+- **Flow:** open memories → choose pet/date → view daily journal and photo grid → tap a photo, or enable editing.
+- **Rules:** the Day calendar starts at Day 0 and ends at today, with 7-day pages; future days are disabled. Photo days are emphasized. Without Day 0, show setup and the selected day&#x27;s records. Switching pets resets the memory date to today and exits editing; normal photo taps open viewing, editing-mode taps open editing.
+- **Result:** only the selected pet/date&#x27;s photos and journal appear; the viewer shows the photo/date and supports zoom up to 5×.
+
+## Acceptance criteria
+
+- [ ] Two pets&#x27; records stay separate.
+- [ ] Week/date/today navigation works.
+- [ ] Empty days show an empty state.
+- [ ] Viewing/editing select the same photo.
+- [ ] Returning from viewing preserves records.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [lib/memory_calendar.dart](../../lib/memory_calendar.dart)
+- [test/widget_test.dart](../../test/widget_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T13" aria-labelledby="T13-title" data-source="t13-write-or-edit-a-daily-journal.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T13</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T13-title">하루 글 작성·수정</h2><p class="subtext">5개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t13-write-or-edit-a-daily-journal.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 내 반려동물과 선택한 추억 날짜.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>하루 기록 또는 글 수정 열기</li><li>제목·메모 입력 및 기념일 스위치 설정</li><li>저장.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>하루 글</strong>: 소유자·반려동물·날짜당 하나 · 저장 시 교체</li><li><strong>제목·메모</strong>: 빈 내용 허용 · 글자 수 제한 미정</li><li><strong>날짜</strong>: 1990년~한국 시간 오늘</li><li><strong>사진</strong>: 불필요</li><li><strong>기념일</strong>: 표시만 · 매년 자동 알림 없음</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li><strong>추억</strong>: 하루 글·기념일 표시</li><li><strong>홈</strong>: 해당 날짜 제목 미리보기 반영</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T13-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>반복 저장은 하나의 하루 글을 갱신합니다.</p></div></li><li class="criterion done" data-origin="T13-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>반려동물·날짜를 분리해서 유지합니다.</p></div></li><li class="criterion done" data-origin="T13-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>빈 글과 사진 없는 날도 저장합니다.</p></div></li><li class="criterion done" data-origin="T13-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>사진 변경·삭제가 하루 글을 보존합니다.</p></div></li><li class="criterion done" data-origin="T13-C5"><span class="criterion-index" aria-hidden="true">5</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>다시 불러와도 모든 항목을 유지합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 실패 방지 · 거부 조건·오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a><a href="../../test/widget_test.dart">test/widget_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T13 — Write or edit a daily journal
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** an owned pet and selected memory date.
+- **Flow:** open daily recording or “edit text” → enter title/note and anniversary switch → save.
+- **Rules:** one journal per owner, pet, and date; saving replaces that journal. Title and note may be empty; no text-length limit is defined. Date is 1990 through KST today. No photo is required; the anniversary switch is a marker, not an automatic yearly reminder.
+- **Result:** the daily text/anniversary appears in memories and the home&#x27;s corresponding title preview.
+
+## Acceptance criteria
+
+- [ ] Repeated save updates one journal.
+- [ ] Pets/dates stay separate.
+- [ ] Empty text and photo-free days save.
+- [ ] Photo changes/deletion preserve the journal.
+- [ ] Reload preserves all fields.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+- [test/widget_test.dart](../../test/widget_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T11" aria-labelledby="T11-title" data-source="t11-add-memory-photos.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T11</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T11-title">추억 사진 추가</h2><p class="subtext">4개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t11-add-memory-photos.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 내 반려동물. 시작 기준이 있으면 <a href="#T09" data-page="T09">T09</a> 규칙을 적용합니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>추억 기록 열기</li><li>사진 한 장 이상 선택</li><li>날짜 선택</li><li>저장.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>사진</strong>: 비어 있지 않은 사진 최소 한 장 · 장당 3MB 이하</li><li><strong>날짜</strong>: 1990년~한국 시간 오늘 · 첫 만남 Day 0 규칙 적용</li><li><strong>새 사진</strong>: 여러 장 가능 · 총 개수 제한 미지정</li><li><strong>저장</strong>: 사진과 하루 글 분리</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>선택한 반려동물·날짜에 사진별 기록 생성</li><li><strong>선택한 추억 날짜</strong>: 저장한 날짜로 변경</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T11-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>한 장·여러 장 추가를 저장하고 유지합니다.</p></div></li><li class="criterion reject" data-origin="T11-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>사진 없음, 미래 날짜, 첫 만남 Day 0 이전 날짜는 거부합니다.</p></div></li><li class="criterion reject" data-origin="T11-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>선택한 사진이 용량을 넘으면 일부 사진만 추가하지 않습니다.</p></div></li><li class="criterion done" data-origin="T11-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>기존 하루 글은 바뀌지 않습니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T11 — Add memory photos
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** an owned pet; T09 rules apply if a starting basis exists.
+- **Flow:** open memory recording → select one or more photos → choose date → save.
+- **Rules:** at least one nonempty photo is required; each picked image is at most 3MB; date is 1990 through KST today and respects first-meeting Day 0. New uploads can contain multiple photos; no total-photo count limit is specified. Photo records are separate from the daily journal.
+- **Result:** one record per selected photo appears under the chosen pet/date; the selected memory date changes to the saved date.
+
+## Acceptance criteria
+
+- [ ] Single/multiple uploads persist.
+- [ ] Missing photos, future dates, and dates before first-meeting Day 0 are rejected.
+- [ ] An oversized picked image does not partially add photos.
+- [ ] Existing journal text is unchanged.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T12" aria-labelledby="T12-title" data-source="t12-edit-move-or-delete-a-memory-photo.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T12</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T12-title">추억 사진 수정·날짜 이동·삭제</h2><p class="subtext">4개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t12-edit-move-or-delete-a-memory-photo.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 내 사진. <a href="#T10" data-page="T10">T10</a> 수정 모드.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>수정 모드에서 사진 선택</li><li>이미지 한 장 교체 또는 날짜 변경</li><li>저장. 또는 삭제 후 확인.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>수정</strong>: 사진 한 장만 · <a href="#T11" data-page="T11">T11</a> 날짜 규칙 적용</li><li><strong>수정·삭제 권한</strong>: 소유자만</li><li><strong>삭제</strong>: 확인 필요</li><li><strong>마지막 사진 삭제</strong>: 하루 제목·메모·기념일 보존</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>사진 수정·날짜 이동·삭제 반영</li><li><strong>하루 글</strong>: 원래 반려동물·날짜에 유지</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T12-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>변경을 저장하고 유지합니다.</p></div></li><li class="criterion done" data-origin="T12-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>취소하면 아무것도 바뀌지 않습니다.</p></div></li><li class="criterion reject" data-origin="T12-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>소유권·잘못된 날짜 검증으로 수정을 거부합니다.</p></div></li><li class="criterion done" data-origin="T12-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>마지막 사진을 옮기거나 삭제해도 원래 하루 글을 유지하고 Day 0를 초기화하지 않습니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T12 — Edit, move, or delete a memory photo
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** an owned photo; T10 editing mode.
+- **Flow:** select photo while editing → replace its single image or change date → save; alternatively delete and confirm.
+- **Rules:** editing accepts exactly one photo and the T11 date rules. Only its owner may edit/delete. Deletion requires confirmation and preserves daily title, note, and anniversary even when it removes the day&#x27;s last photo.
+- **Result:** the photo updates/moves/disappears; journals stay attached to their original pet/date.
+
+## Acceptance criteria
+
+- [ ] Changes persist.
+- [ ] Cancellation changes nothing.
+- [ ] Ownership and invalid-date checks reject edits.
+- [ ] Moving/deleting the last photo retains the original journal and does not reset Day 0.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T14" aria-labelledby="T14-title" data-source="t14-browse-meetup-lists-maps-and-details.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T14</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T14-title">약속 목록·지도·상세 보기</h2><p class="subtext">4개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t14-browse-meetup-lists-maps-and-details.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 로그인된 세션과 저장된 약속. 최종 범위는 D1의 영향을 받습니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>약속 열기</li><li>강아지·고양이·기타 카테고리 선택</li><li>목록·지도 전환</li><li>카드 또는 지도 표시 선택.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>카테고리</strong>: 목록·지도 필터 · 참여 자격 제한 없음</li><li><strong>만들기</strong>: 목록 모드에서만 제공</li><li><strong>유효 좌표</strong>: 지도 표시 · 위치 없으면 목록 유지 + 개수 안내</li><li><strong>카드</strong>: 제목·장소·거리·한국 시간·상태·보호자 수·참여 반려동물 미리보기</li><li><strong>거리 없음</strong>: 거리 미확인 · GPS 거리 계산 미구현</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li><strong>목록·지도 표시</strong>: 같은 약속 상세 열기</li><li><strong>상세</strong>: 설명·시간·정원·참여 반려동물 표시</li><li><strong>빈 카테고리</strong>: 빈 상태 표시</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T14-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>필터링과 이동 대상이 일치합니다.</p></div></li><li class="criterion done" data-origin="T14-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>좌표가 없어도 목록 기록을 숨기지 않습니다.</p></div></li><li class="criterion error" data-origin="T14-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">오류 처리 기준</div><p>지도 불러오기 오류에는 다시 시도를 제공합니다.</p></div></li><li class="criterion done" data-origin="T14-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>전환·스크롤 중에도 목록·지도 조작부가 화면 이동 메뉴 위에 유지됩니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 실패 방지 · 거부 조건 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../lib/meeting_map.dart">lib/meeting_map.dart</a><a href="../../test/widget_test.dart">test/widget_test.dart</a><a href="../../test/community_test.dart">test/community_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T14 — Browse meetup lists, maps, and details
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** active session and stored meetups; D1 affects final scope.
+- **Flow:** open meetups → choose dog/cat/other category → switch list/map → select a card or marker.
+- **Rules:** category filters both views, not participant eligibility. Creation is offered only in list mode. Valid coordinates become map markers; missing locations remain in the list and are counted in a notice. Cards show title, place/distance, KST time, status, guardian count, and participating pet previews. Missing distance displays “unknown”; GPS distance calculation is not implemented.
+- **Result:** list and marker open the same meetup detail, including note, times, capacity, and participating pets; empty categories show an empty state.
+
+## Acceptance criteria
+
+- [ ] Filtering and destinations agree.
+- [ ] Missing coordinates do not hide list records.
+- [ ] Map loading errors expose retry.
+- [ ] Switching/scrolling retains the list/map control above navigation.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [lib/meeting_map.dart](../../lib/meeting_map.dart)
+- [test/widget_test.dart](../../test/widget_test.dart)
+- [test/community_test.dart](../../test/community_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T19" aria-labelledby="T19-title" data-source="t19-enforce-meetup-status-and-chat-closure.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T19</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T19-title">약속 상태·채팅 종료 적용</h2><p class="subtext">3개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t19-enforce-meetup-status-and-chat-closure.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 약속 데이터와 참여 정보.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>시간 경과 또는 취소 상태 발생</li><li>상태와 모든 방 보기를 갱신.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>상태 우선순위</strong>: 취소 → 종료 → 모집 마감 → 정원 마감 → 모집 중</li><li><strong>모집 마감</strong>: 새 참여 차단 · 기존 참여자 채팅 유지</li><li><strong>약속 채팅 종료</strong>: 약속 날짜 이틀 뒤 00:00 한국 시간 · 정각부터 차단</li><li><strong>예시</strong>: 10월 1일 약속 → 10월 3일 00:00 종료</li><li><strong>취소된 약속</strong>: 참여·채팅 차단 / 지속 모임방: 날짜 종료 없음</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li><strong>종료 안내</strong>: 마감 시각 표시</li><li><strong>접근 불가</strong>: 메시지·입력 숨김 + 전송·멤버·사진 모음·열린 사진 차단</li><li><strong>시간 종료 후</strong>: 참여한 약속 카드는 접근 차단 상태로 유지</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T19-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>참여·채팅 마감 직전과 정각, 한국 시간 자정·월·연도 경계, 취소 상태가 올바르게 동작합니다.</p></div></li><li class="criterion reject" data-origin="T19-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>열린 보기도 갱신 시 접근을 잃습니다. 현재는 매초 확인합니다.</p></div></li><li class="criterion done" data-origin="T19-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>모임 채팅은 계속 이용할 수 있습니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a><a href="../../test/chat_test.dart">test/chat_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T19 — Enforce meetup status and chat closure
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** meetup data and memberships.
+- **Flow:** time passes or canceled state is encountered → refresh status and all room views.
+- **Rules:** status precedence is canceled → ended → registration closed → full → recruiting. Registration closure blocks joins, not existing members&#x27; chat. Meetup chat closes at 00:00 KST two calendar days after its meetup date, including that exact instant; October 1 → October 3 00:00. Canceled meetups block joining and chat. Persistent group rooms do not use this date closure.
+- **Result:** closure notice shows the deadline; inaccessible chat hides messages/input and blocks sending, members, gallery, and already-open photos. Current joined meetup cards remain with an access-blocked status after time closure.
+
+## Acceptance criteria
+
+- [ ] Just-before/exact registration and chat cutoffs, KST midnight/month/year boundaries, and canceled state behave correctly.
+- [ ] Open views lose access on refresh (currently checked every second).
+- [ ] Group chat remains available.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+- [test/chat_test.dart](../../test/chat_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T26" aria-labelledby="T26-title" data-source="t26-automatically-cancel-a-meetup-after-its-last-member-leaves.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T26</span><span class="status pending">기획 확정 · 미구현</span></div><h2 id="T26-title">마지막 참여자 탈퇴 시 약속 자동 취소</h2><p class="subtext">4개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t26-automatically-cancel-a-meetup-after-its-last-member-leaves.md">영문 PRD ↗</a></div><div class="notice">미구현입니다. 기획서에 명시된 요구사항이지만 현재 leave()는 참여자만 제거합니다.</div><div class="requires"><strong>필요한 것</strong> · <a href="#T18" data-page="T18">T18</a>. 실제 삭제 동작을 정의하기 전에 D4 데이터 보관 정책을 결정합니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>개설자를 포함한 마지막 참여자 나가기</li><li>약속 자동 취소.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>남은 보호자 없음</strong>: 약속 취소</li><li><strong>취소 후</strong>: 새 참여·재참여·모든 채팅 접근 차단</li><li><strong>개설자 별도 권한</strong>: 불필요</li><li><strong>메시지 실제 삭제 정책</strong>: 임의 결정 금지</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>약속 취소 + 사용자 채팅 이용 불가</li><li><strong>내부 보관</strong>: 별도 결정 필요</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T26-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>다른 참여자가 남아 있으면 나가도 취소하지 않습니다.</p></div></li><li class="criterion done" data-origin="T26-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>마지막 참여자 나가기는 취소 상태를 설정하고 저장해 유지합니다.</p></div></li><li class="criterion reject" data-origin="T26-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>이후 참여·전송·보기는 실패합니다.</p></div></li><li class="criterion done" data-origin="T26-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>다른 방은 바뀌지 않습니다. 이 동작을 구현하고 검증하기 전에는 완료가 아닙니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../docs/human/service-plan.html">docs/human/service-plan.html</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T26 — Automatically cancel a meetup after its last member leaves
+
+Confirmed planning requirement; not implemented.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Status:** not implemented. The service plan explicitly requires it; current `leave()` only removes the member.
+- **Requires:** T18; decide D4 storage retention before defining deletion behavior.
+- **Flow:** last participant, including the creator, leaves → cancel the meetup automatically.
+- **Rules:** no remaining guardians means a canceled meetup; new participation/reparticipation and all chat access are blocked. No special creator permission is needed. Do not invent a physical message-deletion policy.
+- **Result:** meetup is canceled and its chat is unavailable to users; internal retention remains a separate decision.
+
+## Acceptance criteria
+
+- [ ] Leaving with another member remaining does not cancel.
+- [ ] Last-member leave sets canceled state and persists it.
+- [ ] Subsequent join/send/view fail.
+- [ ] Other rooms are unchanged. Not complete until this behavior is implemented and verified.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [docs/human/service-plan.html](../../docs/human/service-plan.html)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T17" aria-labelledby="T17-title" data-source="t17-join-a-meetup.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T17</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T17-title">약속 참여</h2><p class="subtext">4개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t17-join-a-meetup.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 로그인된 세션과 저장된 약속. 내 반려동물은 선택 사항입니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>상세 열기</li><li>원하면 내 반려동물 선택</li><li>참여 누르기.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>참여 조건</strong>: 시작 6시간 전 마감 이전 · 정원 여유 · 취소 아님 · 미참여 상태</li><li><strong>보호자</strong>: 계정당 한 명 / 반려동물: ID 중복 제거 · 미선택 허용</li><li><strong>카테고리·품종</strong>: 참여 제한 없음</li><li><strong>저장</strong>: 현재 참여 시간 + 메시지 위치 경계</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>참여 저장 + 보호자·반려동물 표시 갱신</li><li>상세 닫기 + 참여 중인 약속방 목록에 표시</li><li><strong>채팅 화면 자동 이동</strong>: 없음</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T17-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>유효한 참여를 저장하고 유지합니다.</p></div></li><li class="criterion reject" data-origin="T17-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>중복 참여, 정원이 찬·취소된·마감된 약속, 마감 정각, 다른 사람의 반려동물은 새 참여자 없이 거부합니다.</p></div></li><li class="criterion reject" data-origin="T17-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>동시 제출로 정원을 초과할 수 없습니다.</p></div></li><li class="criterion done" data-origin="T17-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>채팅은 이번 참여 경계에서 시작합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T17 — Join a meetup
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** active session and a stored meetup; optional owned pets.
+- **Flow:** open detail → select own pets if desired → press participate.
+- **Rules:** only before the 6-hour registration cutoff, with space and neither cancellation nor existing membership. Count one account per guardian; deduplicate selected pet IDs; allow no selected pets. Category/breed does not restrict joining. Store current join time and message-position boundary.
+- **Result:** membership is saved, guardian/pet displays update, detail closes, and the room appears among participating meetup rooms; joining does not automatically navigate into chat.
+
+## Acceptance criteria
+
+- [ ] Valid join persists.
+- [ ] Duplicates, full/canceled/closed meetups, exact cutoff, and foreign pets reject without a new member.
+- [ ] Concurrent submissions cannot overbook.
+- [ ] Chat starts at this participation boundary.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T18" aria-labelledby="T18-title" data-source="t18-leave-and-rejoin-a-meetup.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T18</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T18-title">약속 나가기·재참여</h2><p class="subtext">5개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t18-leave-and-rejoin-a-meetup.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 나가기에는 기존 참여, 재참여에는 <a href="#T17" data-page="T17">T17</a> 참여 조건.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>상세에서 참여 취소 또는 채팅에서 나가기 확인</li><li>원하면 마감 전에 다시 참여.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>개설자</strong>: 일반 참여자와 같은 나가기·재참여 권리</li><li><strong>나가기</strong>: 본인 참여 삭제 + 글·사진·멤버 접근 차단 · 다른 모임 가입 유지</li><li><strong>재참여</strong>: 새 시간·메시지 위치 경계 저장 · 이전 기록 계속 숨김</li><li><strong>같은 참여 상태에서 다시 불러오기</strong>: 경계 유지</li><li><strong>마지막 참여자</strong>: <a href="#T26" data-page="T26">T26</a> 별도 미구현 요구사항</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>보호자·반려동물 수 감소 + 내 참여 목록에서 방 제거</li><li><strong>조건에 맞는 재참여</strong>: 새로 조회 가능한 기록에만 접근 복원</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T18-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>상세의 참여 취소와 확인한 방 나가기가 일치합니다.</p></div></li><li class="criterion done" data-origin="T18-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>나가기 창을 취소하면 참여를 유지합니다.</p></div></li><li class="criterion reject" data-origin="T18-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>시계 시각이 같아도 재참여는 이전 글·사진을 제외합니다.</p></div></li><li class="criterion reject" data-origin="T18-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>마감·정원이 찬 상태는 재참여를 막습니다.</p></div></li><li class="criterion done" data-origin="T18-C5"><span class="criterion-index" aria-hidden="true">5</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>다시 불러와도 경계를 유지합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a><a href="../../test/chat_test.dart">test/chat_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T18 — Leave and rejoin a meetup
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** existing membership for leaving; T17 eligibility for rejoining.
+- **Flow:** cancel participation in detail, or confirm “leave” in chat → optionally join again before cutoff.
+- **Rules:** creator has the same leave/rejoin rights as other members. Leaving removes that account&#x27;s membership and blocks its messages, photos, and member views; it does not remove another group&#x27;s membership. Rejoining records a new time/position boundary; previously visible history stays hidden. Same-membership reload never resets the boundary. Last-member behavior is a separate missing requirement, T26.
+- **Result:** guardian/pet counts fall and the room leaves that user&#x27;s participating list; eligible rejoin restores access only to newly available history.
+
+## Acceptance criteria
+
+- [ ] Detail cancellation and confirmed room leaving agree.
+- [ ] Canceling the leave dialog preserves membership.
+- [ ] Rejoin excludes old text/photos even at the same clock timestamp.
+- [ ] Cutoff/full state blocks rejoin.
+- [ ] Reload preserves the boundary.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+- [test/chat_test.dart](../../test/chat_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T15" aria-labelledby="T15-title" data-source="t15-select-a-meetup-location.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T15</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T15-title">약속 장소 선택</h2><p class="subtext">3개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t15-select-a-meetup-location.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 약속 만들기와 지도 접근.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>장소 선택 열기</li><li>지도 지점 또는 예시 표시 누르기</li><li>필요하면 이름 입력</li><li>확인.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>확인 버튼</strong>: 지점 선택 전 비활성화</li><li><strong>이름 미입력</strong>: 좌표 기반 기본 이름</li><li><strong>최종 이름</strong>: 앞뒤 공백 제거 · 필수 · 최대 100자</li><li><strong>저장 좌표</strong>: 유한한 값 · 위도 −85~85 · 경도 −180~180</li><li><strong>확인 없이 복귀</strong>: 이전 선택 유지</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>선택한 이름·좌표를 약속 만들기 양식에 전달</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T15-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>지점·표시 선택, 선택 이름·기본 이름, 취소가 동작합니다.</p></div></li><li class="criterion reject" data-origin="T15-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>약속 생성은 잘못된 위치를 거부합니다.</p></div></li><li class="criterion done" data-origin="T15-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>저장한 좌표는 올바른 약속 지도 표시를 다시 엽니다. 주소 검색·주소의 좌표 변환은 이 작업에 포함하지 않습니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../lib/meeting_map.dart">lib/meeting_map.dart</a><a href="../../lib/meeting_location.dart">lib/meeting_location.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a><a href="../../test/widget_test.dart">test/widget_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T15 — Select a meetup location
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** meetup creation; map access.
+- **Flow:** open place picker → tap a map point or example marker → optionally name it → confirm.
+- **Rules:** confirm is disabled without a selected point. Blank user-entered name gets a coordinate-based default; trimmed final name is required and at most 100 characters. Valid stored coordinates are finite latitude −85 to 85 and longitude −180 to 180. Returning without confirmation keeps the previous choice.
+- **Result:** chosen name and coordinates return to the creation form.
+
+## Acceptance criteria
+
+- [ ] Point/marker selection, optional/default name, and cancel work.
+- [ ] Creation rejects an invalid location.
+- [ ] Saved coordinates reopen the correct meetup marker. Address search/geocoding is not part of this task.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [lib/meeting_map.dart](../../lib/meeting_map.dart)
+- [lib/meeting_location.dart](../../lib/meeting_location.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+- [test/widget_test.dart](../../test/widget_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T16" aria-labelledby="T16-title" data-source="t16-create-a-meetup.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T16</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T16-title">약속 만들기</h2><p class="subtext">3개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t16-create-a-meetup.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 로그인된 세션과 <a href="#T15" data-page="T15">T15</a>. 내 반려동물은 선택 사항입니다. D1을 확인합니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>목록의 + 누르기</li><li>카테고리와 동반할 내 반려동물 선택</li><li>제목·장소·선택 메모·한국 날짜와 시간·보호자 정원 입력</li><li>생성.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>제목</strong>: 필수 · 화면 최대 60자 / 메모: 선택 · 화면 최대 1,000자</li><li><strong>카테고리</strong>: 강아지·고양이·기타</li><li><strong>정원</strong>: 개설자 포함 계정 2~50개 · 반려동물은 정원에 미포함</li><li><strong>시작</strong>: 현재보다 6시간 넘게 이후 / 참여 마감: 시작 6시간 전 정각</li><li><strong>수동 마감·종료 시간</strong>: 없음</li><li><strong>동반 반려동물</strong>: 내 소유만 · 선택 없이도 가능</li><li><strong>생성 버튼</strong>: 장소 미선택·저장 중 비활성화</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>약속 저장 + 개설자 자동 참여</li><li>카테고리 목록 갱신 + 대화상자 닫기</li><li>약속 참여를 통해 채팅 이용 가능</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T16-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>유효한 데이터·좌표·반려동물을 저장하고 유지하며 개설자 수는 1입니다.</p></div></li><li class="criterion reject" data-origin="T16-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>시작까지 정확히 6시간 또는 그보다 짧은 시간, 잘못된 카테고리·장소·정원, 다른 사람의 반려동물은 실패합니다.</p></div></li><li class="criterion done" data-origin="T16-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>취소하면 아무것도 추가하지 않습니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a><a href="../../test/community_test.dart">test/community_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T16 — Create a meetup
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** active session and T15; owned pets are optional; see D1.
+- **Flow:** press list “+” → choose category and own accompanying pets → enter title, place, optional note, KST date/time, guardian capacity → create.
+- **Rules:** title required (UI limit: 60); note optional (UI limit: 1,000); category is dog/cat/other. Capacity is 2–50 accounts, including the creator; pets do not consume guardian slots. Start must be more than 6 hours away; registration closes exactly 6 hours before start. No manual deadline or end time. Selected pets must belong to the creator; no pet is required. Create is disabled without a chosen place or during saving.
+- **Result:** persisted meetup, creator automatically participating, and category list updated; the dialog closes. Chat is available through meetup participation.
+
+## Acceptance criteria
+
+- [ ] Valid data/coordinates/pets persist with creator count 1.
+- [ ] Exactly 6 hours and shorter lead times, invalid category/location/capacity, and foreign pets fail.
+- [ ] Cancel adds nothing.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+- [test/community_test.dart](../../test/community_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T20" aria-labelledby="T20-title" data-source="t20-read-posts.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T20</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T20-title">게시글 읽기</h2><p class="subtext">4개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t20-read-posts.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 로그인된 세션과 저장된 게시글. 최종 범위는 D1의 영향을 받습니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>채팅 영역 열기</li><li>게시글 탭</li><li>게시글 선택</li><li>상세 읽기</li><li>닫기.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>카드</strong>: 카테고리·제목·본문 미리보기·작성자·시간</li><li><strong>상세</strong>: 선택 가능한 전체 본문</li><li><strong>새 글</strong>: 맨 앞에 배치</li><li><strong>미구현</strong>: 댓글·좋아요·검색·수정·삭제 조작부</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>선택한 글 열기 · 데이터 변경 없음</li><li><strong>게시글 없음</strong>: 빈 상태 표시</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T20-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>카드·상세의 글과 전체 본문이 일치합니다.</p></div></li><li class="criterion done" data-origin="T20-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>닫아도 데이터는 바뀌지 않습니다.</p></div></li><li class="criterion done" data-origin="T20-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>빈 상태가 나타납니다.</p></div></li><li class="criterion done" data-origin="T20-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>작성자와 카테고리를 올바르게 표시합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 실패 방지 · 거부 조건·오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/community_test.dart">test/community_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T20 — Read posts
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** active session; stored posts; D1 affects final scope.
+- **Flow:** open chat area → posts tab → select a post → read detail → close.
+- **Rules:** cards show category, title, body preview, author, and time; details show full selectable body. Newly created posts are inserted first. No comments, likes, search, edit, or delete controls are implemented.
+- **Result:** the selected post opens without changing it; no posts produces an empty state.
+
+## Acceptance criteria
+
+- [ ] Card/detail identity and full text match.
+- [ ] Closing changes no data.
+- [ ] Empty state appears.
+- [ ] Authors and categories display correctly.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/community_test.dart](../../test/community_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T21" aria-labelledby="T21-title" data-source="t21-publish-a-post.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T21</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T21-title">게시글 작성</h2><p class="subtext">3개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t21-publish-a-post.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 로그인된 세션과 <a href="#T20" data-page="T20">T20</a>.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>글쓰기 누르기</li><li>카테고리 선택</li><li>제목·본문 입력</li><li>게시.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>카테고리</strong>: 강아지·고양이·기타</li><li><strong>제목</strong>: 앞뒤 공백 제거 후 1~60자 / 본문: 앞뒤 공백 제거 후 1~2,000자</li><li><strong>작성자</strong>: 현재 계정</li><li><strong>게시 버튼</strong>: 저장 중 비활성화 · 빈 입력은 제출 후 검증</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>작성자·시간과 함께 저장 → 목록 맨 앞 표시 → 양식 닫기</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T21-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>유효하며 앞뒤 공백을 제거한 글을 저장하고 유지합니다.</p></div></li><li class="criterion reject" data-origin="T21-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>빈 글·제한 초과 글, 잘못된 카테고리, 로그아웃 상태의 작성은 글 없이 실패합니다.</p></div></li><li class="criterion done" data-origin="T21-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>취소하면 아무것도 추가하지 않습니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/community_test.dart">test/community_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T21 — Publish a post
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** active session; T20.
+- **Flow:** press write → choose category → enter title/body → publish.
+- **Rules:** dog/cat/other category; trimmed title 1–60 characters; trimmed body 1–2,000; author comes from the current account. Publish is disabled during saving; blank inputs are validated after submission.
+- **Result:** stored post appears first with its author/time and the form closes.
+
+## Acceptance criteria
+
+- [ ] Valid and whitespace-trimmed text persists.
+- [ ] Blank/over-limit text, invalid category, and signed-out creation fail without a post.
+- [ ] Cancel adds nothing.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/community_test.dart](../../test/community_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T22" aria-labelledby="T22-title" data-source="t22-discover-join-and-leave-a-persistent-group.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T22</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T22-title">지속 모임 찾기·가입·나가기</h2><p class="subtext">5개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t22-discover-join-and-leave-a-persistent-group.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 로그인된 세션과 기존 모임. 최종 범위는 D1의 영향을 받습니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>모임방 탭</li><li>소개 읽기</li><li>가입·열기 확인. 기존 멤버는 바로 엽니다. 방 나가기를 확인하면 탈퇴하며 원하면 다시 가입합니다.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>목록</strong>: 취소된 모임 제외 · 가입한 모임 우선</li><li><strong>가입</strong>: 중복·취소된 모임 불가 · 새 기록 조회 경계 설정</li><li><strong>나가기·재가입</strong>: 해당 모임에만 영향</li><li><strong>미구현</strong>: 약속 날짜 종료·정원 제한·사용자의 모임 생성 흐름</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li><strong>가입</strong>: 모임 채팅 열기</li><li><strong>나가기</strong>: 글·사진·멤버 접근 차단</li><li><strong>목록 복귀</strong>: 탐색 영역에 다시 표시</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T22-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>가입을 취소하면 참여 정보가 바뀌지 않습니다.</p></div></li><li class="criterion done" data-origin="T22-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>가입 성공을 저장하고 유지합니다.</p></div></li><li class="criterion done" data-origin="T22-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>서로 다른 모임과 약속방은 분리해서 유지합니다.</p></div></li><li class="criterion reject" data-origin="T22-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>재가입은 이전 기록을 숨깁니다.</p></div></li><li class="criterion done" data-origin="T22-C5"><span class="criterion-index" aria-hidden="true">5</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>시간이 흘렀다는 이유만으로 모임을 닫지 않습니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/community_test.dart">test/community_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T22 — Discover, join, and leave a persistent group
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** active session and pre-existing groups; D1 affects final scope.
+- **Flow:** group tab → read a group introduction → confirm join/open; existing members open directly. Use confirmed room leaving to leave; join again if desired.
+- **Rules:** list excludes canceled groups and places joined groups before discovery. Duplicate/canceled-group join fails. Joining establishes a new history boundary; leaving/rejoining affects only that group. No meetup-date closure, capacity limit, or user-created group flow is implemented.
+- **Result:** joining opens the group chat; leaving blocks its text/photos/member views and returns it to discovery after navigation back.
+
+## Acceptance criteria
+
+- [ ] Canceling join leaves membership unchanged.
+- [ ] Successful join persists.
+- [ ] Separate groups and meetup rooms stay isolated.
+- [ ] Rejoin hides earlier history.
+- [ ] Advancing time alone does not close the group.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/community_test.dart](../../test/community_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T23" aria-labelledby="T23-title" data-source="t23-read-and-send-text-messages.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T23</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T23-title">글 메시지 읽기·보내기</h2><p class="subtext">5개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t23-read-and-send-text-messages.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 현재 접근이 허용된 <a href="#T17" data-page="T17">T17</a> 또는 <a href="#T22" data-page="T22">T22</a> 참여 상태. <a href="#T19" data-page="T19">T19</a> 접근 규칙.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>해당 방 열기</li><li>허용된 기록 읽기</li><li>글 입력</li><li>버튼 또는 키보드로 전송.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>사진 없는 글</strong>: 앞뒤 공백 제거 후 1~1,000자 · 공백만 입력 불가</li><li><strong>발신자·이름·시간</strong>: 현재 계정</li><li><strong>기록 조회</strong>: 현재 참여 시간 + 메시지 위치 경계 모두 충족</li><li><strong>전송</strong>: 저장·사진 선택 중 비활성화 · 그 외 빈 입력은 제출 후 검증</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li><strong>성공</strong>: 해당 방에 글·발신자·시간 표시 · 내 글 오른쪽, 다른 사람 왼쪽</li><li><strong>성공 후</strong>: 입력 비우기 + 스크롤 이동</li><li><strong>실패</strong>: 입력 유지 · 메시지 생성 없음</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T23-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>글은 대상 방에만 저장하고 유지합니다.</p></div></li><li class="criterion reject" data-origin="T23-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>빈 글·제한 초과 글과 접근 거부 상태는 실패합니다.</p></div></li><li class="criterion reject" data-origin="T23-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>첫 참여·재참여는 이전 기록을 숨깁니다.</p></div></li><li class="criterion done" data-origin="T23-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>다시 불러와도 현재 기록을 유지합니다.</p></div></li><li class="criterion done" data-origin="T23-C5"><span class="criterion-index" aria-hidden="true">5</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>허용된 기록이 없으면 첫 인사 안내를 표시합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a><a href="../../test/chat_test.dart">test/chat_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T23 — Read and send text messages
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** current, allowed membership in T17 or T22; T19 access rules.
+- **Flow:** open the relevant room → read allowed history → enter text → send by button or keyboard.
+- **Rules:** without an image, trimmed text is 1–1,000 characters; whitespace-only text fails. Sender/name/time use the active account. History must pass both the current membership time and stored message-position boundary. Sending is disabled while saving or picking a photo; empty input is otherwise validated on submission.
+- **Result:** successful text appears in that room with sender/time; own messages align right, others left; input clears and scroll advances. Failed send retains input and creates no message.
+
+## Acceptance criteria
+
+- [ ] Text persists only in the target room.
+- [ ] Blank/over-limit text and denied access fail.
+- [ ] Initial join/rejoin hide older history.
+- [ ] Reload preserves current history.
+- [ ] Empty allowed history shows the greeting state.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+- [test/chat_test.dart](../../test/chat_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T24" aria-labelledby="T24-title" data-source="t24-attach-and-send-a-chat-photo.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T24</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T24-title">채팅 사진 첨부·전송</h2><p class="subtext">4개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t24-attach-and-send-a-chat-photo.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · <a href="#T23" data-page="T23">T23</a> 접근 권한. 최종 범위는 D1의 영향을 받습니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>+ 누르기</li><li>이미지 한 장 선택</li><li>미리보기</li><li>필요하면 제거·교체·글 추가</li><li>전송.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>첨부</strong>: 대기 사진 최대 한 장</li><li><strong>저장 형식</strong>: JPEG·PNG·GIF·WebP base64 이미지</li><li><strong>해석한 바이트</strong>: 빈 데이터 불가 · 최대 3MB</li><li><strong>전송</strong>: 사진만 가능 · 글이 있으면 1,000자 이내</li><li><strong>사진 선택 취소</strong>: 전송 없음 / 전송 전: 접근 권한 재확인</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>사진을 방에 표시</li><li><strong>성공</strong>: 글·첨부 비우기 / 실패: 글·첨부 유지</li><li><strong>미리보기 제거</strong>: 메시지 생성 없음</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T24-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>사진만 전송·글과 사진 전송을 저장하고 유지합니다.</p></div></li><li class="criterion done" data-origin="T24-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>제거·취소는 기록을 바꾸지 않습니다.</p></div></li><li class="criterion reject" data-origin="T24-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>용량 초과·빈 데이터·지원하지 않는 사진과 취소된 접근 권한은 메시지 없이 거부합니다.</p></div></li><li class="criterion reject" data-origin="T24-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>참여 경계는 사진에도 똑같이 적용합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/chat_test.dart">test/chat_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T24 — Attach and send a chat photo
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** T23 access; D1 affects final scope.
+- **Flow:** press “+” → select one image → preview → optionally remove/replace or add text → send.
+- **Rules:** at most one pending attachment; supported store formats are JPEG/PNG/GIF/WebP base64 image data; decoded bytes must be nonempty and at most 3MB. Photo-only messages are allowed; text, when present, stays within 1,000 characters. Picker cancellation does not send; access is checked again before sending.
+- **Result:** image appears in the room; successful send clears text/attachment; failure preserves them. Removing a preview does not create a message.
+
+## Acceptance criteria
+
+- [ ] Photo-only and text-plus-photo persist.
+- [ ] Removal/cancel leaves history unchanged.
+- [ ] Oversized/empty/unsupported media and revoked access reject without messages.
+- [ ] Membership boundaries apply equally to photos.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/chat_test.dart](../../test/chat_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T25" aria-labelledby="T25-title" data-source="t25-view-room-members-and-shared-photos.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T25</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T25-title">채팅방 멤버·공유 사진 보기</h2><p class="subtext">4개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t25-view-room-members-and-shared-photos.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 허용된 <a href="#T23" data-page="T23">T23</a> 접근 권한. 사진에는 <a href="#T24" data-page="T24">T24</a> 데이터.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>방 메뉴</li><li>멤버 또는 사진</li><li>사진 모음·대화 말풍선의 이미지 선택</li><li>확대·보기</li><li>돌아가기.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>멤버</strong>: 현재 보호자·참여 반려동물 표시 + 현재 사용자 표시</li><li><strong>사진 모음</strong>: 해당 방에서 허용된 메시지 기록만</li><li><strong>멤버·사진 모음·사진 보기</strong>: 접근 재확인</li><li><strong>접근 권한 없음·경계 밖 사진</strong>: 차단 상태 / 사진 없음: 빈 상태</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>멤버 또는 허용된 사진 표시</li><li><strong>확대 사진</strong>: 발신자·시간 표시</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T25-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>목록이 현재 참여 정보와 일치합니다.</p></div></li><li class="criterion reject" data-origin="T25-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>다른 방·이전 참여 시점의 사진은 절대 나타나지 않습니다.</p></div></li><li class="criterion reject" data-origin="T25-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>사진을 열어 둔 상태에서도 나가기·취소·약속 종료 정각에 접근을 제거합니다.</p></div></li><li class="criterion done" data-origin="T25-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>채팅으로 돌아가도 참여를 유지합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/chat_test.dart">test/chat_test.dart</a><a href="../../test/community_test.dart">test/community_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T25 — View room members and shared photos
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** allowed T23 access; T24 data for photos.
+- **Flow:** room menu → members or photos → select a gallery/bubble image → zoom/view → return.
+- **Rules:** show current guardians and their participating pets; label the current user. Gallery uses exactly the room&#x27;s permitted message history. Every member/gallery/photo view rechecks access; no access or an out-of-boundary image shows a blocked state. Empty gallery shows an empty state.
+- **Result:** members or permitted photos display; enlarged photo shows sender/time.
+
+## Acceptance criteria
+
+- [ ] List matches current membership.
+- [ ] Other rooms&#x27; or earlier-membership images never appear.
+- [ ] Leave, cancellation, and exact meetup closure remove access even while an image is open.
+- [ ] Returning to chat preserves membership.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/chat_test.dart](../../test/chat_test.dart)
+- [test/community_test.dart](../../test/community_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T07" aria-labelledby="T07-title" data-source="t07-delete-a-pet-profile.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T07</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T07-title">반려동물 프로필 삭제</h2><p class="subtext">3개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t07-delete-a-pet-profile.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 내 반려동물. 삭제 동작을 바꾸기 전에 D3를 확인합니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>프로필 수정 열기</li><li>삭제</li><li>확인 또는 취소.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>삭제 대상</strong>: 프로필만</li><li><strong>보존 대상</strong>: 사진·하루 글·참여 정보 참조</li><li><strong>삭제 권한</strong>: 소유자만</li><li><strong>확인창</strong>: 복구 불가 안내</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li>프로필 삭제 · 연관 기록은 내부 보관</li><li><strong>다른 내 반려동물 있음</strong>: 그중 하나로 선택 변경</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T07-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>취소하면 프로필을 유지합니다.</p></div></li><li class="criterion done" data-origin="T07-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>확인하면 내 프로필만 삭제되며 다시 불러온 뒤에도 삭제 상태를 유지합니다.</p></div></li><li class="criterion reject" data-origin="T07-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>다른 계정의 삭제는 실패합니다. 연관 기록 보관은 현재 동작이며 확정된 정리 정책은 아닙니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T07 — Delete a pet profile
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** an owned pet; see D3 before changing deletion behavior.
+- **Flow:** open profile editing → delete → confirm or cancel.
+- **Rules:** current deletion removes only the profile; it does not cascade to that pet&#x27;s photos, journals, or membership references. Other accounts cannot delete it; the confirmation warns that deletion cannot be undone.
+- **Result:** the profile disappears; existing associated records are retained internally. Selection falls back to another owned pet, if one exists.
+
+## Acceptance criteria
+
+- [ ] Cancel preserves the profile.
+- [ ] Confirm removes only the owned profile after reload.
+- [ ] Another account&#x27;s delete fails. Retention is documented as current behavior, not a settled cleanup policy.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><article class="page" id="T06" aria-labelledby="T06-title" data-source="t06-create-or-edit-a-pet-profile.md"><div class="page-head"><div><div class="page-meta"><span class="pill">T06</span><span class="status ">현재 구현 기준 · 검증 미실행</span></div><h2 id="T06-title">반려동물 프로필 등록·수정</h2><p class="subtext">4개 확인 기준 · 해당 기능의 선행 조건과 공통 기준을 함께 적용</p></div><a class="btn" href="../prd/t06-create-or-edit-a-pet-profile.md">영문 PRD ↗</a></div><div class="requires"><strong>필요한 것</strong> · 로그인된 세션. 수정에는 내 반려동물이 필요합니다.</div><section class="card"><h3 class="card-title"><span class="number">01</span>사용 과정</h3><ol class="flow"><li>프로필 등록·수정 열기</li><li>이름과 선택 항목인 품종·사진 입력</li><li>필요하면 생일 선택</li><li>저장.</li></ol></section><section class="card"><h3 class="card-title"><span class="number">02</span>지켜야 할 규칙</h3><ul class="rule-list"><li><strong>이름</strong>: 필수 · 앞뒤 공백 제거 · 화면 최대 60자</li><li><strong>품종</strong>: 선택 · 화면 최대 80자</li><li><strong>사진</strong>: 선택 · 선택 단계에서 3MB 이하</li><li><strong>생일</strong>: 기본값 오늘 · 화면에서 1990년~기기 현지 오늘 선택</li><li><strong>수정 권한</strong>: 소유자만</li></ul></section><section class="card result"><h3 class="card-title"><span class="number">03</span>실행 결과</h3><ul class="rule-list"><li><strong>내 프로필</strong>: 프로필 목록·홈 좌우 넘김 영역에 표시</li><li><strong>수정 후</strong>: ID·순서·Day 0 유지</li></ul></section><section class="card"><h3 class="card-title"><span class="number">04</span>완료 여부를 판단할 기준</h3><p class="check-note">아래는 확인할 조건입니다. 실제 통과·실패 결과는 기록하지 않았습니다.</p><ol class="criteria"><li class="criterion done" data-origin="T06-C1"><span class="criterion-index" aria-hidden="true">1</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>등록·수정한 값을 다시 불러온 뒤에도 표시합니다.</p></div></li><li class="criterion reject" data-origin="T06-C2"><span class="criterion-index" aria-hidden="true">2</span><div><div class="criterion-label">실패 방지 · 거부 조건</div><p>빈 이름과 다른 계정의 수정은 실패합니다.</p></div></li><li class="criterion done" data-origin="T06-C3"><span class="criterion-index" aria-hidden="true">3</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>취소하면 아무것도 바뀌지 않습니다.</p></div></li><li class="criterion done" data-origin="T06-C4"><span class="criterion-index" aria-hidden="true">4</span><div><div class="criterion-label">완료 기준 · 정상 동작</div><p>수정해도 기존 추억 연결과 Day 0를 유지합니다.</p></div></li></ol><p class="no-extra">이 기능의 원문 완료 목록에는 별도 오류 처리 기준 항목이 없습니다. 원문 과정·규칙·결과와 공통 저장 오류 기준도 함께 확인합니다.</p></section><div class="evidence"><strong>원문에 연결된 근거</strong> · <a href="../../lib/main.dart">lib/main.dart</a><a href="../../lib/store.dart">lib/store.dart</a><a href="../../test/store_test.dart">test/store_test.dart</a></div><details class="source"><summary>영문 원문 전체 펼쳐서 대조</summary><pre># T06 — Create or edit a pet profile
+
+Current implementation baseline; acceptance criteria have not been executed in this documentation review.
+
+Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
+
+## Process, rules, and result
+
+- **Requires:** active session; an owned pet for editing.
+- **Flow:** open profile registration/editing → enter name and optional breed/photo → select birthday if needed → save.
+- **Rules:** trimmed name is required (UI limit: 60); breed is optional (UI limit: 80); photo is optional and limited to 3MB by the picker; birthday defaults to today and the UI picker permits 1990 through device-local today. Other accounts cannot edit the pet.
+- **Result:** an owned profile appears in the profile list and home carousel; edits retain its ID, order, and Day 0 settings.
+
+## Acceptance criteria
+
+- [ ] Creation/editing displays saved values after reload.
+- [ ] Blank names and cross-account edits fail.
+- [ ] Cancel changes nothing.
+- [ ] Existing memory associations and Day 0 survive editing.
+
+## Evidence
+
+- [lib/main.dart](../../lib/main.dart)
+- [lib/store.dart](../../lib/store.dart)
+- [test/store_test.dart](../../test/store_test.dart)
+</pre></details><p class="check-note"><a href="#overview" data-page="overview">공통 기준·결정할 내용 확인</a></p></article><footer class="page-footer">영문 PRD를 기준으로 번역한 정적 문서입니다. 확인 기준의 색상은 실제 테스트 결과를 뜻하지 않습니다.</footer></main>
+</div>
+<script>
+(()=>{'use strict';document.documentElement.classList.add('js');const pages=[...document.querySelectorAll('.page')];const links=[...document.querySelectorAll('[data-page]')];const search=document.querySelector('#feature-search');function activate(id,focus){const selected=pages.find(p=>p.id===id)||pages[0];for(const page of pages)page.hidden=page!==selected;for(const link of links){if(link.dataset.page===selected.id)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current')}if(focus){document.querySelector('#content').focus({preventScroll:true});selected.scrollIntoView({block:'start'})}}for(const link of links)link.addEventListener('click',()=>{activate(link.dataset.page,true)});window.addEventListener('hashchange',()=>activate(location.hash.slice(1),false));search.addEventListener('input',()=>{const q=search.value.trim().toLocaleLowerCase();let visible=0;for(const link of document.querySelectorAll('.nav-items .nav-link')){link.hidden=!link.textContent.toLocaleLowerCase().includes(q);if(!link.hidden)visible++}for(const group of document.querySelectorAll('.nav-section'))group.hidden=![...group.querySelectorAll('.nav-link')].some(l=>!l.hidden);document.querySelector('#empty-search').hidden=visible!==0});let printOpened=[];window.addEventListener('beforeprint',()=>{printOpened=[...document.querySelectorAll('.decisions details:not([open])')];for(const detail of printOpened)detail.open=true});window.addEventListener('afterprint',()=>{for(const detail of printOpened)detail.open=false;printOpened=[]});document.querySelector('#print-prd').addEventListener('click',()=>window.print());activate(location.hash.slice(1),false)})();
+</script>
+</body>
+</html>
