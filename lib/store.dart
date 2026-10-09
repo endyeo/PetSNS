@@ -47,8 +47,16 @@ class PetStore extends ChangeNotifier {
   bool busy = false;
   static const key = 'petsns.v1';
   List<RecordData> rows(String key) => (data[key] as List).cast<RecordData>();
-  String? get user => data['session'] as String?;
-  RecordData get account => rows('accounts').firstWhere((r) => r['id'] == user);
+  String? get user => account?['id'] as String?;
+  RecordData? get account {
+    final session = data['session'];
+    if (session is! String) return null;
+    for (final row in (data['accounts'] as List? ?? const [])) {
+      if (row['id'] == session) return row as RecordData;
+    }
+    return null;
+  }
+
   String id() =>
       '${clock().microsecondsSinceEpoch}-${Random.secure().nextInt(0x7fffffff)}';
   Future<void> load() async {
@@ -556,7 +564,7 @@ class PetStore extends ChangeNotifier {
         rows('posts').insert(0, {
           'id': id(),
           'owner': user,
-          'name': account['name'],
+          'name': account!['name'],
           'title': title.trim(),
           'body': body.trim(),
           'category': category,
@@ -722,7 +730,7 @@ class PetStore extends ChangeNotifier {
       'id': id(),
       'meeting': mid,
       'owner': user,
-      'name': account['name'],
+      'name': account!['name'],
       'body': body.trim(),
       'photo': ?photo,
       'at': clock().toUtc().toIso8601String(),
@@ -761,7 +769,11 @@ class PetStore extends ChangeNotifier {
       'at': at.toUtc().toIso8601String(),
       'deadline': deadline.toUtc().toIso8601String(),
       'capacity': capacity,
-      'photo': dogPhoto,
+      'photo': switch (category) {
+        '강아지' => dogPhoto,
+        '고양이' => catPhoto,
+        _ => null,
+      },
       'canceled': false,
       'members': {
         user!: {

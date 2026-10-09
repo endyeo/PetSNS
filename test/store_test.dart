@@ -15,6 +15,47 @@ void main() {
     await s.testLogin();
   });
   test(
+    'account is null before load, after logout and for missing sessions',
+    () async {
+      final fresh = PetStore(s.prefs);
+      expect(fresh.account, isNull);
+      expect(fresh.user, isNull);
+      await s.logout();
+      expect(s.account, isNull);
+      expect(s.user, isNull);
+      s.data['session'] = 'missing-account';
+      expect(s.account, isNull);
+      expect(s.user, isNull);
+      final previousPosts = jsonEncode(s.rows('posts'));
+      await expectLater(s.createPost('제목', '내용', '강아지'), throwsException);
+      expect(jsonEncode(s.rows('posts')), previousPosts);
+    },
+  );
+  test(
+    'created meetup photos match every category and survive reload',
+    () async {
+      for (final category in petCategories) {
+        await s.createMeeting(
+          category,
+          const MeetingLocation('공원', 37.54, 127.04),
+          '',
+          now.add(const Duration(days: 2)),
+          6,
+          category: category,
+        );
+      }
+      final restored = PetStore(s.prefs, clock: () => now);
+      await restored.load();
+      final created = restored.rows('meetings').skip(2).toList();
+      expect(created.map((meeting) => meeting['category']), petCategories);
+      expect(created.map((meeting) => meeting['photo']), [
+        dogPhoto,
+        catPhoto,
+        null,
+      ]);
+    },
+  );
+  test(
     'test session, pet and memory persist through reload and logout',
     () async {
       await s.logout();
@@ -505,9 +546,9 @@ void main() {
       s.rows('pets').removeWhere((pet) => pet['id'] != original);
       s.rows('memories').removeWhere((photo) => photo['petId'] != original);
       s.rows('memoryDays').removeWhere((day) => day['petId'] != original);
-      s.account.remove('multiPetDemoV1');
-      s.account['memoryOriginType'] = 'firstMeeting';
-      s.account['memoryOriginDate'] = '2026-09-01';
+      s.account!.remove('multiPetDemoV1');
+      s.account!['memoryOriginType'] = 'firstMeeting';
+      s.account!['memoryOriginDate'] = '2026-09-01';
       final oldPhoto = s.rows('memories').first;
       oldPhoto.remove('petId');
       s.rows('memoryDays').first.remove('petId');
