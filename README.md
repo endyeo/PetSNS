@@ -11,7 +11,34 @@ flutter pub get
 flutter run -d chrome --web-port 8080
 ```
 
-Use the same host and port 8080 to keep browser records accessible. Do not start another server on an occupied port. For a connected Android device, use `flutter run -d <device-id>`.
+Use the same host and port 8080 to keep browser records accessible. Do not start another server on an occupied port. For a connected Android phone, allow USB debugging when prompted, then run `flutter run -d SM-S908N`.
+
+### Supabase connection setup
+
+Copy `config/supabase.example.json` to `config/supabase.local.json` (Git-ignored),
+then enter your Project URL and `sb_publishable_...` key. Inject them at build time:
+
+```powershell
+flutter run -d chrome --web-port 8080 --dart-define-from-file=config/supabase.local.json
+flutter build web --release --dart-define-from-file=config/supabase.local.json
+flutter build apk --debug --dart-define-from-file=config/supabase.local.json
+flutter test test/supabase_live_test.dart --dart-define-from-file=config/supabase.local.json
+```
+
+Individual `--dart-define=SUPABASE_URL=...` and
+`--dart-define=SUPABASE_PUBLISHABLE_KEY=...` flags also work. These settings are
+embedded in the client build; use only a Publishable Key, never a Secret Key,
+service_role key, or DB password. Do not add settings as Flutter assets.
+
+Startup initializes the SDK, then makes a read-only `GET /auth/v1/settings` with
+the `apikey` header and a 10-second connection timeout. Only HTTP 200 with an Auth
+settings response counts as connected. The `[PetSNS Supabase]` console diagnostic
+reports missing/invalid settings, initialization failures, HTTP failures, and
+network failures without printing keys or response bodies. `supabaseConnection`
+in `lib/main.dart` exposes separate `initialized` and `connected` flags.
+Failures keep the existing local app available. This verifies project gateway
+and Auth accessibility, not database permissions, synchronization, or user login.
+Supabase session persistence and URL session detection are disabled for this stage.
 
 ## Current Scope
 
@@ -36,7 +63,7 @@ Run `flutter analyze` and relevant `flutter test` checks for code changes. Build
 
 ## Visual References
 
-- [Service plan](docs/human/service-plan.html) and [screen guide](docs/human/ui-guide.html).
+- [Service plan](docs/human/service-plan.html), [screen guide](docs/human/ui-guide.html), and [feature PRD viewer](docs/human/feature-prd.html).
 - [Existing screenshots](docs/human/screenshots/mobile-preview.jpg); other captures are in the same directory.
 
 Screen-guide notes live in browser storage. If a location/origin change hides notes, export JSON from the previous guide and import it into the new one.
