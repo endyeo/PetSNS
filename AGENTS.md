@@ -3,6 +3,7 @@
 ## Start Here
 
 - For code or document edits, read the [coding principles](.agents/rules/coding.md).
+- Before committing, read the [commit conventions](.agents/rules/commits.md).
 - Use [README.md](README.md) for startup, current scope, and important existing rules when needed.
 - For feature behavior or acceptance criteria, read the relevant task linked from [PRD.md](PRD.md); resolve its open decisions before changing affected behavior.
 - Inspect the requested code and relevant tests. Read related code when the change affects it; do not load every file.
@@ -10,7 +11,7 @@
 
 ## Code Entry Points
 
-- [lib/main.dart](lib/main.dart): app setup, login, `Home` and its feature screens, `ChatScreen`, `ChatRoomDetails`, and `MemoryView`.
+- [lib/main.dart](lib/main.dart): app startup. Tab screens, login, chat, and viewers are in `lib/screens/`; popup forms are in `lib/forms/`; shared widgets are in `lib/widgets/`. Design tokens and the theme are in `lib/design_system.dart`.
 - [lib/store.dart](lib/store.dart): `PetStore`, persistence, migration, permissions, participation, and time policies. Preserve existing records when changing storage.
 - Other `lib` files contain calendars, the profile carousel, and meetup maps/locations. Existing model and screen tests are in `test/`.
 

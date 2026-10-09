@@ -28,7 +28,9 @@ This is a one-device, one-active-instance demo. No server, real email verificati
 
 ## Find Code and Check Changes
 
-Screens are mainly in `lib/main.dart`; storage and rules are in `lib/store.dart`. Other `lib` files support calendars, profiles, and maps. Tests are in `test/`.
+`lib/main.dart` starts the app. Five tab screens, login, chat, and viewers are in `lib/screens/`; popup forms are in `lib/forms/`; shared widgets are in `lib/widgets/`. Storage and business rules remain in `lib/store.dart`. Colors, text styles (minimum 13px), and the theme are in `lib/design_system.dart`. The bundled [Pretendard v1.3.9](https://github.com/orioncactus/pretendard/tree/v1.3.9) font and its OFL license are in `assets/fonts/`.
+
+Keep the checkout outside OneDrive, such as `C:\Projects\PetSNS`; `build/` and `.dart_tool/` are ignored by Git. Flutter is available through `C:\flutter\bin` in the Windows user PATH. Read the [commit conventions](.agents/rules/commits.md) before committing.
 
 Run `flutter analyze` and relevant `flutter test` checks for code changes. Build with `flutter build web --release` or `flutter build apk --debug` when platform changes require it. No new app-test or build result is claimed by this document cleanup.
 

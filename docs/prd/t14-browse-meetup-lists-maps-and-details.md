@@ -7,7 +7,7 @@ Use this task with the [shared boundaries and open decisions](../../PRD.md). Tas
 ## Process, rules, and result
 
 - **Requires:** active session and stored meetups; D1 affects final scope.
-- **Flow:** open meetups → choose dog/cat/other category → switch list/map → select a card or marker.
+- **Flow:** open meetups with “전체” selected → optionally choose dog/cat/other category → switch list/map → select a card or marker.
 - **Rules:** category filters both views, not participant eligibility. Creation is offered only in list mode. Valid coordinates become map markers; missing locations remain in the list and are counted in a notice. Cards show title, place/distance, KST time, status, guardian count, and participating pet previews. Missing distance displays “unknown”; GPS distance calculation is not implemented.
 - **Result:** list and marker open the same meetup detail, including note, times, capacity, and participating pets; empty categories show an empty state.
 

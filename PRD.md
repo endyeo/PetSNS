@@ -121,7 +121,7 @@ Real authentication/email verification, password recovery, account deletion, use
 
 ## Evidence for maintenance
 
-- [Screens and flows](lib/main.dart): `PetApp`, `Login`, `Home`, profile/memory/meetup/post/group forms, `ChatScreen`, `ChatRoomDetails`, `MemoryView`.
+- [App startup](lib/main.dart): `PetApp`. Screens and viewers are in `lib/screens/`; popup forms are in `lib/forms/`.
 - [Storage and business rules](lib/store.dart): `load`, migrations, `login`, `testLogin`, `logout`, `saveOwned`, `deleteOwned`, memory methods, `createMeeting`, `join`, `leave`, `status`, `canChat`, `messages`, `send`, `joinGroup`, `createPost`.
 - [Home calendar](lib/home_week_calendar.dart), [memory calendar](lib/memory_calendar.dart), [pet carousel](lib/pet_profile_carousel.dart), [map/place picker](lib/meeting_map.dart), [location validation](lib/meeting_location.dart).
 - Existing tests: [store](test/store_test.dart), [screens](test/widget_test.dart), [community](test/community_test.dart), [chat](test/chat_test.dart). These support particular rules; their existence does not certify every acceptance criterion above.

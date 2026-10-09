@@ -14,7 +14,7 @@ Use this task with the [shared boundaries and open decisions](../../PRD.md). Tas
 ## Acceptance criteria
 
 - [ ] Just-before/exact registration and chat cutoffs, KST midnight/month/year boundaries, and canceled state behave correctly.
-- [ ] Open views lose access on refresh (currently checked every second).
+- [ ] Open views lose access at the scheduled policy boundary or when the app resumes; idle screens do not poll every second.
 - [ ] Group chat remains available.
 
 ## Evidence
