@@ -13,7 +13,7 @@
 
 - [lib/main.dart](lib/main.dart): app startup. Tab screens, login, chat, and viewers are in `lib/screens/`; popup forms are in `lib/forms/`; shared widgets are in `lib/widgets/`. Design tokens and the theme are in `lib/design_system.dart`.
 - [lib/store.dart](lib/store.dart): `PetStore`, persistence, migration, permissions, participation, and time policies. Preserve existing records when changing storage.
-- [lib/supabase_connection.dart](lib/supabase_connection.dart): Supabase initialization and connection checks. Other `lib` files contain calendars, the profile carousel, and meetup maps/locations. Existing model and screen tests are in `test/`.
+- Other `lib` files contain calendars, the profile carousel, and meetup maps/locations. Existing model and screen tests are in `test/`.
 
 ## name Attention-kind
 ## description ADHD-friendly. Plain English, front-loaded answers, short by default, expands only on what's vital.
