@@ -5,6 +5,7 @@ import 'store.dart';
 import 'design_system.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'supabase_connection.dart';
 export 'design_system.dart' show coral, ink, cream, muted;
 export 'screens/home_screen.dart';
 export 'screens/login_screen.dart';
@@ -12,8 +13,12 @@ export 'screens/chat_screen.dart';
 export 'screens/memory_view.dart';
 export 'widgets/common.dart';
 
-void main() {
+SupabaseConnectionResult? supabaseConnection;
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  supabaseConnection = await initializeSupabase();
+  debugPrint('[PetSNS Supabase] ${supabaseConnection!.message}');
   runApp(const PetApp());
 }
 
