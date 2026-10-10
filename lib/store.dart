@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
 import 'meeting_location.dart';
+import 'supabase_auth_service.dart';
+import 'supabase_pet_repository.dart';
+import 'supabase_memory_repository.dart';
+import 'supabase_photo_repository.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,16 +43,71 @@ const catPhoto =
 const petCategories = ['강아지', '고양이', '기타'];
 
 class PetStore extends ChangeNotifier {
-  PetStore(this.prefs, {DateTime Function()? clock})
-    : clock = clock ?? DateTime.now;
+  PetStore(
+    this.prefs, {
+    DateTime Function()? clock,
+    this.auth,
+    this.petRepository,
+    this.memoryRepository,
+    this.photoRepository,
+  }) : assert(
+         memoryRepository == null || (petRepository != null && auth != null),
+       ),
+       assert(
+         photoRepository == null || (petRepository != null && auth != null),
+       ),
+       clock = clock ?? DateTime.now {
+    auth?.addListener(_authChanged);
+  }
   final SharedPreferences prefs;
+  final SupabaseAuthService? auth;
+  final SupabasePetRepository? petRepository;
+  final SupabaseMemoryRepository? memoryRepository;
+  final SupabasePhotoRepository? photoRepository;
+  List<RecordData> _serverPets = [];
+  List<RecordData> _serverDays = [];
+  List<RecordData> _serverPhotos = [];
+  bool photoCleanupPending = false;
+  String? _petOwner;
+  String? _profileName;
+  bool _disposed = false;
+  bool _loaded = false;
+  void _authChanged() {
+    if (auth?.account?['id'] != _petOwner) {
+      _serverPets = [];
+      _serverDays = [];
+      _serverPhotos = [];
+      photoCleanupPending = false;
+      _petOwner = null;
+      _profileName = null;
+    }
+    notifyListeners();
+  }
+
+  bool get usesSupabase => auth != null;
   final DateTime Function() clock;
   RecordData data = {};
   bool busy = false;
   static const key = 'petsns.v1';
-  List<RecordData> rows(String key) => (data[key] as List).cast<RecordData>();
+  List<RecordData> rows(String key) {
+    if (_loaded) {
+      if (key == 'pets' && petRepository != null) return _serverPets;
+      if (key == 'memoryDays' && memoryRepository != null) return _serverDays;
+      if (key == 'memories' && photoRepository != null) return _serverPhotos;
+    }
+    return (data[key] as List).cast<RecordData>();
+  }
+
   String? get user => account?['id'] as String?;
   RecordData? get account {
+    if (auth != null) {
+      final account = auth!.account;
+      if (petRepository != null && account?['id'] != _petOwner) return null;
+      if (petRepository != null && account != null) {
+        return {...account, 'name': _profileName};
+      }
+      return account;
+    }
     final session = data['session'];
     if (session is! String) return null;
     for (final row in (data['accounts'] as List? ?? const [])) {
@@ -204,8 +263,97 @@ class PetStore extends ChangeNotifier {
     if (migrated != beforeMigration && !await prefs.setString(key, migrated)) {
       throw Exception('기존 추억을 저장하지 못했습니다. 저장 공간을 확인해 주세요.');
     }
+    _loaded = true;
+    if (petRepository != null && auth?.account != null) await _loadServerPets();
     notifyListeners();
   }
+
+  Future<void> _loadServerPets() async {
+    if (_disposed) throw Exception('화면이 닫혔습니다. 다시 실행해 주세요.');
+    final account = auth!.account!;
+    final owner = account['id'] as String;
+    _petOwner = null;
+    _serverPets = [];
+    _serverDays = [];
+    _serverPhotos = [];
+    notifyListeners();
+    final name = await petRepository!.ensureProfile(
+      owner,
+      account['name'] as String,
+    );
+    final pets = await petRepository!.list(owner);
+    final days = await memoryRepository?.list(owner) ?? <RecordData>[];
+    final clean = await photoRepository?.cleanup(owner) ?? true;
+    final photos = await photoRepository?.list(owner) ?? <RecordData>[];
+    if (_disposed || auth!.account?['id'] != owner) {
+      throw Exception('로그인 상태가 변경되었습니다. 다시 로그인해 주세요.');
+    }
+    _serverPets = pets;
+    _serverDays = days;
+    _serverPhotos = photos;
+    photoCleanupPending = !clean;
+    _petOwner = owner;
+    _profileName = name;
+    notifyListeners();
+  }
+
+  Future<void> _changeServerPet(
+    Future<void> Function(String owner) action,
+  ) async {
+    requireUser();
+    if (busy) throw Exception('저장 중입니다. 잠시 후 다시 시도해 주세요.');
+    final owner = user!;
+    busy = true;
+    try {
+      await action(owner);
+    } finally {
+      busy = false;
+      if (!_disposed) notifyListeners();
+    }
+  }
+
+  void _checkPetSession(String owner) {
+    if (_disposed || user != owner) {
+      throw Exception('로그인 상태가 변경되었습니다. 다시 로그인해 주세요.');
+    }
+  }
+
+  Future<void> _saveServerPet(RecordData row) => _changeServerPet((
+    owner,
+  ) async {
+    final matches = _serverPets.where((pet) => pet['id'] == row['id']);
+    if (row['id'] != null && matches.isEmpty) throw Exception('수정 권한이 없습니다.');
+    final saved = {...?matches.firstOrNull, ...row};
+    saved['name'] = (saved['name'] as String? ?? '').trim();
+    if ((saved['name'] as String).isEmpty ||
+        (saved['name'] as String).length > 60 ||
+        (saved['breed'] as String? ?? '').length > 80) {
+      throw Exception('이름(1~60자)과 품종(80자 이하)을 확인해 주세요.');
+    }
+    final birthday = saved['birthday'];
+    if (birthday != null) validateMemoryDate(DateTime.parse(birthday));
+    final photo = saved['photo'] as String?;
+    if (photo != null &&
+        photo.isNotEmpty &&
+        !['https', 'http'].contains(Uri.tryParse(photo)?.scheme)) {
+      throw Exception('프로필 사진 업로드는 준비 중입니다.');
+    }
+    if (photo == '') saved['photo'] = null;
+    final changes = {...row};
+    if (row.containsKey('name')) changes['name'] = saved['name'];
+    if (row.containsKey('photo')) changes['photo'] = saved['photo'];
+    final result = await petRepository!.save(owner, changes);
+    _checkPetSession(owner);
+    final index = _serverPets.indexWhere((pet) => pet['id'] == result['id']);
+    if (index < 0) {
+      _serverPets.add(result);
+      _serverPets.sort(
+        (a, b) => (a['id'] as String).compareTo(b['id'] as String),
+      );
+    } else {
+      _serverPets[index] = result;
+    }
+  });
 
   void migrateMemoryDays() {
     data.putIfAbsent('memoryDays', () => <RecordData>[]);
@@ -326,21 +474,44 @@ class PetStore extends ChangeNotifier {
     }
   }
 
-  Future<void> setMemoryOrigin(String type, DateTime date, {String? petId}) =>
-      change(() {
-        final profile = memoryProfile(petId: petId);
-        final firstPhoto = firstPhotoDateFor(profile['id']);
-        if (!['firstMeeting', 'firstPhoto'].contains(type)) {
-          throw Exception('시작 기준을 선택해 주세요.');
-        }
-        if (type == 'firstPhoto') date = firstPhoto ?? date;
-        validateMemoryDate(date);
-        if (firstPhoto != null && date.isAfter(firstPhoto)) {
-          throw Exception('시작일은 가장 오래된 사진 날짜보다 늦을 수 없어요.');
-        }
-        profile['memoryOriginType'] = type;
-        profile['memoryOriginDate'] = dayKey(date);
+  Future<void> setMemoryOrigin(
+    String type,
+    DateTime date, {
+    String? petId,
+  }) async {
+    if (petRepository != null) {
+      final profile = memoryProfile(petId: petId);
+      if (!['firstMeeting', 'firstPhoto'].contains(type)) {
+        throw Exception('시작 기준을 선택해 주세요.');
+      }
+      final firstPhoto = firstPhotoDateFor(profile['id']);
+      if (type == 'firstPhoto') date = firstPhoto ?? date;
+      validateMemoryDate(date);
+      if (firstPhoto != null && date.isAfter(firstPhoto)) {
+        throw Exception('시작일은 가장 오래된 사진 날짜보다 늦을 수 없어요.');
+      }
+      await _saveServerPet({
+        'id': profile['id'],
+        'memoryOriginType': type,
+        'memoryOriginDate': dayKey(date),
       });
+      return;
+    }
+    await change(() {
+      final profile = memoryProfile(petId: petId);
+      final firstPhoto = firstPhotoDateFor(profile['id']);
+      if (!['firstMeeting', 'firstPhoto'].contains(type)) {
+        throw Exception('시작 기준을 선택해 주세요.');
+      }
+      if (type == 'firstPhoto') date = firstPhoto ?? date;
+      validateMemoryDate(date);
+      if (firstPhoto != null && date.isAfter(firstPhoto)) {
+        throw Exception('시작일은 가장 오래된 사진 날짜보다 늦을 수 없어요.');
+      }
+      profile['memoryOriginType'] = type;
+      profile['memoryOriginDate'] = dayKey(date);
+    });
+  }
 
   Future<void> saveMemoryDay(
     String date,
@@ -348,73 +519,179 @@ class PetStore extends ChangeNotifier {
     String note,
     bool anniversary, {
     String? petId,
-  }) => change(() {
-    final profile = memoryProfile(petId: petId);
-    validateMemoryDate(DateTime.parse(date));
-    rows('memoryDays').removeWhere(
-      (day) =>
-          day['owner'] == user &&
-          day['petId'] == profile['id'] &&
-          day['date'] == date,
-    );
-    rows('memoryDays').add({
-      'owner': user,
-      'petId': profile['id'],
-      'date': date,
-      'title': title.trim(),
-      'note': note.trim(),
-      'anniversary': anniversary,
+  }) async {
+    if (memoryRepository != null) {
+      await _changeServerPet((owner) async {
+        final profile = memoryProfile(petId: petId);
+        final parsed = DateTime.tryParse(date);
+        if (parsed == null || dayKey(parsed) != date) {
+          throw Exception('올바른 날짜를 선택해 주세요.');
+        }
+        validateMemoryDate(parsed);
+        final result = await memoryRepository!.save(
+          profile['id'],
+          date,
+          title.trim(),
+          note.trim(),
+          anniversary,
+        );
+        _checkPetSession(owner);
+        _serverDays.removeWhere(
+          (day) =>
+              day['petId'] == result['petId'] && day['date'] == result['date'],
+        );
+        _serverDays.add(result);
+      });
+      return;
+    }
+    await change(() {
+      final profile = memoryProfile(petId: petId);
+      validateMemoryDate(DateTime.parse(date));
+      rows('memoryDays').removeWhere(
+        (day) =>
+            day['owner'] == user &&
+            day['petId'] == profile['id'] &&
+            day['date'] == date,
+      );
+      rows('memoryDays').add({
+        'owner': user,
+        'petId': profile['id'],
+        'date': date,
+        'title': title.trim(),
+        'note': note.trim(),
+        'anniversary': anniversary,
+      });
     });
-  });
+  }
+
+  Future<void> deleteMemoryDay(String date, {String? petId}) async {
+    if (memoryRepository == null) throw Exception('온라인 하루 기록에만 사용할 수 있습니다.');
+    await _changeServerPet((owner) async {
+      final profile = memoryProfile(petId: petId);
+      await memoryRepository!.delete(owner, profile['id'], date);
+      _checkPetSession(owner);
+      _serverDays.removeWhere(
+        (day) => day['petId'] == profile['id'] && day['date'] == date,
+      );
+    });
+  }
 
   Future<void> saveMemoryPhotos(
     String date,
     List<String> photos, {
     String? existingId,
     String? petId,
-  }) => change(() {
-    requireUser();
-    RecordData? existing;
-    if (existingId != null) {
-      existing = rows(
-        'memories',
-      ).firstWhere((photo) => photo['id'] == existingId);
-      if (existing['owner'] != user) throw Exception('수정 권한이 없습니다.');
-      petId ??= existing['petId'];
+  }) async {
+    if (photoRepository != null) {
+      await _changeServerPet((owner) async {
+        final existing = existingId == null
+            ? null
+            : rows(
+                'memories',
+              ).firstWhere((p) => p['id'] == existingId && p['owner'] == owner);
+        final profile = memoryProfile(petId: petId ?? existing?['petId']);
+        final parsed = DateTime.tryParse(date);
+        if (parsed == null || dayKey(parsed) != date) {
+          throw Exception('올바른 날짜를 선택해 주세요.');
+        }
+        validateMemoryDate(parsed);
+        if (photos.isEmpty || (existing != null && photos.length != 1)) {
+          throw Exception('사진을 선택해 주세요.');
+        }
+        if (profile['memoryOriginType'] == 'firstMeeting' &&
+            parsed.isBefore(DateTime.parse(profile['memoryOriginDate']))) {
+          throw Exception('첫 만남 이전 사진이에요. Day 0 시작일을 먼저 확인해 주세요.');
+        }
+        final uploads = existing != null && photos.single == existing['photo']
+            ? null
+            : photos.map(PhotoUpload.parse).toList();
+        try {
+          if (uploads == null) {
+            await photoRepository!.edit(
+              owner,
+              existingId!,
+              profile['id'],
+              date,
+            );
+          } else {
+            await photoRepository!.save(
+              owner,
+              profile['id'],
+              date,
+              uploads,
+              replace: existingId,
+            );
+          }
+        } catch (_) {
+          if (!_disposed && user == owner) {
+            final clean = await photoRepository!.cleanup(owner);
+            if (!_disposed && user == owner) {
+              photoCleanupPending = !clean;
+            }
+          }
+          rethrow;
+        }
+        await _refreshServerPhotos(owner);
+      });
+      return;
     }
-    final profile = memoryProfile(petId: petId);
-    final origin = memoryOriginFor(profile['id']);
-    validateMemoryDate(DateTime.parse(date));
-    if (profile['memoryOriginType'] == 'firstMeeting' &&
-        origin != null &&
-        DateTime.parse(date).isBefore(origin)) {
-      throw Exception('첫 만남 이전 사진이에요. Day 0 시작일을 먼저 확인해 주세요.');
-    }
-    if (photos.isEmpty || photos.any((photo) => photo.isEmpty)) {
-      throw Exception('사진을 선택해 주세요.');
-    }
-    if (existing != null) {
-      if (photos.length != 1) throw Exception('수정할 사진 한 장을 선택해 주세요.');
-      existing['photo'] = photos.single;
-      existing['date'] = date;
-      existing['petId'] = profile['id'];
-    } else {
-      for (final photo in photos) {
-        rows('memories').add({
-          'id': id(),
-          'owner': user,
-          'petId': profile['id'],
-          'date': date,
-          'photo': photo,
-        });
+    await change(() {
+      requireUser();
+      RecordData? existing;
+      if (existingId != null) {
+        existing = rows(
+          'memories',
+        ).firstWhere((photo) => photo['id'] == existingId);
+        if (existing['owner'] != user) throw Exception('수정 권한이 없습니다.');
+        petId ??= existing['petId'];
       }
-    }
-    if (profile['memoryOriginType'] == 'firstPhoto' &&
-        origin != null &&
-        DateTime.parse(date).isBefore(origin)) {
-      profile['memoryOriginDate'] = date;
-    }
-  });
+      final profile = memoryProfile(petId: petId);
+      final origin = memoryOriginFor(profile['id']);
+      validateMemoryDate(DateTime.parse(date));
+      if (profile['memoryOriginType'] == 'firstMeeting' &&
+          origin != null &&
+          DateTime.parse(date).isBefore(origin)) {
+        throw Exception('첫 만남 이전 사진이에요. Day 0 시작일을 먼저 확인해 주세요.');
+      }
+      if (photos.isEmpty || photos.any((photo) => photo.isEmpty)) {
+        throw Exception('사진을 선택해 주세요.');
+      }
+      if (existing != null) {
+        if (photos.length != 1) throw Exception('수정할 사진 한 장을 선택해 주세요.');
+        existing['photo'] = photos.single;
+        existing['date'] = date;
+        existing['petId'] = profile['id'];
+      } else {
+        for (final photo in photos) {
+          rows('memories').add({
+            'id': id(),
+            'owner': user,
+            'petId': profile['id'],
+            'date': date,
+            'photo': photo,
+          });
+        }
+      }
+      if (profile['memoryOriginType'] == 'firstPhoto' &&
+          origin != null &&
+          DateTime.parse(date).isBefore(origin)) {
+        profile['memoryOriginDate'] = date;
+      }
+    });
+  }
+
+  Future<void> _refreshServerPhotos(String owner) async {
+    _checkPetSession(owner);
+    final photos = await photoRepository!.list(owner);
+    final pets = await petRepository!.list(owner);
+    final clean = await photoRepository!.cleanup(owner);
+    _checkPetSession(owner);
+    _serverPhotos = photos;
+    _serverPets = pets;
+    photoCleanupPending = !clean;
+  }
+
+  Future<void> retryPhotoCleanup() => _changeServerPet(_refreshServerPhotos);
 
   void ensureDemoCompanion() {
     final accounts = rows(
@@ -451,13 +728,49 @@ class PetStore extends ChangeNotifier {
     }
     busy = true;
     final backup = jsonEncode(data);
+    final petBackup = jsonEncode(_serverPets);
+    final dayBackup = jsonEncode(_serverDays);
+    final photoBackup = jsonEncode(_serverPhotos);
+    final owner = _petOwner;
     try {
       action();
+      if (petRepository != null) {
+        if (jsonEncode(_serverPets) != petBackup ||
+            jsonEncode(_serverDays) != dayBackup ||
+            jsonEncode(_serverPhotos) != photoBackup) {
+          throw Exception(
+            memoryRepository == null ? '추억 저장은 준비 중입니다.' : '사진 저장은 준비 중입니다.',
+          );
+        }
+        final previous = jsonDecode(backup) as RecordData;
+        // Local child records cannot enforce server pet deletion across devices.
+        for (final collection in [
+          'pets',
+          'memories',
+          'memoryDays',
+          'meetings',
+          'groups',
+        ]) {
+          if (jsonEncode(data[collection]) !=
+              jsonEncode(previous[collection])) {
+            throw Exception(
+              memoryRepository == null
+                  ? '추억과 모임 저장은 준비 중입니다. 반려동물 프로필만 저장할 수 있습니다.'
+                  : '사진과 모임 저장은 준비 중입니다.',
+            );
+          }
+        }
+      }
       if (!await prefs.setString(key, jsonEncode(data))) {
         throw Exception('저장 공간이 부족합니다.');
       }
     } catch (_) {
       data = jsonDecode(backup) as RecordData;
+      if (_petOwner == owner) {
+        _serverPets = (jsonDecode(petBackup) as List).cast<RecordData>();
+        _serverDays = (jsonDecode(dayBackup) as List).cast<RecordData>();
+        _serverPhotos = (jsonDecode(photoBackup) as List).cast<RecordData>();
+      }
       rethrow;
     } finally {
       busy = false;
@@ -467,67 +780,106 @@ class PetStore extends ChangeNotifier {
 
   String hash(String password, String salt) =>
       sha256.convert(utf8.encode('$salt:$password')).toString();
-  Future<void> login(String email, String password, {String? name}) =>
-      change(() {
-        email = email.trim().toLowerCase();
-        if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email)) {
-          throw Exception('이메일 주소를 확인해 주세요.');
+  Future<void> login(String email, String password, {String? name}) async {
+    if (auth != null) {
+      email = email.trim().toLowerCase();
+      if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email)) {
+        throw Exception('이메일 주소를 확인해 주세요.');
+      }
+      if (password.length < 8) {
+        throw Exception('비밀번호는 8자 이상 입력해 주세요.');
+      }
+      if (name != null) throw Exception('온라인 회원가입은 아직 지원하지 않습니다.');
+      if (petRepository == null) {
+        await auth!.login(email, password);
+      } else {
+        if (busy) throw Exception('처리 중입니다. 잠시 후 다시 시도해 주세요.');
+        busy = true;
+        try {
+          await auth!.login(email, password);
+          await _loadServerPets();
+        } finally {
+          busy = false;
+          if (!_disposed) notifyListeners();
         }
-        if (password.length < 8) {
-          throw Exception('비밀번호는 8자 이상 입력해 주세요.');
-        }
-        final matches = rows('accounts').where((r) => r['email'] == email);
-        if (name != null) {
-          if (name.trim().isEmpty) {
-            throw Exception('이름을 입력해 주세요.');
-          }
-          if (matches.isNotEmpty) {
-            throw Exception('이미 가입한 이메일입니다.');
-          }
-          final salt = id();
-          final uid = id();
-          rows('accounts').add({
-            'id': uid,
-            'email': email,
-            'name': name.trim(),
-            'salt': salt,
-            'hash': hash(password, salt),
-          });
-          data['session'] = uid;
-        } else {
-          if (matches.isEmpty ||
-              matches.first['hash'] != hash(password, matches.first['salt'])) {
-            throw Exception('이메일 또는 비밀번호가 올바르지 않습니다.');
-          }
-          data['session'] = matches.first['id'];
-        }
-      });
-  Future<void> testLogin() => change(() {
-    if (!rows('accounts').any((r) => r['id'] == 'test')) {
-      rows('accounts').add({'id': 'test', 'name': '지우', 'email': '테스트 계정'});
-      rows('pets').add({
-        'id': id(),
-        'owner': 'test',
-        'name': '모카',
-        'breed': '골든 리트리버',
-        'birthday': '2022-04-12',
-        'photo': dogPhoto,
-      });
-      rows('memories').add({
-        'id': id(),
-        'owner': 'test',
-        'title': '너와 함께라서 좋은 하루',
-        'note': '오랜만에 공원에서 실컷 뛰어놀았다. 이런 평범한 날들이 오래 기억되길.',
-        'date': dayKey(korea(clock())),
-        'photo': dogPhoto,
-        'anniversary': false,
-      });
+      }
+      return;
     }
-    data['session'] = 'test';
-    ensureDemoCompanion();
-    migrateMemoryDays();
-  });
-  Future<void> logout() => change(() => data['session'] = null);
+    await change(() {
+      email = email.trim().toLowerCase();
+      if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email)) {
+        throw Exception('이메일 주소를 확인해 주세요.');
+      }
+      if (password.length < 8) {
+        throw Exception('비밀번호는 8자 이상 입력해 주세요.');
+      }
+      final matches = rows('accounts').where((r) => r['email'] == email);
+      if (name != null) {
+        if (name.trim().isEmpty) {
+          throw Exception('이름을 입력해 주세요.');
+        }
+        if (matches.isNotEmpty) {
+          throw Exception('이미 가입한 이메일입니다.');
+        }
+        final salt = id();
+        final uid = id();
+        rows('accounts').add({
+          'id': uid,
+          'email': email,
+          'name': name.trim(),
+          'salt': salt,
+          'hash': hash(password, salt),
+        });
+        data['session'] = uid;
+      } else {
+        if (matches.isEmpty ||
+            matches.first['hash'] != hash(password, matches.first['salt'])) {
+          throw Exception('이메일 또는 비밀번호가 올바르지 않습니다.');
+        }
+        data['session'] = matches.first['id'];
+      }
+    });
+  }
+
+  Future<void> testLogin() {
+    if (auth != null) throw Exception('등록된 계정으로 로그인해 주세요.');
+    return change(() {
+      if (!rows('accounts').any((r) => r['id'] == 'test')) {
+        rows('accounts').add({'id': 'test', 'name': '지우', 'email': '테스트 계정'});
+        rows('pets').add({
+          'id': id(),
+          'owner': 'test',
+          'name': '모카',
+          'breed': '골든 리트리버',
+          'birthday': '2022-04-12',
+          'photo': dogPhoto,
+        });
+        rows('memories').add({
+          'id': id(),
+          'owner': 'test',
+          'title': '너와 함께라서 좋은 하루',
+          'note': '오랜만에 공원에서 실컷 뛰어놀았다. 이런 평범한 날들이 오래 기억되길.',
+          'date': dayKey(korea(clock())),
+          'photo': dogPhoto,
+          'anniversary': false,
+        });
+      }
+      data['session'] = 'test';
+      ensureDemoCompanion();
+      migrateMemoryDays();
+    });
+  }
+
+  Future<void> logout() =>
+      auth != null ? auth!.logout() : change(() => data['session'] = null);
+
+  @override
+  void dispose() {
+    _disposed = true;
+    auth?.removeListener(_authChanged);
+    super.dispose();
+  }
+
   void requireUser() {
     if (user == null) {
       throw Exception('로그인이 필요합니다.');
@@ -784,44 +1136,84 @@ class PetStore extends ChangeNotifier {
       },
     });
   });
-  Future<void> saveOwned(String collection, RecordData row) => change(() {
-    requireUser();
-    if (!['pets', 'memories'].contains(collection)) {
-      throw Exception('잘못된 요청입니다.');
+  Future<void> saveOwned(String collection, RecordData row) async {
+    if (petRepository != null && collection == 'pets') {
+      await _saveServerPet(row);
+      return;
     }
-    final existing = rows(collection).where((r) => r['id'] == row['id']);
-    if (existing.isNotEmpty && existing.first['owner'] != user) {
-      throw Exception('수정 권한이 없습니다.');
+    await change(() {
+      requireUser();
+      if (!['pets', 'memories'].contains(collection)) {
+        throw Exception('잘못된 요청입니다.');
+      }
+      final existing = rows(collection).where((r) => r['id'] == row['id']);
+      if (existing.isNotEmpty && existing.first['owner'] != user) {
+        throw Exception('수정 권한이 없습니다.');
+      }
+      if ((row[collection == 'pets' ? 'name' : 'title'] as String? ?? '')
+          .trim()
+          .isEmpty) {
+        throw Exception('이름 또는 제목을 입력해 주세요.');
+      }
+      final entries = rows(collection);
+      final index = entries.indexWhere((entry) => entry['id'] == row['id']);
+      final saved = <String, dynamic>{
+        if (index >= 0) ...entries[index],
+        ...row,
+        'id': row['id'] ?? id(),
+        'owner': user,
+      };
+      if (index >= 0) {
+        entries[index] = saved;
+      } else {
+        entries.add(saved);
+      }
+      migrateMemoryDays();
+    });
+  }
+
+  Future<void> deleteOwned(String collection, String rid) async {
+    if (photoRepository != null && collection == 'memories') {
+      await _changeServerPet((owner) async {
+        // Retry also works after an earlier delete hid the photo but left its file.
+        try {
+          await photoRepository!.delete(owner, rid);
+        } finally {
+          if (!_disposed && user == owner) await _refreshServerPhotos(owner);
+        }
+      });
+      return;
     }
-    if ((row[collection == 'pets' ? 'name' : 'title'] as String? ?? '')
-        .trim()
-        .isEmpty) {
-      throw Exception('이름 또는 제목을 입력해 주세요.');
+    if (petRepository != null && collection == 'pets') {
+      await _changeServerPet((owner) async {
+        memoryProfile(petId: rid);
+        final memories = [...rows('memories'), ...rows('memoryDays')];
+        final rooms = [...rows('meetings'), ...rows('groups')];
+        if (memories.any(
+              (row) => row['owner'] == owner && row['petId'] == rid,
+            ) ||
+            rooms.any(
+              (room) => (members(room)[owner]?['petIds'] as List? ?? [])
+                  .contains(rid),
+            )) {
+          throw Exception('연결된 기록이 있어 삭제할 수 없습니다.');
+        }
+        await petRepository!.delete(owner, rid);
+        _checkPetSession(owner);
+        _serverPets.removeWhere((pet) => pet['id'] == rid);
+      });
+      return;
     }
-    final entries = rows(collection);
-    final index = entries.indexWhere((entry) => entry['id'] == row['id']);
-    final saved = <String, dynamic>{
-      if (index >= 0) ...entries[index],
-      ...row,
-      'id': row['id'] ?? id(),
-      'owner': user,
-    };
-    if (index >= 0) {
-      entries[index] = saved;
-    } else {
-      entries.add(saved);
-    }
-    migrateMemoryDays();
-  });
-  Future<void> deleteOwned(String collection, String rid) => change(() {
-    requireUser();
-    if (!['pets', 'memories'].contains(collection)) {
-      throw Exception('잘못된 요청입니다.');
-    }
-    final row = rows(collection).firstWhere((r) => r['id'] == rid);
-    if (row['owner'] != user) {
-      throw Exception('삭제 권한이 없습니다.');
-    }
-    rows(collection).remove(row);
-  });
+    await change(() {
+      requireUser();
+      if (!['pets', 'memories'].contains(collection)) {
+        throw Exception('잘못된 요청입니다.');
+      }
+      final row = rows(collection).firstWhere((r) => r['id'] == rid);
+      if (row['owner'] != user) {
+        throw Exception('삭제 권한이 없습니다.');
+      }
+      rows(collection).remove(row);
+    });
+  }
 }

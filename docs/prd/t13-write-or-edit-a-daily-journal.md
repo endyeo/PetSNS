@@ -2,6 +2,8 @@
 
 Current implementation baseline; acceptance criteria have not been executed in this documentation review.
 
+Online journal storage and confirmed deletion are implemented in [T30](t30-supabase-memory-days.md), including actual A/B API verification. The baseline below describes the original local flow; online journals do not import local data.
+
 Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
 
 ## Process, rules, and result

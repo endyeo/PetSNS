@@ -2,6 +2,8 @@
 
 Current implementation baseline; acceptance criteria have not been executed in this documentation review.
 
+Online Day 0 is saved in the pet DB and reread across app instances; see [T29](t29-supabase-pet-integration.md). Online photo recording remains unavailable until its DB integration. The baseline below describes local demo behavior.
+
 Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
 
 ## Process, rules, and result

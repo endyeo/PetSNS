@@ -2,6 +2,8 @@
 
 Current implementation baseline; acceptance criteria have not been executed in this documentation review.
 
+Online startup additionally verifies the Supabase session before showing home; see [T28](t28-supabase-login-and-session.md). The data migration rules below still apply to local domain records.
+
 Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
 
 ## Process, rules, and result

@@ -4,6 +4,8 @@ Current implementation baseline; acceptance criteria have not been executed in t
 
 Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
 
+Online behavior, October 10, 2026: T29 checks device references and T27 restricts parent deletion. [T30](t30-supabase-memory-days.md) blocks pet deletion through a server FK while journals remain, including requests from stale clients. Future photos/memberships require restrictive FKs. The baseline below describes local demo behavior.
+
 ## Process, rules, and result
 
 - **Requires:** an owned pet; see D3 before changing deletion behavior.

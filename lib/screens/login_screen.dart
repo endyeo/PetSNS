@@ -163,33 +163,38 @@ class _LoginState extends State<Login> {
                                   : '로그인',
                             ),
                           ),
-                          TextButton(
-                            onPressed: busy
-                                ? null
-                                : () => setState(() => signup = !signup),
-                            child: Text(
-                              signup ? '이미 계정이 있어요 · 로그인' : '처음 오셨나요? 회원가입',
+                          if (!widget.store.usesSupabase)
+                            TextButton(
+                              onPressed: busy
+                                  ? null
+                                  : () => setState(() => signup = !signup),
+                              child: Text(
+                                signup ? '이미 계정이 있어요 · 로그인' : '처음 오셨나요? 회원가입',
+                              ),
                             ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12),
-                            child: Divider(),
-                          ),
-                          OutlinedButton.icon(
-                            onPressed: busy
-                                ? null
-                                : () => go(widget.store.testLogin),
-                            icon: const Icon(Icons.auto_awesome_outlined),
-                            label: const Padding(
-                              padding: EdgeInsets.all(14),
-                              child: Text('테스트로 이용하기'),
+                          if (!widget.store.usesSupabase)
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              child: Divider(),
                             ),
-                          ),
+                          if (!widget.store.usesSupabase)
+                            OutlinedButton.icon(
+                              onPressed: busy
+                                  ? null
+                                  : () => go(widget.store.testLogin),
+                              icon: const Icon(Icons.auto_awesome_outlined),
+                              label: const Padding(
+                                padding: EdgeInsets.all(14),
+                                child: Text('테스트로 이용하기'),
+                              ),
+                            ),
                           const SizedBox(height: 14),
-                          const Text(
-                            '가입 없이 바로 둘러보세요.\n기록은 이 기기와 브라우저에 저장됩니다.',
+                          Text(
+                            widget.store.usesSupabase
+                                ? '등록된 계정으로 로그인해 주세요.\n반려동물·하루 기록·추억 사진은 계정에 저장됩니다.\n모임 저장은 준비 중입니다.'
+                                : '가입 없이 바로 둘러보세요.\n기록은 이 기기와 브라우저에 저장됩니다.',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: AppText.minimumSize,
                               color: muted,
                             ),

@@ -130,6 +130,16 @@ mixin MemoryForms on HomeBindings {
     final petId = selectedPet!['id'] as String;
     final date = memoryDayKey(memoryDate);
     final day = s.memoryDay(date, petId: petId);
+    final hasServerRecord =
+        s.memoryRepository != null &&
+        s
+            .rows('memoryDays')
+            .any(
+              (entry) =>
+                  entry['owner'] == s.user &&
+                  entry['petId'] == petId &&
+                  entry['date'] == date,
+            );
     final name = TextEditingController(text: day['title']);
     final note = TextEditingController(text: day['note']);
     var anniversary = day['anniversary'] == true;
@@ -168,6 +178,46 @@ mixin MemoryForms on HomeBindings {
             ),
           ),
           actions: [
+            if (hasServerRecord)
+              TextButton(
+                onPressed: saving
+                    ? null
+                    : () async {
+                        final yes = await showDialog<bool>(
+                          context: dialogContext,
+                          builder: (c) => AlertDialog(
+                            title: const Text('하루 기록을 삭제할까요?'),
+                            content: const Text(
+                              '이 날짜의 제목·메모·기념일 표시를 삭제합니다. 복구할 수 없습니다.',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(c, false),
+                                child: const Text('취소'),
+                              ),
+                              FilledButton(
+                                onPressed: () => Navigator.pop(c, true),
+                                child: const Text('삭제'),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (yes != true || !dialogContext.mounted) return;
+                        update(() => saving = true);
+                        final ok = await attempt(
+                          dialogContext,
+                          () => s.deleteMemoryDay(date, petId: petId),
+                        );
+                        if (dialogContext.mounted) {
+                          if (ok) {
+                            Navigator.pop(dialogContext);
+                          } else {
+                            update(() => saving = false);
+                          }
+                        }
+                      },
+                child: const Text('삭제'),
+              ),
             TextButton(
               onPressed: saving ? null : () => Navigator.pop(dialogContext),
               child: const Text('닫기'),
@@ -332,7 +382,7 @@ mixin MemoryForms on HomeBindings {
                           },
                   ),
                   const Text(
-                    '제목과 메모는 M 화면에서 하루에 하나씩 기록해요.',
+                    '제목과 메모는 추억 화면에서 하루에 하나씩 기록해요.',
                     style: TextStyle(
                       fontSize: AppText.minimumSize,
                       color: muted,

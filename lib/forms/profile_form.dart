@@ -45,32 +45,34 @@ mixin ProfileForm on HomeBindings {
                       fit: pet ? BoxFit.cover : BoxFit.contain,
                     ),
                   ),
-                  TextButton.icon(
-                    onPressed: () async {
-                      await attempt(context, () async {
-                        final file = await ImagePicker().pickImage(
-                          source: ImageSource.gallery,
-                          maxWidth: 1200,
-                          imageQuality: 80,
-                        );
-                        if (file == null) {
-                          return;
-                        }
-                        final bytes = await file.readAsBytes();
-                        if (bytes.length > 3 * 1024 * 1024) {
-                          throw Exception('사진은 3MB 이하로 선택해 주세요.');
-                        }
-                        if (context.mounted) {
-                          update(
-                            () => selectedPhoto =
-                                'data:${file.mimeType ?? 'image/jpeg'};base64,${base64Encode(bytes)}',
+                  if (s.usesSupabase) const Text('프로필 사진 업로드는 준비 중입니다.'),
+                  if (!s.usesSupabase)
+                    TextButton.icon(
+                      onPressed: () async {
+                        await attempt(context, () async {
+                          final file = await ImagePicker().pickImage(
+                            source: ImageSource.gallery,
+                            maxWidth: 1200,
+                            imageQuality: 80,
                           );
-                        }
-                      });
-                    },
-                    icon: const Icon(Icons.add_a_photo_outlined),
-                    label: const Text('사진 선택'),
-                  ),
+                          if (file == null) {
+                            return;
+                          }
+                          final bytes = await file.readAsBytes();
+                          if (bytes.length > 3 * 1024 * 1024) {
+                            throw Exception('사진은 3MB 이하로 선택해 주세요.');
+                          }
+                          if (context.mounted) {
+                            update(
+                              () => selectedPhoto =
+                                  'data:${file.mimeType ?? 'image/jpeg'};base64,${base64Encode(bytes)}',
+                            );
+                          }
+                        });
+                      },
+                      icon: const Icon(Icons.add_a_photo_outlined),
+                      label: const Text('사진 선택'),
+                    ),
                   TextField(
                     controller: name,
                     maxLength: 60,

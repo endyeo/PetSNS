@@ -1,0 +1,6 @@
+{
+  "PET_SNS_TEST_EMAIL_A": "test1@example.com",
+  "PET_SNS_TEST_PASSWORD_A": "test1234",
+  "PET_SNS_TEST_EMAIL_B": "test2@example.com",
+  "PET_SNS_TEST_PASSWORD_B": "test4321"
+}

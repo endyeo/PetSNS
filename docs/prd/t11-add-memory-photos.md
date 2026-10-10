@@ -1,5 +1,7 @@
 # T11 — Add memory photos
 
+Online photo storage and verification are recorded in [T31](t31-supabase-memory-photos.md). The local demo baseline below remains supported.
+
 Current implementation baseline; acceptance criteria have not been executed in this documentation review.
 
 Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.

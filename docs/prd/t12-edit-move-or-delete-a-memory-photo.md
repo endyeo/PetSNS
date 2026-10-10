@@ -1,5 +1,7 @@
 # T12 — Edit, move, or delete a memory photo
 
+Online editing, replacement, deletion and cleanup are recorded in [T31](t31-supabase-memory-photos.md). The local demo baseline below remains supported.
+
 Current implementation baseline; acceptance criteria have not been executed in this documentation review.
 
 Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.

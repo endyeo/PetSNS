@@ -100,6 +100,20 @@ class _MemoryTabContent extends HomeContent {
       key: const ValueKey('memory-gallery'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (s.photoCleanupPending)
+          Row(
+            children: [
+              const Expanded(
+                child: Text('삭제하지 못한 사진 파일이 남아 있습니다. 정리를 다시 시도해 주세요.'),
+              ),
+              TextButton(
+                onPressed: s.busy
+                    ? null
+                    : () => attempt(context, s.retryPhotoCleanup),
+                child: const Text('파일 정리'),
+              ),
+            ],
+          ),
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Row(

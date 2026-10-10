@@ -2,6 +2,8 @@
 
 Current implementation baseline; acceptance criteria have not been executed in this documentation review.
 
+This local baseline applies to debug builds without Supabase settings. Online logout and verified session removal are specified in [T28](t28-supabase-login-and-session.md).
+
 Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
 
 ## Process, rules, and result

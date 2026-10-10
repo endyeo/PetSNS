@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import '../design_system.dart';
+import '../supabase_photo_repository.dart';
+import 'private_photo_scope.dart';
 
 Widget photo(
   String? source, {
@@ -28,6 +30,21 @@ class PetPhoto extends StatefulWidget {
 
 class _PetPhotoState extends State<PetPhoto> {
   Uint8List? bytes;
+  int request = 0;
+  bool loading = false;
+  String? owner;
+  SupabasePhotoRepository? repository;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final scope = PrivatePhotoScope.of(context);
+    if (owner != scope?.owner || repository != scope?.repository) {
+      owner = scope?.owner;
+      repository = scope?.repository;
+      decode();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -41,13 +58,49 @@ class _PetPhotoState extends State<PetPhoto> {
   }
 
   void decode() {
+    request++;
+    if (bytes != null) {
+      PaintingBinding.instance.imageCache.evict(MemoryImage(bytes!));
+    }
     bytes = null;
+    loading = false;
     final source = widget.source;
+    if (source?.startsWith(privatePhotoPrefix) == true) {
+      loadPrivate();
+      return;
+    }
     if (source == null || !source.startsWith('data:')) return;
     try {
       bytes = base64Decode(source.split(',').last);
     } on FormatException {
       // Invalid stored photos use the same fallback as failed network images.
+    }
+  }
+
+  @override
+  void dispose() {
+    request++;
+    if (bytes != null &&
+        widget.source?.startsWith(privatePhotoPrefix) == true) {
+      PaintingBinding.instance.imageCache.evict(MemoryImage(bytes!));
+    }
+    super.dispose();
+  }
+
+  Future<void> loadPrivate() async {
+    if (repository == null || owner == null) return;
+    final current = request;
+    loading = true;
+    try {
+      final result = await repository!.download(owner!, widget.source!);
+      if (mounted && current == request) {
+        setState(() {
+          bytes = result;
+          loading = false;
+        });
+      }
+    } catch (_) {
+      if (mounted && current == request) setState(() => loading = false);
     }
   }
 
@@ -63,6 +116,40 @@ class _PetPhotoState extends State<PetPhoto> {
   Widget build(BuildContext context) {
     final source = widget.source;
     if (source == null || source.isEmpty) return fallback();
+    if (source.startsWith(privatePhotoPrefix)) {
+      if (loading) {
+        return SizedBox(
+          height: widget.height,
+          width: widget.width,
+          child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+        );
+      }
+      if (bytes == null) {
+        return SizedBox(
+          height: widget.height,
+          width: widget.width,
+          child: Center(
+            child: IconButton(
+              tooltip: '사진 다시 불러오기',
+              onPressed: owner == null || repository == null
+                  ? null
+                  : () {
+                      setState(() => loading = true);
+                      loadPrivate();
+                    },
+              icon: const Icon(Icons.refresh),
+            ),
+          ),
+        );
+      }
+      return Image.memory(
+        bytes!,
+        height: widget.height,
+        width: widget.width,
+        fit: widget.fit,
+        errorBuilder: (_, e, s) => fallback(),
+      );
+    }
     if (source.startsWith('data:')) {
       if (bytes == null || bytes!.isEmpty) return fallback();
       return Image.memory(

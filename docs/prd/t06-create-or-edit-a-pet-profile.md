@@ -2,6 +2,8 @@
 
 Current implementation baseline; acceptance criteria have not been executed in this documentation review.
 
+Online behavior and verification are recorded in [T29](t29-supabase-pet-integration.md): server-backed pet CRUD, preserved Day 0, no automatic local import, and profile photo upload deferred. The baseline below describes local demo behavior.
+
 Use this task with the [shared boundaries and open decisions](../../PRD.md). Task IDs in prerequisites refer to that index.
 
 ## Process, rules, and result

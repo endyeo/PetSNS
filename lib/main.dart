@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'store.dart';
@@ -6,6 +8,11 @@ import 'design_system.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'supabase_connection.dart';
+import 'supabase_auth_service.dart';
+import 'supabase_pet_repository.dart';
+import 'supabase_memory_repository.dart';
+import 'supabase_photo_repository.dart';
+import 'widgets/private_photo_scope.dart';
 export 'design_system.dart' show coral, ink, cream, muted;
 export 'screens/home_screen.dart';
 export 'screens/login_screen.dart';
@@ -19,17 +26,30 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   supabaseConnection = await initializeSupabase();
   debugPrint('[PetSNS Supabase] ${supabaseConnection!.message}');
-  runApp(const PetApp());
+  runApp(
+    PetApp(
+      useSupabase: requiresSupabase(
+        debug: kDebugMode,
+        web: kIsWeb,
+        origin: Uri.base,
+        hasSettings:
+            const bool.hasEnvironment('SUPABASE_URL') ||
+            const bool.hasEnvironment('SUPABASE_PUBLISHABLE_KEY'),
+      ),
+    ),
+  );
 }
 
 class PetApp extends StatefulWidget {
-  const PetApp({super.key});
+  const PetApp({super.key, this.useSupabase = false});
+  final bool useSupabase;
   @override
   State<PetApp> createState() => _PetAppState();
 }
 
 class _PetAppState extends State<PetApp> {
   PetStore? store;
+  SupabaseAuthService? auth;
   String? error;
   @override
   void initState() {
@@ -39,17 +59,51 @@ class _PetAppState extends State<PetApp> {
 
   Future<void> init() async {
     setState(() => error = null);
+    PetStore? loadingStore;
     try {
-      final s = PetStore(await SharedPreferences.getInstance());
+      if (widget.useSupabase) {
+        if (supabaseConnection?.initialized != true) {
+          supabaseConnection = await initializeSupabase();
+        }
+        if (supabaseConnection?.initialized != true) {
+          throw Exception('로그인 서비스를 시작하지 못했습니다. 연결 설정을 확인해 주세요.');
+        }
+        auth ??= SupabaseAuthService(Supabase.instance.client);
+        await auth!.restore();
+      }
+      final s = PetStore(
+        await SharedPreferences.getInstance(),
+        auth: auth,
+        petRepository: auth == null
+            ? null
+            : SupabasePetRepository(auth!.client),
+        memoryRepository: auth == null
+            ? null
+            : SupabaseMemoryRepository(auth!.client),
+        photoRepository: auth == null
+            ? null
+            : SupabasePhotoRepository(auth!.client),
+      );
+      loadingStore = s;
       await s.load();
       if (mounted) {
         setState(() => store = s);
+      } else {
+        s.dispose();
       }
     } catch (e) {
+      loadingStore?.dispose();
       if (mounted) {
         setState(() => error = '데이터를 불러오지 못했습니다. $e');
       }
     }
+  }
+
+  @override
+  void dispose() {
+    store?.dispose();
+    auth?.dispose();
+    super.dispose();
   }
 
   @override
@@ -60,6 +114,16 @@ class _PetAppState extends State<PetApp> {
     localizationsDelegates: GlobalMaterialLocalizations.delegates,
     title: 'PetSNS · 함께 쌓는 작은 행복',
     theme: petTheme,
+    builder: (context, child) => store == null
+        ? child!
+        : ListenableBuilder(
+            listenable: store!,
+            builder: (_, _) => PrivatePhotoScope(
+              repository: store!.photoRepository,
+              owner: store!.user,
+              child: child!,
+            ),
+          ),
     home: store == null
         ? Scaffold(
             body: Center(

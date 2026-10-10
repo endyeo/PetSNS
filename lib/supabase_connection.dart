@@ -4,6 +4,16 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+bool requiresSupabase({
+  required bool debug,
+  required bool web,
+  required Uri origin,
+  required bool hasSettings,
+}) =>
+    hasSettings ||
+    !debug ||
+    (web && !{'localhost', '127.0.0.1', '::1'}.contains(origin.host));
+
 class SupabaseConnectionResult {
   const SupabaseConnectionResult({
     required this.initialized,
@@ -68,8 +78,8 @@ Future<SupabaseConnectionResult> initializeSupabase({
       publishableKey: publishableKey,
       debug: false,
       authOptions: const FlutterAuthClientOptions(
-        persistSession: false,
-        autoRefreshToken: false,
+        persistSession: true,
+        autoRefreshToken: true,
         detectSessionInUri: false,
       ),
     );
