@@ -1,6 +1,6 @@
 # PetSNS Feature PRD and Acceptance Criteria
 
-Basis: repository code, existing test cases, and the service plan, reviewed on October 9, 2026.
+Basis: repository code, existing test cases, and the service plan, reviewed on October 9, 2026. Supabase implementation and verification records T27/T28 were added on October 10, 2026.
 
 ## How to use this document
 
@@ -8,11 +8,15 @@ Choose one linked task PRD and implement or change only that behavior. Each task
 
 **T01–T25 describe the current implementation as a baseline, not newly approved product decisions. T26 is a confirmed planning requirement missing from the code.** Acceptance criteria are checks to perform, not a claim that this review ran or passed tests. Resolve the decisions at the end before changing affected behavior.
 
+T27 records the completed development DB/RLS foundation. T28 connects actual Supabase login, logout, and verified session restoration. T29 connects guardian profile initialization and pet CRUD/Day 0; T30 connects daily journals and restrictive pet deletion. T31 connects private memory photos, Storage and recoverable cleanup. Web hosting is intentionally deferred.
+
+COMMON-UI-01 establishes global navigation styling, Material 3 surface tint removal, and design token consistency across components. HOME-UI-01 improves the home screen day profile header layout, D+ badge placement, and calendar cleanliness.
+
 Each linked file is one assignable feature PRD. Shared boundaries and unresolved decisions live here to avoid repeating them in every task. Existing Korean interface labels remain unchanged.
 
 ## Shared boundaries
 
-- Scope: a local Flutter demo for web and Android, one device and one active instance. Accounts, sessions, records, memberships, and messages use local SharedPreferences data under `petsns.v1`. There is no server or communication between different devices.
+- Scope: Flutter web and Android. Builds with Supabase settings, profile/release builds, and web builds on non-loopback hosts use server Auth. Unconfigured local debug builds retain demo authentication. Online pets, Day 0, journals and private memory photos use Supabase; local JSON is preserved without automatic import. Other domains remain local; online profile photo upload and membership writes remain pending. SDK Auth sessions use separate storage. Pets, journals and photos are reread on login/restart; real-time synchronization is not implemented.
 - All tasks except startup and authentication require a signed-in account. Personal profiles, photos, and journals are scoped to their owner; shared posts and room membership have their own rules below.
 - Successful stored changes survive reopening on the same storage/origin. A rejected or failed stored change reports an error and restores the previous in-memory data; an overlapping store mutation is rejected. Canceling an unsaved form does not create a record.
 - Meetup dates, deadlines, chat closure, and memory “today” use Korean time (KST). The pet birthday picker currently uses device-local today. Day 0 counts calendar days, with the starting date equal to 0.
@@ -28,9 +32,12 @@ Group tasks by the screen or UI area used in the [UI guide](docs/human/ui-guide.
 ### G — Common structure
 
 - [T01 — Load and restore the application](docs/prd/t01-load-and-restore-the-application.md)
+- [T27 — Supabase 사용자·반려동물 DB와 접근 권한 구축](docs/prd/t27-supabase-profiles-and-pets.md): backend foundation; client storage remains local.
+- [COMMON-UI-01 — 공통 내비게이션 및 전역 컴포넌트 UI 색상 개선](docs/human/task%20record/COMMON-UI-01/PRD.md): 모바일 하단 내비게이션(4번 코랄 채움 + 1px 경계선), 데스크톱 사이드바(꽉 찬 탭 + 탭 간 구분선 + 코랄 채움 + 꺾쇠 화살표), M3 표면 틴트 차단, 전역 Card/TabBar/SegmentedButton/Chip 디자인 토큰 일치화.
 
 ### L — Log in / sign up
 
+- [T28 — Supabase 로그인과 세션 복원](docs/prd/t28-supabase-login-and-session.md): current online Auth behavior and Korean verification log.
 - [T02 — Register an account](docs/prd/t02-register-an-account.md)
 - [T03 — Log in with email and password](docs/prd/t03-log-in-with-email-and-password.md)
 - [T04 — Enter the demo account](docs/prd/t04-enter-the-demo-account.md)
@@ -39,6 +46,7 @@ Group tasks by the screen or UI area used in the [UI guide](docs/human/ui-guide.
 ### H — Home · our day
 
 - [T08 — View the home day's memories and appointments](docs/prd/t08-view-the-home-day-s-memories-and-appointments.md)
+- [HOME-UI-01 — 홈 화면 반려동물 프로필 UI 개선](docs/human/task%20record/HOME-UI-01/PRD.md): 사진 상단 우측 D+ 배지(`D+숫자`/`기준 설정`), 사진 우측 하단 추억 기록 버튼, 생일 텍스트 제거, '가족 1/2 마리' 문구 제거 및 도트 인디케이터 배치, 주간 달력 중복 Day 문구 제거.
 
 ### M — Memory library
 
@@ -48,11 +56,13 @@ Group tasks by the screen or UI area used in the [UI guide](docs/human/ui-guide.
 ### MV — View memories
 
 - [T13 — Write or edit a daily journal](docs/prd/t13-write-or-edit-a-daily-journal.md)
+- [T30 — 추억의 하루 기록 DB 연결](docs/prd/t30-supabase-memory-days.md): server journals, cross-client deletion restrictions and Korean verification record.
 
 ### ME — Record / edit memory photos
 
 - [T11 — Add memory photos](docs/prd/t11-add-memory-photos.md)
 - [T12 — Edit, move, or delete a memory photo](docs/prd/t12-edit-move-or-delete-a-memory-photo.md)
+- [T31 — 추억 사진 저장소·DB 연결](docs/prd/t31-supabase-memory-photos.md): private Storage, server photo metadata, restrictive FK, Day 0 and recoverable cleanup.
 
 ### P — Meetups
 
@@ -92,6 +102,7 @@ Group tasks by the screen or UI area used in the [UI guide](docs/human/ui-guide.
 ### FE — Create / edit pet profile
 
 - [T06 — Create or edit a pet profile](docs/prd/t06-create-or-edit-a-pet-profile.md)
+- [T29 — 배포 기준 반려동물 DB 연결](docs/prd/t29-supabase-pet-integration.md): online pet storage, deletion boundary, build criteria and Korean verification record.
 
 ### S — States and errors
 
@@ -109,7 +120,7 @@ The request's example requires both fields before pressing login. Current T03 in
 
 ### D3 — Decide pet deletion and unspecified input limits
 
-Deleting a pet currently retains associated records/references without a supported restore flow. Choose whether to prevent deletion, retain accessible archives, or cascade, and define membership handling before changing T07. No total-photo limit, journal text limit, or recurring anniversary reminder is defined. Several profile/meetup field limits are UI-only; decide whether equivalent store validation is required before changing those contracts.
+Local demo deletion retains associated records/references. The user chose to block online deletion when linked records remain on October 10, 2026. T27 restricts parent deletion, T29 checks device references, T30 adds a restrictive journal FK, and [T31](docs/prd/t31-supabase-memory-photos.md) adds a restrictive photo FK. Empty journals and unfinished photo reservations also block pet deletion until explicitly removed or cleaned up. Future membership tables must use restrictive FKs. Existing local records on other devices are not imported or discoverable. No total-photo limit, journal text limit, or recurring anniversary reminder is defined.
 
 ### D4 — Decide closed/canceled data retention and notices
 
@@ -117,7 +128,7 @@ History is currently retained internally after leaving/closure. The plan leaves 
 
 ### D5 — Define any production or additional account scope
 
-Real authentication/email verification, password recovery, account deletion, user profile editing, multi-device sync, server-backed real-time chat, and delivery/read receipts are not implemented. The older plan mentions user profile editing and leaves account-deletion handling open. Required fields, recovery/retention rules, infrastructure, and final delivery targets need decisions if these become tasks. Do not treat them as completed or silently add them to this local-demo PRD.
+Actual existing-account login, current-session logout, and verified session restoration are implemented in T28; pet CRUD/Day 0 and cross-instance reads are implemented in T29. Online registration/email verification, password recovery, account deletion, user profile editing, other domain data sync, server-backed real-time chat, and delivery/read receipts remain unimplemented. The older plan mentions user profile editing and leaves account-deletion handling open. Required fields, recovery/retention rules, infrastructure, and final delivery targets need decisions if these become tasks.
 
 ## Evidence for maintenance
 

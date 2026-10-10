@@ -11,7 +11,7 @@ flutter pub get
 flutter run -d chrome --web-port 8080
 ```
 
-Use the same host and port 8080 to keep browser records accessible. Do not start another server on an occupied port. For a connected Android phone, allow USB debugging when prompted, then run `flutter run -d SM-S908N`.
+Use the same host and port 8080 to keep browser records accessible. Do not start another server on an occupied port. For a connected Android phone, allow USB debugging when prompted, then run `flutter run`.
 
 ### Supabase connection setup
 
@@ -20,7 +20,7 @@ then enter your Project URL and `sb_publishable_...` key. Inject them at build t
 
 ```powershell
 flutter run -d chrome --web-port 8080 --dart-define-from-file=config/supabase.local.json
-flutter build web --release --dart-define-from-file=config/supabase.local.json
+./scripts/build-web.ps1
 flutter build apk --debug --dart-define-from-file=config/supabase.local.json
 flutter test test/supabase_live_test.dart --dart-define-from-file=config/supabase.local.json
 ```
@@ -36,15 +36,25 @@ settings response counts as connected. The `[PetSNS Supabase]` console diagnosti
 reports missing/invalid settings, initialization failures, HTTP failures, and
 network failures without printing keys or response bodies. `supabaseConnection`
 in `lib/main.dart` exposes separate `initialized` and `connected` flags.
-Failures keep the existing local app available. This verifies project gateway
-and Auth accessibility, not database permissions, synchronization, or user login.
-Supabase session persistence and URL session detection are disabled for this stage.
+The gateway check verifies project accessibility separately from user login.
+With either Supabase setting present, in profile/release builds, and on non-loopback web hosts, login uses
+Supabase Auth and never falls back to local credentials. Missing/invalid settings
+block startup with a retry action. SDK session persistence and token refresh are
+enabled; startup verifies restored users with the server. URL session detection
+remains disabled. Online signup and password recovery are pending.
 
 ## Current Scope
 
-Use the test-account button to try the app without registering. Records and sessions persist after refresh; test access does not reset them. Data is local SharedPreferences JSON under `petsns.v1`.
+### Database & Backend (Supabase T27–T31)
 
-This is a one-device, one-active-instance demo. No server, real email verification, password recovery, or multi-device synchronization is implemented. Authentication is not production-ready. Clearing storage or uninstalling may delete records; sample photos and maps need a network connection.
+Unconfigured local debug builds retain registration and the test-account button. Online builds use existing-account login, create/read the guardian profile, and store pets, Day 0, daily journals and private memory photos in Supabase. Login does not import local SharedPreferences records from `petsns.v1`.
+
+Pets, journals and memory photos are reread on login/restart, including across independent app instances. Journals and photo reservations restrict pet deletion in the DB. Private memory photos support upload, date editing, replacement and deletion, with recoverable cleanup after interrupted requests. Profile photo upload and online membership writes remain pending. Other domains remain local. [T31](docs/prd/t31-supabase-memory-photos.md) records boundaries, tests and build commands. Automated multi-account integration tests use `config/supabase.test.local.json` (template: `config/supabase.test.example.json`). The build script rejects private/test credentials and creates a release artifact without deploying hosting. Clearing storage may delete local records; sample photos and maps need a network connection.
+
+### UI & Design System (COMMON-UI-01 & HOME-UI-01)
+
+- **COMMON-UI-01 (Global Navigation & Component Tokens)**: Material 3 surface tint (`surfaceTint: Colors.transparent`) is disabled globally. Mobile bottom navigation uses cream background (`#F5F2E9`), coral filled pill indicator (`#E77D63`), white icons, and a 1px top border (`#E7E5DB`). Desktop web sidebar features edge-to-edge flush tabs (no outer padding), dividing borders between tabs, solid coral active tab fill with white chevron-right indicator, and cream inactive tabs. Theme tokens are unified across `CardTheme`, `DialogTheme`, `TabBarTheme`, `SegmentedButtonTheme`, and `ChipTheme`.
+- **HOME-UI-01 (Home Screen Profile Header & Calendar)**: Relocates the Day badge to the top-right of the pet photo banner (`D+숫자` or `'기준 설정'`, black text on `#FAF8F3`). Moves the '추억 기록' button to the bottom-right of the photo. Removes pet birthday text from the banner overlay. Replaces the `'가족 N / M 마리'` text in the white lower card with clean page indicator dots. Removes redundant Day labels from the weekly calendar dates.
 
 ## Important Existing Rules
 
@@ -59,7 +69,7 @@ This is a one-device, one-active-instance demo. No server, real email verificati
 
 Keep the checkout outside OneDrive, such as `C:\Projects\PetSNS`; `build/` and `.dart_tool/` are ignored by Git. Flutter is available through `C:\flutter\bin` in the Windows user PATH. Read the [commit conventions](.agents/rules/commits.md) before committing.
 
-Run `flutter analyze` and relevant `flutter test` checks for code changes. Build with `flutter build web --release` or `flutter build apk --debug` when platform changes require it. No new app-test or build result is claimed by this document cleanup.
+Run `flutter analyze` and relevant `flutter test` checks for code changes. Build with `flutter build web --release` or `flutter build apk --debug` when platform changes require it. See T27/T28 for the recorded checks and their limits.
 
 ## Visual References
 
