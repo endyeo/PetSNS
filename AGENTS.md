@@ -1,9 +1,12 @@
 # PetSNS Development Instructions
 
+## Project Context
+
+- Flutter-based Web and Android app with a Supabase (PostgreSQL, Auth) backend architecture.
+- Core domains: pet profiles, memories (calendar and gallery), posts, meetups (appointments), and group/meetup chat.
+
 ## Start Here
 
-- For code or document edits, read the [coding principles](.agents/rules/coding.md).
-- Before committing, read the [commit conventions](.agents/rules/commits.md).
 - Use [README.md](README.md) for startup, current scope, and important existing rules when needed.
 - For feature behavior or acceptance criteria, read the relevant task linked from [PRD.md](PRD.md); resolve its open decisions before changing affected behavior.
 - Inspect the requested code and relevant tests. Read related code when the change affects it; do not load every file.

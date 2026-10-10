@@ -1,0 +1,6 @@
+interface:
+  display_name: "Commit Conventions"
+  short_description: "Prepare focused commits with verified changes."
+  default_prompt: "Use $commit-conventions to prepare a PetSNS commit and verify the staged changes."
+policy:
+  allow_implicit_invocation: true

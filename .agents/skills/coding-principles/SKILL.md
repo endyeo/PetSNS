@@ -1,7 +1,9 @@
 ---
-trigger: model_decision
-description: Apply ONLY when implementing new features, modifying code, refactoring, fixing bugs, or writing files. Do NOT apply for conceptual explanations, Q&A, or codebase exploration.
+name: coding-principles
+description: Apply coding principles when implementing features, modifying code, refactoring, fixing bugs, or writing files. Do not use for conceptual explanations, Q&A, or read-only codebase exploration.
 ---
+
+# Coding Principles
 
 1. Think Before Coding
 Don't assume. Don't hide confusion. Surface tradeoffs.

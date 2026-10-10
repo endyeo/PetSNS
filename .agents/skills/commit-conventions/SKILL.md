@@ -1,6 +1,6 @@
 ---
-trigger: model_decision
-description: Read before creating commits or publishing repository changes.
+name: commit-conventions
+description: Apply PetSNS commit conventions when preparing or creating commits or publishing repository changes. Use Conventional Commits and verify staged changes before committing.
 ---
 
 # Commit conventions

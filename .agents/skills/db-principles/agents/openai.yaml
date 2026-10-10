@@ -1,0 +1,6 @@
+interface:
+  display_name: "Database Principles"
+  short_description: "Design safe DB schemas, write SQL migrations, and configure RLS."
+  default_prompt: "Use $db-principles to design schemas, write safe SQL migrations, and verify RLS security policies."
+policy:
+  allow_implicit_invocation: true

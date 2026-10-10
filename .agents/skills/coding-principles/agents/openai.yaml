@@ -1,0 +1,6 @@
+interface:
+  display_name: "Coding Principles"
+  short_description: "Keep code changes simple, focused, and verified."
+  default_prompt: "Use $coding-principles to implement this change with minimal, focused code and verify the result."
+policy:
+  allow_implicit_invocation: true
