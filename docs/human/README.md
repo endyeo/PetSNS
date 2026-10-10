@@ -44,7 +44,7 @@ flutter test test/supabase_live_test.dart --dart-define-from-file=config/supabas
 
 ## 알아두면 좋은 규칙
 
-- DB 스키마는 실제 코드를 근거로 설계하며, 운영 데이터 삭제 등 파괴적인 작업은 사용자 승인 없이 실행하지 않습니다. RLS 보안 정책은 단순 설정에 그치지 않고 허용·차단 실테스트를 거칩니다([DB 원칙](../../.agents/rules/db.md)).
+- DB 스키마는 실제 코드를 근거로 설계하며, 운영 데이터 삭제 등 파괴적인 작업은 사용자 승인 없이 실행하지 않습니다. RLS 보안 정책은 단순 설정에 그치지 않고 허용·차단 실테스트를 거칩니다([DB 원칙](../../.agents/skills/db-principles/SKILL.md)).
 - 약속 정원은 자동 참여하는 작성자를 포함한 보호자 2~50명입니다. 시작 6시간 전에 참여가 마감되며 마감 정각에는 참여할 수 없습니다. 새 약속은 시작까지 6시간 넘게 남아야 합니다.
 - 약속 채팅은 약속 날짜 기준 이틀 뒤 00:00 한국 시간(KST)에 종료됩니다(예: 10월 1일 약속 → 10월 3일 00:00 종료). 모임방에는 약속 날짜에 따른 자동 종료가 없습니다.
 - 나가면 접근이 차단되고, 재참여하면 새 참여 시점(`since` 및 `after`) 이후의 대화·사진만 보입니다. 약속방 나가기는 해당 약속 참여, 모임방 나가기는 해당 모임 가입만 취소합니다.
@@ -54,7 +54,7 @@ flutter test test/supabase_live_test.dart --dart-define-from-file=config/supabas
 
 `lib/main.dart`에서 앱이 시작됩니다. 5개 탭 화면, 로그인, 채팅, 뷰어는 `lib/screens/`에 있고 팝업 폼은 `lib/forms/`, 공용 위젯은 `lib/widgets/`에 있습니다. 저장소 및 비즈니스 규칙은 `lib/store.dart`에 위치합니다. 색상, 텍스트 스타일(최소 13px), 테마는 `lib/design_system.dart`에 정의되어 있습니다. 번들된 [Pretendard v1.3.9](https://github.com/orioncactus/pretendard/tree/v1.3.9) 폰트와 OFL 라이선스는 `assets/fonts/`에 있습니다.
 
-저장소는 `C:\Projects\PetSNS`와 같이 OneDrive 외부 경로에 보관하세요. `build/`와 `.dart_tool/`은 Git 제외 대상입니다. Flutter는 Windows 사용자 PATH의 `C:\flutter\bin`을 통해 이용할 수 있습니다. 커밋하기 전에 [커밋 규칙](../../.agents/rules/commits.md)을 확인하세요.
+저장소는 `C:\Projects\PetSNS`와 같이 OneDrive 외부 경로에 보관하세요. `build/`와 `.dart_tool/`은 Git 제외 대상입니다. Flutter는 Windows 사용자 PATH의 `C:\flutter\bin`을 통해 이용할 수 있습니다. 커밋하기 전에 [커밋 규칙](../../.agents/skills/commit-conventions/SKILL.md)을 확인하세요.
 
 코드를 바꿀 때는 `flutter analyze`와 관련 `flutter test`로 확인합니다. 플랫폼 변경이 필요한 경우 `flutter build web --release` 또는 `flutter build apk --debug`로 빌드합니다. 실제 실행한 검증과 한계는 T27·T28에 기록했습니다.
 
@@ -63,7 +63,6 @@ flutter test test/supabase_live_test.dart --dart-define-from-file=config/supabas
 - [서비스 기획서](service-plan.html): 서비스의 전체 흐름.
 - [기능별 완료 기준](feature-prd.html): 기능 PRD의 한글 보기와 완료·실패 방지·오류 조건.
 - [화면 가이드](ui-guide.html): 화면·요소를 찾아 수정할 곳을 지정하고 메모하기.
-- [기존 화면 캡처](screenshots/mobile-preview.jpg): 같은 폴더에 다른 화면 캡처도 있습니다.
 - [UI 개선 기록 (COMMON-UI-01)](task%20record/COMMON-UI-01/PRD.md): 공통 내비게이션 및 컴포넌트 개선과 실화면 스크린샷 증적.
 - [UI 개선 기록 (HOME-UI-01)](task%20record/HOME-UI-01/PRD.md): 홈 화면 프로필·주간 달력 개선과 실화면 스크린샷 증적.
 

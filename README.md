@@ -67,13 +67,12 @@ Pets, journals and memory photos are reread on login/restart, including across i
 
 `lib/main.dart` starts the app. Five tab screens, login, chat, and viewers are in `lib/screens/`; popup forms are in `lib/forms/`; shared widgets are in `lib/widgets/`. Storage and business rules remain in `lib/store.dart`. Colors, text styles (minimum 13px), and the theme are in `lib/design_system.dart`. The bundled [Pretendard v1.3.9](https://github.com/orioncactus/pretendard/tree/v1.3.9) font and its OFL license are in `assets/fonts/`.
 
-Keep the checkout outside OneDrive, such as `C:\Projects\PetSNS`; `build/` and `.dart_tool/` are ignored by Git. Flutter is available through `C:\flutter\bin` in the Windows user PATH. Read the [commit conventions](.agents/rules/commits.md) before committing.
+Keep the checkout outside OneDrive, such as `C:\Projects\PetSNS`; `build/` and `.dart_tool/` are ignored by Git. Flutter is available through `C:\flutter\bin` in the Windows user PATH. Read the [commit conventions](.agents/skills/commit-conventions/SKILL.md) before committing.
 
 Run `flutter analyze` and relevant `flutter test` checks for code changes. Build with `flutter build web --release` or `flutter build apk --debug` when platform changes require it. See T27/T28 for the recorded checks and their limits.
 
 ## Visual References
 
 - [Service plan](docs/human/service-plan.html), [screen guide](docs/human/ui-guide.html), and [feature PRD viewer](docs/human/feature-prd.html).
-- [Existing screenshots](docs/human/screenshots/mobile-preview.jpg); other captures are in the same directory.
 
 Screen-guide notes live in browser storage. If a location/origin change hides notes, export JSON from the previous guide and import it into the new one.
