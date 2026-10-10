@@ -21,7 +21,7 @@ Each linked file is one assignable feature PRD. Shared boundaries and unresolved
 - Successful stored changes survive reopening on the same storage/origin. A rejected or failed stored change reports an error and restores the previous in-memory data; an overlapping store mutation is rejected. Canceling an unsaved form does not create a record.
 - Meetup dates, deadlines, chat closure, and memory “today” use Korean time (KST). The pet birthday picker currently uses device-local today. Day 0 counts calendar days, with the starting date equal to 0.
 - Selected profile/memory photos are checked in the picker; chat photos are also checked by the store. The byte limit is `3 * 1024 * 1024` (3,145,728 bytes) per image after reading the selected file. Do not assume these validation layers are identical.
-- Completion requires checking the task's successful path, rejected inputs/access where specified, and persistence for changed stored data. Relevant code-change verification follows `coding.md`; this PRD does not duplicate its workflow.
+- Completion requires checking the task's successful path, rejected inputs/access where specified, and persistence for changed stored data. Relevant code-change verification follows the `coding-principles` skill; this PRD does not duplicate its workflow.
 
 **Assignment boundary:** a single task can be developed against existing prerequisites or fixtures. Tasks share `lib/main.dart` and `lib/store.dart`; this split does not make simultaneous edits to those files conflict-free. Coordinate shared-file edits.
 
