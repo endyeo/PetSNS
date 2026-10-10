@@ -12,6 +12,10 @@ class PetProfileCarousel extends StatefulWidget {
     required this.onRecord,
     required this.onFamily,
     required this.photoBuilder,
+    this.origin,
+    this.originForPet,
+    this.today,
+    this.onSetup,
   });
   final List<RecordData> pets;
   final String selectedId;
@@ -19,6 +23,10 @@ class PetProfileCarousel extends StatefulWidget {
   final ValueChanged<RecordData> onRecord;
   final VoidCallback onFamily;
   final Widget Function(String?) photoBuilder;
+  final DateTime? origin;
+  final DateTime? Function(String petId)? originForPet;
+  final DateTime? today;
+  final VoidCallback? onSetup;
   @override
   State<PetProfileCarousel> createState() => _PetProfileCarouselState();
 }
@@ -59,6 +67,22 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
       final pet = widget.pets[selectedIndex];
+      final origin = widget.originForPet != null
+          ? widget.originForPet!(pet['id'])
+          : widget.origin;
+      final today = widget.today ?? DateUtils.dateOnly(DateTime.now());
+      String dayText;
+      if (origin != null) {
+        final count = daysBetween(origin, today) + 1;
+        if (count >= 1) {
+          dayText = 'D+$count';
+        } else {
+          dayText = '기준 설정';
+        }
+      } else {
+        dayText = '기준 설정';
+      }
+
       return ClipRRect(
         borderRadius: BorderRadius.circular(22),
         child: Column(
@@ -115,77 +139,76 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
                     ),
                   ),
                   Positioned(
-                    left: 24,
-                    right: 24,
-                    bottom: 24,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IgnorePointer(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                pet['name'],
-                                key: const ValueKey('home-pet-name'),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: AppColors.surface,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                "${pet['breed']} · 생일 ${pet['birthday']}",
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppText.captionOnPhoto,
-                              ),
-                              if (widget.pets.length > 1) ...[
-                                const SizedBox(height: 12),
-                                Row(
-                                  children: [
-                                    ...List.generate(
-                                      widget.pets.length,
-                                      (index) => Container(
-                                        margin: const EdgeInsets.only(right: 5),
-                                        width: 6,
-                                        height: 6,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: index == selectedIndex
-                                              ? AppColors.surface
-                                              : AppColors.surface.withValues(
-                                                  alpha: .35,
-                                                ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    const Text(
-                                      '좌우로 넘겨 보세요',
-                                      style: TextStyle(
-                                        fontSize: AppText.minimumSize,
-                                        color: AppColors.onPhotoMuted,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ],
+                    top: 16,
+                    right: 16,
+                    child: Material(
+                      color: AppColors.canvas,
+                      borderRadius: BorderRadius.circular(12),
+                      child: InkWell(
+                        key: const ValueKey('home-pet-day'),
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: origin == null ? widget.onSetup : null,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                          child: Text(
+                            dayText,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 18),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: 20,
+                    right: 20,
+                    bottom: 20,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: IgnorePointer(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  pet['name'],
+                                  key: const ValueKey('home-pet-name'),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: AppColors.surface,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  pet['breed'] ?? '',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppText.captionOnPhoto,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
                         FilledButton(
                           key: const ValueKey('home-record-memory'),
                           style: FilledButton.styleFrom(
                             backgroundColor: AppColors.primary,
                             foregroundColor: AppColors.surface,
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 13,
+                              horizontal: 20,
+                              vertical: 12,
                             ),
                           ),
                           onPressed: () =>
@@ -216,11 +239,24 @@ class _PetProfileCarouselState extends State<PetProfileCarousel> {
                         color: AppColors.primary,
                       ),
                       const SizedBox(width: 10),
-                      Text(
-                        '가족 ${selectedIndex + 1} / ${widget.pets.length} 마리',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                      Row(
+                        key: const ValueKey('home-pet-indicators'),
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(
+                          widget.pets.length,
+                          (index) => Container(
+                            margin: const EdgeInsets.only(right: 5),
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: index == selectedIndex
+                                  ? AppColors.primary
+                                  : AppColors.muted.withValues(
+                                      alpha: .35,
+                                    ),
+                            ),
+                          ),
                         ),
                       ),
                       const Spacer(),

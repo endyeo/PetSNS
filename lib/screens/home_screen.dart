@@ -146,114 +146,168 @@ class _HomeState extends State<Home>
                     right: BorderSide(color: AppColors.sidebarBorder),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(20, 38, 20, 8),
-                      child: Row(
-                        children: [
-                          Icon(Icons.pets, color: coral, size: 30),
-                          SizedBox(width: 10),
-                          Text(
-                            'PetSNS',
-                            style: TextStyle(
-                              fontSize: 23,
-                              fontWeight: FontWeight.w900,
-                            ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SingleChildScrollView(
+                      physics: const ClampingScrollPhysics(),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
+                        ),
+                        child: IntrinsicHeight(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.fromLTRB(20, 28, 20, 6),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.pets, color: coral, size: 28),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      'PetSNS',
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 29, bottom: 24),
+                                child: Text(
+                                  '함께 쌓는 작은 행복',
+                                  style: TextStyle(
+                                    fontSize: AppText.minimumSize,
+                                    color: muted,
+                                  ),
+                                ),
+                              ),
+                              ...List.generate(
+                                5,
+                                (i) {
+                                  final isSelected = tab == i;
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? AppColors.primary
+                                          : AppColors.sidebar,
+                                      border: const Border(
+                                        bottom: BorderSide(
+                                          color: AppColors.sidebarBorder,
+                                          width: 1.0,
+                                        ),
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 2,
+                                      ),
+                                      selected: isSelected,
+                                      tileColor: Colors.transparent,
+                                      selectedTileColor: Colors.transparent,
+                                      leading: Icon(
+                                        icons[i],
+                                        size: 20,
+                                        color: isSelected
+                                            ? AppColors.surface
+                                            : AppColors.muted,
+                                      ),
+                                      title: Text(
+                                        labels[i],
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: isSelected
+                                              ? FontWeight.w700
+                                              : FontWeight.w600,
+                                          color: isSelected
+                                              ? AppColors.surface
+                                              : AppColors.ink,
+                                        ),
+                                      ),
+                                      trailing: isSelected
+                                          ? const Icon(
+                                              Icons.chevron_right,
+                                              size: 18,
+                                              color: AppColors.surface,
+                                            )
+                                          : null,
+                                      onTap: () => navigate(i),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const Spacer(),
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 10,
+                                ),
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  color: AppColors.accentSurface,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: const Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(
+                                      Icons.wb_sunny_outlined,
+                                      color: AppColors.accent,
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      '산책하기 좋은 하루',
+                                      style: AppText.captionBold,
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      '오늘도 작은 행복을\n하나 더 쌓아볼까요?',
+                                      style: TextStyle(
+                                        fontSize: AppText.minimumSize,
+                                        color: muted,
+                                        height: 1.6,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              ListTile(
+                                leading: const CircleAvatar(
+                                  backgroundColor: AppColors.avatar,
+                                  child: Icon(
+                                    Icons.person_outline,
+                                    color: AppColors.surface,
+                                  ),
+                                ),
+                                title: Text(
+                                  '${s.account?['name'] ?? '보호자'} 님',
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                                subtitle: Text(
+                                  s.user == 'test'
+                                      ? '테스트 이용 중'
+                                      : '나의 계정',
+                                  style: AppText.captionMuted,
+                                ),
+                                trailing: IconButton(
+                                  tooltip: '로그아웃',
+                                  onPressed: () =>
+                                      attempt(context, s.logout),
+                                  icon: const Icon(Icons.logout, size: 18),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 29, bottom: 44),
-                      child: Text(
-                        '함께 쌓는 작은 행복',
-                        style: TextStyle(
-                          fontSize: AppText.minimumSize,
-                          color: muted,
                         ),
                       ),
-                    ),
-                    ...List.generate(
-                      5,
-                      (i) => Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 4,
-                        ),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          selected: tab == i,
-                          selectedTileColor: AppColors.selected,
-                          selectedColor: coral,
-                          leading: Icon(icons[i], size: 21),
-                          title: Text(
-                            labels[i],
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          onTap: () => navigate(i),
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    Container(
-                      margin: const EdgeInsets.all(20),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.accentSurface,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.wb_sunny_outlined,
-                            color: AppColors.accent,
-                          ),
-                          SizedBox(height: 12),
-                          Text('산책하기 좋은 하루', style: AppText.captionBold),
-                          SizedBox(height: 5),
-                          Text(
-                            '오늘도 작은 행복을\n하나 더 쌓아볼까요?',
-                            style: TextStyle(
-                              fontSize: AppText.minimumSize,
-                              color: muted,
-                              height: 1.7,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    ListTile(
-                      leading: const CircleAvatar(
-                        backgroundColor: AppColors.avatar,
-                        child: Icon(
-                          Icons.person_outline,
-                          color: AppColors.surface,
-                        ),
-                      ),
-                      title: Text(
-                        '${s.account?['name'] ?? '보호자'} 님',
-                        style: const TextStyle(fontSize: 13),
-                      ),
-                      subtitle: Text(
-                        s.user == 'test' ? '테스트 이용 중' : '나의 계정',
-                        style: AppText.captionMuted,
-                      ),
-                      trailing: IconButton(
-                        tooltip: '로그아웃',
-                        onPressed: () => attempt(context, s.logout),
-                        icon: const Icon(Icons.logout, size: 18),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
+                    );
+                  },
                 ),
               ),
             Expanded(
@@ -329,14 +383,25 @@ class _HomeState extends State<Home>
       ),
       bottomNavigationBar: wide
           ? null
-          : NavigationBar(
-              selectedIndex: tab,
-              onDestinationSelected: (i) => navigate(i),
-              destinations: List.generate(
-                5,
-                (i) => NavigationDestination(
-                  icon: Icon(icons[i]),
-                  label: ['하루', '추억', '약속', '채팅', '반려동물'][i],
+          : Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: AppColors.sidebarBorder),
+                ),
+              ),
+              child: NavigationBar(
+                selectedIndex: tab,
+                backgroundColor: AppColors.sidebar,
+                indicatorColor: AppColors.primary,
+                elevation: 0,
+                onDestinationSelected: (i) => navigate(i),
+                destinations: List.generate(
+                  5,
+                  (i) => NavigationDestination(
+                    icon: Icon(icons[i], color: AppColors.muted),
+                    selectedIcon: Icon(icons[i], color: AppColors.surface),
+                    label: ['하루', '추억', '약속', '채팅', '반려동물'][i],
+                  ),
                 ),
               ),
             ),

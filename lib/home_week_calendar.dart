@@ -43,6 +43,7 @@ class _HomeWeekCalendarState extends State<HomeWeekCalendar> {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
         children: [
@@ -88,9 +89,6 @@ class _HomeWeekCalendarState extends State<HomeWeekCalendar> {
                 final today = DateUtils.isSameDay(date, widget.today);
                 final selected = DateUtils.isSameDay(date, widget.selectedDate);
                 final appointment = widget.meetingDates.contains(dayKey(date));
-                final count = widget.origin == null
-                    ? null
-                    : daysBetween(widget.origin!, date);
                 return Expanded(
                   child: Column(
                     children: [
@@ -141,31 +139,6 @@ class _HomeWeekCalendarState extends State<HomeWeekCalendar> {
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 24,
-                        child: today
-                            ? count != null && count >= 0
-                                  ? Center(
-                                      child: Text(
-                                        'Day $count',
-                                        key: const ValueKey('home-today-day'),
-                                        style: AppText.captionPrimary,
-                                      ),
-                                    )
-                                  : InkWell(
-                                      onTap: widget.onSetup,
-                                      child: const Center(
-                                        child: Text(
-                                          '기준 설정',
-                                          style: TextStyle(
-                                            fontSize: AppText.minimumSize,
-                                            color: AppColors.primary,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                            : null,
                       ),
                     ],
                   ),

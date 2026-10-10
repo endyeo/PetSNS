@@ -87,6 +87,87 @@ final petTheme = ThemeData(
     seedColor: coral,
     primary: coral,
     surface: AppColors.surface,
+    surfaceTint: Colors.transparent,
+  ),
+  cardTheme: const CardThemeData(
+    color: AppColors.surface,
+    surfaceTintColor: Colors.transparent,
+    elevation: 0,
+  ),
+  dialogTheme: const DialogThemeData(
+    backgroundColor: AppColors.surface,
+    surfaceTintColor: Colors.transparent,
+  ),
+  bottomSheetTheme: const BottomSheetThemeData(
+    backgroundColor: AppColors.surface,
+    surfaceTintColor: Colors.transparent,
+  ),
+  popupMenuTheme: const PopupMenuThemeData(
+    color: AppColors.surface,
+    surfaceTintColor: Colors.transparent,
+  ),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: cream,
+    surfaceTintColor: Colors.transparent,
+    elevation: 0,
+    scrolledUnderElevation: 0,
+    iconTheme: IconThemeData(color: ink),
+    titleTextStyle: TextStyle(
+      color: ink,
+      fontSize: 18,
+      fontWeight: FontWeight.w700,
+      fontFamily: 'Pretendard',
+    ),
+  ),
+  segmentedButtonTheme: SegmentedButtonThemeData(
+    style: SegmentedButton.styleFrom(
+      backgroundColor: AppColors.surface,
+      selectedBackgroundColor: AppColors.selected,
+      selectedForegroundColor: AppColors.primary,
+      foregroundColor: AppColors.muted,
+      side: const BorderSide(color: AppColors.cardBorder),
+    ),
+  ),
+  tabBarTheme: TabBarThemeData(
+    labelColor: AppColors.primary,
+    unselectedLabelColor: AppColors.muted,
+    indicatorColor: AppColors.primary,
+    dividerColor: AppColors.divider,
+    labelStyle: AppText.captionStrong.copyWith(color: AppColors.primary),
+    unselectedLabelStyle: AppText.captionMuted,
+  ),
+  chipTheme: const ChipThemeData(
+    backgroundColor: AppColors.surface,
+    selectedColor: AppColors.selected,
+    surfaceTintColor: Colors.transparent,
+    side: BorderSide(color: AppColors.cardBorder),
+    labelStyle: AppText.caption,
+    secondaryLabelStyle: TextStyle(
+      fontSize: AppText.minimumSize,
+      fontWeight: FontWeight.w600,
+      color: AppColors.primary,
+    ),
+    checkmarkColor: AppColors.primary,
+  ),
+  dividerTheme: const DividerThemeData(
+    color: AppColors.divider,
+    thickness: 1,
+  ),
+  datePickerTheme: const DatePickerThemeData(
+    backgroundColor: AppColors.surface,
+    surfaceTintColor: Colors.transparent,
+    headerBackgroundColor: AppColors.primary,
+    headerForegroundColor: AppColors.surface,
+  ),
+  timePickerTheme: const TimePickerThemeData(
+    backgroundColor: AppColors.surface,
+    dialHandColor: AppColors.primary,
+    hourMinuteColor: AppColors.selected,
+    hourMinuteTextColor: AppColors.primary,
+  ),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: AppColors.primary,
+    foregroundColor: AppColors.surface,
   ),
   fontFamily: 'Pretendard',
   textTheme: const TextTheme(
@@ -110,8 +191,22 @@ final petTheme = ThemeData(
       fontWeight: FontWeight.w800,
     ),
   ),
-  navigationBarTheme: const NavigationBarThemeData(
-    labelTextStyle: WidgetStatePropertyAll(AppText.captionStrong),
+  navigationBarTheme: NavigationBarThemeData(
+    elevation: 0,
+    backgroundColor: AppColors.sidebar,
+    indicatorColor: AppColors.primary,
+    iconTheme: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.selected)) {
+        return const IconThemeData(color: AppColors.surface);
+      }
+      return const IconThemeData(color: AppColors.muted);
+    }),
+    labelTextStyle: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.selected)) {
+        return AppText.captionStrong.copyWith(color: AppColors.primary);
+      }
+      return AppText.captionMuted;
+    }),
   ),
   inputDecorationTheme: InputDecorationTheme(
     filled: true,

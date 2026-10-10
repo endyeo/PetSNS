@@ -236,7 +236,10 @@ void main() {
         final banner = find.byKey(const ValueKey('home-pet-banner'));
         expect(tester.getTopLeft(family).dy, tester.getBottomLeft(banner).dy);
         expect(tester.getSize(family).width, tester.getSize(banner).width);
-        expect(find.text('가족 1 / 2 마리'), findsOneWidget);
+        expect(find.text('가족 1 / 2 마리'), findsNothing);
+        expect(find.textContaining('생일'), findsNothing);
+        expect(find.text('좌우로 넘겨 보세요'), findsNothing);
+        expect(find.byKey(const ValueKey('home-pet-indicators')), findsOneWidget);
         expect(find.text('1 / 2'), findsNothing);
         expect(
           find.byKey(const ValueKey('home-week-calendar')),
@@ -279,7 +282,7 @@ void main() {
           tester.widget<Text>(find.byKey(const ValueKey('home-pet-name'))).data,
           '루나',
         );
-        expect(find.text('가족 2 / 2 마리'), findsOneWidget);
+        expect(find.text('가족 2 / 2 마리'), findsNothing);
         expect(find.text('2 / 2'), findsNothing);
         expect(tester.getTopLeft(recordButton), buttonPosition);
         expect(tester.element(recordButton), same(buttonElement));
@@ -390,8 +393,9 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Day 30'), findsOneWidget);
-      expect(find.textContaining('Day '), findsOneWidget);
+      expect(find.text('Day 30'), findsNothing);
+      expect(find.textContaining('Day '), findsNothing);
+      expect(find.text('D+31'), findsOneWidget);
       Color? dateColor(String date) =>
           (tester
                       .widget<Container>(
@@ -468,7 +472,8 @@ void main() {
         const Offset(-300, 0),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Day 1'), findsOneWidget);
+      expect(find.text('Day 1'), findsNothing);
+      expect(find.text('D+2'), findsOneWidget);
       expect(find.text('오늘의 추억을 기록하기'), findsOneWidget);
       expect(find.byIcon(Icons.add_photo_alternate_outlined), findsOneWidget);
       for (final memory in store.rows('memories')) {

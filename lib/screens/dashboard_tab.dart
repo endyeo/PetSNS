@@ -49,6 +49,7 @@ class _DashboardTabContent extends HomeContent {
               decoration: BoxDecoration(
                 color: AppColors.surface,
                 borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: AppColors.cardBorder),
               ),
               child: Column(
                 children: [
@@ -70,6 +71,10 @@ class _DashboardTabContent extends HomeContent {
               onSelected: (id) => setState(() => selectedPetId = id),
               onRecord: recordPetMemory,
               onFamily: () => setState(() => tab = 4),
+              origin: selectedOrigin,
+              originForPet: (id) => s.memoryOriginFor(id),
+              today: DateUtils.dateOnly(korea(s.clock())),
+              onSetup: selectedPet == null ? null : setupMemoryOrigin,
               photoBuilder: (source) => photo(
                 source,
                 width: double.infinity,
