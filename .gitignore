@@ -37,6 +37,7 @@ migrate_working_dir/
 *.local.json
 .env
 .env.*
+/supabase/.temp/
 
 # Symbolication related
 app.*.symbols
