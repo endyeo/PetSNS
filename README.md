@@ -45,11 +45,11 @@ remains disabled. Online signup and password recovery are pending.
 
 ## Current Scope
 
-### Database & Backend (Supabase T27–T31)
+### Database & Backend (Supabase T27–T32)
 
 Unconfigured local debug builds retain registration and the test-account button. Online builds use existing-account login, create/read the guardian profile, and store pets, Day 0, daily journals and private memory photos in Supabase. Login does not import local SharedPreferences records from `petsns.v1`.
 
-Pets, journals and memory photos are reread on login/restart, including across independent app instances. Journals and photo reservations restrict pet deletion in the DB. Private memory photos support upload, date editing, replacement and deletion, with recoverable cleanup after interrupted requests. Profile photo upload and online membership writes remain pending. Other domains remain local. [T31](docs/prd/t31-supabase-memory-photos.md) records boundaries, tests and build commands. Automated multi-account integration tests use `config/supabase.test.local.json` (template: `config/supabase.test.example.json`). The build script rejects private/test credentials and creates a release artifact without deploying hosting. Clearing storage may delete local records; sample photos and maps need a network connection.
+Pets, journals and memory photos are reread on login/restart, including across independent app instances. Journals and memory photo reservations restrict pet deletion in the DB. Private memory photos support upload, date editing, replacement and deletion, with recoverable cleanup after interrupted requests. Private profile photos support selection, replacement and photo-only removal; profile fields and the new photo commit together. Successful pet deletion also cleans up its profile photo. Online membership writes remain pending; other domains remain local. [T32](docs/prd/t32-supabase-pet-avatars.md) records the current boundaries, verification and build commands. Automated multi-account integration tests use `config/supabase.test.local.json` (template: `config/supabase.test.example.json`). The build script rejects private/test credentials and creates a release artifact without deploying hosting. Clearing storage may delete local records; sample photos and maps need a network connection.
 
 ### UI & Design System (COMMON-UI-01 & HOME-UI-01)
 

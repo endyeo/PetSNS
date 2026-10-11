@@ -8,7 +8,7 @@ Choose one linked task PRD and implement or change only that behavior. Each task
 
 **T01–T25 describe the current implementation as a baseline, not newly approved product decisions. T26 is a confirmed planning requirement missing from the code.** Acceptance criteria are checks to perform, not a claim that this review ran or passed tests. Resolve the decisions at the end before changing affected behavior.
 
-T27 records the completed development DB/RLS foundation. T28 connects actual Supabase login, logout, and verified session restoration. T29 connects guardian profile initialization and pet CRUD/Day 0; T30 connects daily journals and restrictive pet deletion. T31 connects private memory photos, Storage and recoverable cleanup. Web hosting is intentionally deferred.
+T27 records the completed development DB/RLS foundation. T28 connects actual Supabase login, logout, and verified session restoration. T29 connects guardian profile initialization and pet CRUD/Day 0; T30 connects daily journals and restrictive pet deletion. T31 connects private memory photos, Storage and recoverable cleanup; T32 adds private pet profile photos with atomic profile updates. Web hosting is intentionally deferred.
 
 COMMON-UI-01 establishes global navigation styling, Material 3 surface tint removal, and design token consistency across components. HOME-UI-01 improves the home screen day profile header layout, D+ badge placement, and calendar cleanliness.
 
@@ -16,7 +16,7 @@ Each linked file is one assignable feature PRD. Shared boundaries and unresolved
 
 ## Shared boundaries
 
-- Scope: Flutter web and Android. Builds with Supabase settings, profile/release builds, and web builds on non-loopback hosts use server Auth. Unconfigured local debug builds retain demo authentication. Online pets, Day 0, journals and private memory photos use Supabase; local JSON is preserved without automatic import. Other domains remain local; online profile photo upload and membership writes remain pending. SDK Auth sessions use separate storage. Pets, journals and photos are reread on login/restart; real-time synchronization is not implemented.
+- Scope: Flutter web and Android. Builds with Supabase settings, profile/release builds, and web builds on non-loopback hosts use server Auth. Unconfigured local debug builds retain demo authentication. Online pets, Day 0, journals, private memory and profile photos use Supabase; local JSON is preserved without automatic import. Other domains remain local; online membership writes remain pending. SDK Auth sessions use separate storage. Pets, journals and photos are reread on login/restart; real-time synchronization is not implemented. Profile photos are owner-only; future shared profiles require an explicit access policy.
 - All tasks except startup and authentication require a signed-in account. Personal profiles, photos, and journals are scoped to their owner; shared posts and room membership have their own rules below.
 - Successful stored changes survive reopening on the same storage/origin. A rejected or failed stored change reports an error and restores the previous in-memory data; an overlapping store mutation is rejected. Canceling an unsaved form does not create a record.
 - Meetup dates, deadlines, chat closure, and memory “today” use Korean time (KST). The pet birthday picker currently uses device-local today. Day 0 counts calendar days, with the starting date equal to 0.
@@ -103,6 +103,7 @@ Group tasks by the screen or UI area used in the [UI guide](docs/human/ui-guide.
 
 - [T06 — Create or edit a pet profile](docs/prd/t06-create-or-edit-a-pet-profile.md)
 - [T29 — 배포 기준 반려동물 DB 연결](docs/prd/t29-supabase-pet-integration.md): online pet storage, deletion boundary, build criteria and Korean verification record.
+- [T32 — 반려동물 프로필 사진 업로드](docs/prd/t32-supabase-pet-avatars.md): private avatars, atomic profile saves, cleanup and Korean verification record.
 
 ### S — States and errors
 
@@ -120,7 +121,7 @@ The request's example requires both fields before pressing login. Current T03 in
 
 ### D3 — Decide pet deletion and unspecified input limits
 
-Local demo deletion retains associated records/references. The user chose to block online deletion when linked records remain on October 10, 2026. T27 restricts parent deletion, T29 checks device references, T30 adds a restrictive journal FK, and [T31](docs/prd/t31-supabase-memory-photos.md) adds a restrictive photo FK. Empty journals and unfinished photo reservations also block pet deletion until explicitly removed or cleaned up. Future membership tables must use restrictive FKs. Existing local records on other devices are not imported or discoverable. No total-photo limit, journal text limit, or recurring anniversary reminder is defined.
+Local demo deletion retains associated records/references. The user chose to block online deletion when linked records remain on October 10, 2026. T27 restricts parent deletion, T29 checks device references, T30 adds a restrictive journal FK, and [T31](docs/prd/t31-supabase-memory-photos.md) adds a restrictive photo FK. Empty journals and unfinished memory photo reservations also block pet deletion until explicitly removed or cleaned up. A T32 profile photo is a pet attribute: successful pet deletion retires its file; blocked pet deletion preserves it. Future membership tables must use restrictive FKs. Existing local records on other devices are not imported or discoverable. No total-photo limit, journal text limit, or recurring anniversary reminder is defined.
 
 ### D4 — Decide closed/canceled data retention and notices
 
