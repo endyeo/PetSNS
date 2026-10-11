@@ -5,6 +5,7 @@ import 'supabase_auth_service.dart';
 import 'supabase_pet_repository.dart';
 import 'supabase_memory_repository.dart';
 import 'supabase_photo_repository.dart';
+import 'supabase_avatar_repository.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,6 +51,7 @@ class PetStore extends ChangeNotifier {
     this.petRepository,
     this.memoryRepository,
     this.photoRepository,
+    this.avatarRepository,
   }) : assert(
          memoryRepository == null || (petRepository != null && auth != null),
        ),
@@ -57,6 +59,7 @@ class PetStore extends ChangeNotifier {
          photoRepository == null || (petRepository != null && auth != null),
        ),
        clock = clock ?? DateTime.now {
+    assert(avatarRepository == null || (petRepository != null && auth != null));
     auth?.addListener(_authChanged);
   }
   final SharedPreferences prefs;
@@ -64,6 +67,8 @@ class PetStore extends ChangeNotifier {
   final SupabasePetRepository? petRepository;
   final SupabaseMemoryRepository? memoryRepository;
   final SupabasePhotoRepository? photoRepository;
+  final SupabaseAvatarRepository? avatarRepository;
+  bool avatarCleanupPending = false;
   List<RecordData> _serverPets = [];
   List<RecordData> _serverDays = [];
   List<RecordData> _serverPhotos = [];
@@ -78,6 +83,7 @@ class PetStore extends ChangeNotifier {
       _serverDays = [];
       _serverPhotos = [];
       photoCleanupPending = false;
+      avatarCleanupPending = false;
       _petOwner = null;
       _profileName = null;
     }
@@ -284,6 +290,7 @@ class PetStore extends ChangeNotifier {
     final pets = await petRepository!.list(owner);
     final days = await memoryRepository?.list(owner) ?? <RecordData>[];
     final clean = await photoRepository?.cleanup(owner) ?? true;
+    final avatarsClean = await avatarRepository?.cleanup(owner) ?? true;
     final photos = await photoRepository?.list(owner) ?? <RecordData>[];
     if (_disposed || auth!.account?['id'] != owner) {
       throw Exception('로그인 상태가 변경되었습니다. 다시 로그인해 주세요.');
@@ -292,6 +299,7 @@ class PetStore extends ChangeNotifier {
     _serverDays = days;
     _serverPhotos = photos;
     photoCleanupPending = !clean;
+    avatarCleanupPending = !avatarsClean;
     _petOwner = owner;
     _profileName = name;
     notifyListeners();
@@ -333,8 +341,17 @@ class PetStore extends ChangeNotifier {
     final birthday = saved['birthday'];
     if (birthday != null) validateMemoryDate(DateTime.parse(birthday));
     final photo = saved['photo'] as String?;
+    final upload =
+        photo?.startsWith('data:') == true && avatarRepository != null
+        ? PhotoUpload.parse(photo!)
+        : null;
+    final sameAvatar =
+        photo?.startsWith(privateAvatarPrefix) == true &&
+        matches.firstOrNull?['photo'] == photo;
     if (photo != null &&
         photo.isNotEmpty &&
+        upload == null &&
+        !sameAvatar &&
         !['https', 'http'].contains(Uri.tryParse(photo)?.scheme)) {
       throw Exception('프로필 사진 업로드는 준비 중입니다.');
     }
@@ -342,7 +359,18 @@ class PetStore extends ChangeNotifier {
     final changes = {...row};
     if (row.containsKey('name')) changes['name'] = saved['name'];
     if (row.containsKey('photo')) changes['photo'] = saved['photo'];
-    final result = await petRepository!.save(owner, changes);
+    if (sameAvatar) changes.remove('photo');
+    late RecordData result;
+    try {
+      result = avatarRepository != null && changes.containsKey('photo')
+          ? await avatarRepository!.save(owner, changes, upload: upload)
+          : await petRepository!.save(owner, changes);
+    } finally {
+      if (avatarRepository != null && !_disposed && user == owner) {
+        final clean = await avatarRepository!.cleanup(owner);
+        if (!_disposed && user == owner) avatarCleanupPending = !clean;
+      }
+    }
     _checkPetSession(owner);
     final index = _serverPets.indexWhere((pet) => pet['id'] == result['id']);
     if (index < 0) {
@@ -692,6 +720,11 @@ class PetStore extends ChangeNotifier {
   }
 
   Future<void> retryPhotoCleanup() => _changeServerPet(_refreshServerPhotos);
+  Future<void> retryAvatarCleanup() => _changeServerPet((owner) async {
+    final clean = await avatarRepository!.cleanup(owner);
+    _checkPetSession(owner);
+    avatarCleanupPending = !clean;
+  });
 
   void ensureDemoCompanion() {
     final accounts = rows(
@@ -1201,6 +1234,11 @@ class PetStore extends ChangeNotifier {
         await petRepository!.delete(owner, rid);
         _checkPetSession(owner);
         _serverPets.removeWhere((pet) => pet['id'] == rid);
+        if (avatarRepository != null) {
+          final clean = await avatarRepository!.cleanup(owner);
+          _checkPetSession(owner);
+          avatarCleanupPending = !clean;
+        }
       });
       return;
     }

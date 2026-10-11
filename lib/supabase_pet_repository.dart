@@ -43,13 +43,15 @@ class SupabasePetRepository {
     return displayName;
   });
 
-  Map<String, dynamic> _pet(Map<String, dynamic> row) => {
+  static Map<String, dynamic> decode(Map<String, dynamic> row) => {
     'id': row['id'],
     'owner': row['owner_id'],
     'name': row['name'],
     'breed': row['breed'],
     'birthday': row['birthday'],
-    'photo': row['photo'],
+    'photo': row['avatar_id'] == null
+        ? row['photo']
+        : 'petsns-avatar:${row['owner_id']}/${row['avatar_id']}',
     'memoryOriginType': row['memory_origin_type'],
     'memoryOriginDate': row['memory_origin_date'],
   };
@@ -60,7 +62,7 @@ class SupabasePetRepository {
         .select()
         .eq('owner_id', owner)
         .order('id');
-    return rows.map(_pet).toList();
+    return rows.map(decode).toList();
   });
 
   Future<Map<String, dynamic>> save(String owner, Map<String, dynamic> pet) =>
@@ -90,7 +92,7 @@ class SupabasePetRepository {
                   .eq('owner_id', owner)
                   .select()
                   .single();
-        return _pet(row);
+        return decode(row);
       });
 
   Future<void> delete(String owner, String id) => _request(() async {

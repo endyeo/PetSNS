@@ -65,7 +65,7 @@ class _PetPhotoState extends State<PetPhoto> {
     bytes = null;
     loading = false;
     final source = widget.source;
-    if (source?.startsWith(privatePhotoPrefix) == true) {
+    if (isPrivatePhotoSource(source)) {
       loadPrivate();
       return;
     }
@@ -80,8 +80,7 @@ class _PetPhotoState extends State<PetPhoto> {
   @override
   void dispose() {
     request++;
-    if (bytes != null &&
-        widget.source?.startsWith(privatePhotoPrefix) == true) {
+    if (bytes != null && isPrivatePhotoSource(widget.source)) {
       PaintingBinding.instance.imageCache.evict(MemoryImage(bytes!));
     }
     super.dispose();
@@ -116,7 +115,7 @@ class _PetPhotoState extends State<PetPhoto> {
   Widget build(BuildContext context) {
     final source = widget.source;
     if (source == null || source.isEmpty) return fallback();
-    if (source.startsWith(privatePhotoPrefix)) {
+    if (isPrivatePhotoSource(source)) {
       if (loading) {
         return SizedBox(
           height: widget.height,

@@ -1,0 +1,72 @@
+begin;
+create function pg_temp.assert_true(ok boolean,label text) returns text language plpgsql as $$
+begin if ok is distinct from true then raise exception 'FAIL: %',label; end if; return 'PASS: '||label; end; $$;
+create function pg_temp.expect_error(statement text,code text,label text) returns text language plpgsql as $$
+begin
+  begin execute statement; exception when others then
+    if sqlstate=code then return 'PASS: '||label; end if;
+    raise exception 'FAIL: %, expected %, got %',label,code,sqlstate;
+  end;
+  raise exception 'FAIL: %, request succeeded',label;
+end; $$;
+select pg_temp.assert_true((select not public and file_size_limit=3145728 and cardinality(allowed_mime_types)=4 from storage.buckets where id='pet-avatars'),'avatar bucket private with exact limits');
+select pg_temp.assert_true((select relrowsecurity from pg_class where oid='public.pet_avatars'::regclass),'avatar metadata RLS');
+select pg_temp.assert_true(not has_table_privilege('anon','public.pet_avatars','SELECT') and not has_function_privilege('anon','public.save_pet_with_avatar(text,boolean,jsonb,uuid)','EXECUTE'),'anonymous avatar API denied');
+select pg_temp.assert_true((select bool_and(not prosecdef and proconfig @> array['search_path=""']) from pg_proc where proname in ('guard_avatar','guard_avatar_upload','guard_pet_avatar','save_pet_with_avatar','claim_avatar_cleanup')),'avatar functions use caller and empty search path');
+select pg_temp.assert_true(has_table_privilege('service_role','public.pet_avatars','SELECT') and has_column_privilege('service_role','public.pet_avatars','state','UPDATE') and not has_column_privilege('authenticated','public.pet_avatars','owner_id','UPDATE'),'backend lock supported and owner immutable');
+insert into auth.users values('42000000-0000-0000-0000-000000000001'),('42000000-0000-0000-0000-000000000002');
+insert into public.profiles(id,name) values('42000000-0000-0000-0000-000000000001','A'),('42000000-0000-0000-0000-000000000002','B');
+set local role authenticated;
+select set_config('request.jwt.claim.sub','42000000-0000-0000-0000-000000000001',true);
+insert into public.pet_avatars(id) values('43000000-0000-0000-0000-000000000001');
+select pg_temp.expect_error($q$select public.save_pet_with_avatar('avatar-a',true,'{"name":"A"}','43000000-0000-0000-0000-000000000001')$q$,'23514','missing avatar rolls back new pet');
+select pg_temp.assert_true((select count(*)=0 from public.pets),'failed creation leaves no empty pet');
+insert into storage.objects(bucket_id,name) select 'pet-avatars',object_path from public.pet_avatars;
+select public.save_pet_with_avatar('avatar-a',true,'{"name":"A","birthday":"2000-01-01"}','43000000-0000-0000-0000-000000000001');
+select pg_temp.assert_true((select avatar_id='43000000-0000-0000-0000-000000000001' and photo is null from public.pets where id='avatar-a') and (select state='ready' from public.pet_avatars),'profile and avatar commit together');
+select pg_temp.expect_error($q$update public.pet_avatars set state='deleting'$q$,'23514','active avatar cannot be cancelled');
+delete from storage.objects;
+select pg_temp.assert_true((select count(*)=1 from storage.objects),'active avatar file deletion blocked');
+select pg_temp.expect_error($q$delete from public.pet_avatars$q$,'23514','active metadata deletion blocked');
+select pg_temp.expect_error($q$update public.pets set photo='data:image/png;base64,abc' where id='avatar-a'$q$,'23514','direct base64 profile blocked');
+select pg_temp.expect_error($q$select public.save_pet_with_avatar('forged',true,'{"name":"X","owner_id":"42000000-0000-0000-0000-000000000002"}',null)$q$,'23514','RPC field whitelist');
+insert into public.pet_avatars(id) values('43000000-0000-0000-0000-000000000002');
+insert into storage.objects(bucket_id,name) select 'pet-avatars',object_path from public.pet_avatars where state='pending';
+select pg_temp.expect_error($q$select public.save_pet_with_avatar('avatar-a',false,'{"name":""}','43000000-0000-0000-0000-000000000002')$q$,'23514','invalid replacement rolls back');
+select pg_temp.assert_true((select name='A' and avatar_id='43000000-0000-0000-0000-000000000001' from public.pets where id='avatar-a') and (select state='pending' from public.pet_avatars where id='43000000-0000-0000-0000-000000000002'),'failed replacement preserves profile and reservation');
+select set_config('request.jwt.claim.sub','42000000-0000-0000-0000-000000000002',true);
+select pg_temp.assert_true((select count(*)=0 from public.pet_avatars) and (select count(*)=0 from storage.objects),'B cannot read A avatar or file');
+select pg_temp.expect_error($q$select public.save_pet_with_avatar('avatar-b',true,'{"name":"B"}','43000000-0000-0000-0000-000000000001')$q$,'23514','B cannot attach A avatar');
+select pg_temp.expect_error($q$select public.save_pet_with_avatar('avatar-a',false,'{"name":"B"}',null)$q$,'23514','B cannot edit A pet');
+select set_config('request.jwt.claim.sub','42000000-0000-0000-0000-000000000001',true);
+select public.save_pet_with_avatar('avatar-a',false,'{"name":"updated"}','43000000-0000-0000-0000-000000000002');
+select pg_temp.assert_true((select name='updated' and birthday='2000-01-01' and avatar_id='43000000-0000-0000-0000-000000000002' from public.pets where id='avatar-a') and (select state='deleting' from public.pet_avatars where id='43000000-0000-0000-0000-000000000001'),'replacement preserves omitted fields and retires old avatar');
+delete from storage.objects where name like '%43000000-0000-0000-0000-000000000001';
+delete from public.pet_avatars where state='deleting';
+insert into public.memory_days(pet_id,record_date,note) values('avatar-a','2000-01-01','journal');
+select pg_temp.expect_error($q$delete from public.pets where id='avatar-a'$q$,'23503','journal blocks pet deletion with avatar intact');
+select public.save_pet_with_avatar('avatar-a',false,'{"photo":null}',null);
+select pg_temp.assert_true((select avatar_id is null from public.pets where id='avatar-a') and (select count(*)=1 from public.memory_days),'photo removal keeps pet and journal');
+delete from storage.objects;
+delete from public.pet_avatars where state='deleting';
+insert into public.pet_avatars(id) values('43000000-0000-0000-0000-000000000003');
+insert into storage.objects(bucket_id,name) select 'pet-avatars',object_path from public.pet_avatars;
+select public.save_pet_with_avatar('avatar-a',false,'{}','43000000-0000-0000-0000-000000000003');
+delete from public.memory_days;
+delete from public.pets;
+select public.claim_avatar_cleanup();
+select pg_temp.assert_true((select state='deleting' from public.pet_avatars),'successful pet deletion claims orphan avatar');
+delete from storage.objects;
+delete from public.pet_avatars;
+reset role;
+insert into public.pet_avatars(id,owner_id,created_at) values
+('43000000-0000-0000-0000-000000000004','42000000-0000-0000-0000-000000000001',now()-interval '25 hours'),
+('43000000-0000-0000-0000-000000000005','42000000-0000-0000-0000-000000000001',now()-interval '24 hours');
+set local role authenticated;
+select public.claim_avatar_cleanup();
+select pg_temp.assert_true((select state='deleting' from public.pet_avatars where id='43000000-0000-0000-0000-000000000004') and (select state='pending' from public.pet_avatars where id='43000000-0000-0000-0000-000000000005'),'avatar cleanup strictly older than 24h');
+select pg_temp.expect_error($q$insert into storage.objects(bucket_id,name) values('pet-avatars','42000000-0000-0000-0000-000000000001/43000000-0000-0000-0000-000000000004')$q$,'23514','late upload after cancellation denied');
+set local role anon;
+select pg_temp.assert_true((select count(*)=0 from storage.objects),'anonymous avatar file hidden');
+reset role;
+rollback;

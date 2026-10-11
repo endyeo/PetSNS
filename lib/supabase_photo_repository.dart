@@ -4,6 +4,19 @@ import 'dart:typed_data';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 const privatePhotoPrefix = 'petsns-photo:';
+const privateAvatarPrefix = 'petsns-avatar:';
+bool isPrivatePhotoSource(String? source) =>
+    source?.startsWith(privatePhotoPrefix) == true ||
+    source?.startsWith(privateAvatarPrefix) == true;
+
+String newPhotoId() {
+  final random = Random.secure();
+  final bytes = List<int>.generate(16, (_) => random.nextInt(256));
+  bytes[6] = (bytes[6] & 15) | 64;
+  bytes[8] = (bytes[8] & 63) | 128;
+  final hex = bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+  return '${hex.substring(0, 8)}-${hex.substring(8, 12)}-${hex.substring(12, 16)}-${hex.substring(16, 20)}-${hex.substring(20)}';
+}
 
 class PhotoUpload {
   PhotoUpload(this.bytes, this.mime);
@@ -32,14 +45,6 @@ class SupabasePhotoRepository {
   SupabasePhotoRepository(this.client);
   final SupabaseClient client;
   static const bucket = 'memory-photos';
-
-  String _id() {
-    final bytes = List<int>.generate(16, (_) => Random.secure().nextInt(256));
-    bytes[6] = (bytes[6] & 15) | 64;
-    bytes[8] = (bytes[8] & 63) | 128;
-    final hex = bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
-    return '${hex.substring(0, 8)}-${hex.substring(8, 12)}-${hex.substring(12, 16)}-${hex.substring(16, 20)}-${hex.substring(20)}';
-  }
 
   void _session(String owner) {
     if (client.auth.currentUser?.id != owner) {
@@ -84,14 +89,16 @@ class SupabasePhotoRepository {
 
   Future<Uint8List> download(String owner, String source) async {
     _session(owner);
-    if (!source.startsWith('$privatePhotoPrefix$owner/')) {
+    final avatar = source.startsWith(privateAvatarPrefix);
+    final prefix = avatar ? privateAvatarPrefix : privatePhotoPrefix;
+    if (!source.startsWith('$prefix$owner/')) {
       throw Exception('사진 접근 권한이 없습니다.');
     }
     try {
       final bytes = await client.storage
-          .from(bucket)
+          .from(avatar ? 'pet-avatars' : bucket)
           .download(
-            source.substring(privatePhotoPrefix.length),
+            source.substring(prefix.length),
             cacheNonce: DateTime.now().microsecondsSinceEpoch.toString(),
           );
       _session(owner);
@@ -112,7 +119,7 @@ class SupabasePhotoRepository {
     if (photos.isEmpty || (replace != null && photos.length != 1)) {
       throw Exception('사진을 선택해 주세요. 교체할 사진은 한 장만 선택할 수 있습니다.');
     }
-    final ids = photos.map((_) => _id()).toList();
+    final ids = photos.map((_) => newPhotoId()).toList();
     var committed = false;
     try {
       await client.from('memory_photos').insert([

@@ -27,6 +27,19 @@ class _PetsTabContent extends HomeContent {
           label: const Text('반려동물 등록'),
         ),
       ),
+      if (s.avatarCleanupPending)
+        Card(
+          child: ListTile(
+            title: const Text('이전 프로필 사진 정리가 남아 있어요'),
+            subtitle: const Text('현재 프로필은 저장됐어요. 연결이 안정되면 다시 정리해 주세요.'),
+            trailing: TextButton(
+              onPressed: s.busy
+                  ? null
+                  : () => attempt(context, s.retryAvatarCleanup),
+              child: const Text('정리 재시도'),
+            ),
+          ),
+        ),
       owned('pets').isEmpty
           ? empty('가족을 소개해 주세요', '이름, 생일, 사진을 등록할 수 있어요.', Icons.pets)
           : grid(

@@ -6,7 +6,7 @@ const root = new URL('../', import.meta.url);
 const migrationDirectory = new URL('supabase/migrations/', root);
 const migrationFiles = (await readdir(migrationDirectory)).filter(name => name.endsWith('.sql')).sort();
 const migrations = await Promise.all(migrationFiles.map(name => readFile(new URL(name, migrationDirectory), 'utf8')));
-const testFiles = ['profiles_and_pets.sql', 'memory_days.sql', 'memory_photos.sql'];
+const testFiles = ['profiles_and_pets.sql', 'memory_days.sql', 'memory_photos.sql', 'pet_avatars.sql'];
 const tests = await Promise.all(testFiles.map(name => readFile(new URL(`supabase/tests/${name}`, root), 'utf8')));
 const report = { engine: 'PGlite 0.3.14 PostgreSQL with Auth schema fixtures', scope: 'Local SQL only; no Supabase Auth gateway', migrations: migrationFiles, runs: [] };
 

@@ -52,7 +52,8 @@ select pg_temp.assert_true(
   'owner lookup index exists');
 select pg_temp.assert_true(
   (select count(*) = 2 from pg_constraint where contype = 'f'
-    and confdeltype = 'r' and conrelid in ('public.profiles'::regclass, 'public.pets'::regclass)),
+    and confdeltype = 'r' and conrelid in ('public.profiles'::regclass, 'public.pets'::regclass)
+    and confrelid in ('auth.users'::regclass,'public.profiles'::regclass)),
   'both parent foreign keys restrict deletion');
 
 -- Fresh Auth fixture IDs prevent touching existing accounts.

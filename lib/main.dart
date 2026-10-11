@@ -12,6 +12,7 @@ import 'supabase_auth_service.dart';
 import 'supabase_pet_repository.dart';
 import 'supabase_memory_repository.dart';
 import 'supabase_photo_repository.dart';
+import 'supabase_avatar_repository.dart';
 import 'widgets/private_photo_scope.dart';
 export 'design_system.dart' show coral, ink, cream, muted;
 export 'screens/home_screen.dart';
@@ -83,6 +84,9 @@ class _PetAppState extends State<PetApp> {
         photoRepository: auth == null
             ? null
             : SupabasePhotoRepository(auth!.client),
+        avatarRepository: auth == null
+            ? null
+            : SupabaseAvatarRepository(auth!.client),
       );
       loadingStore = s;
       await s.load();
