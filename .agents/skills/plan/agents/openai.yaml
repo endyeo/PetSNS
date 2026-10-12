@@ -1,0 +1,4 @@
+interface:
+  display_name: "PetSNS Plan"
+  short_description: "PRD와 현재 코드 기반 계획, 결정별 검토와 승인 회차 JSON"
+  default_prompt: "$plan을 사용해 요청한 PetSNS 변경의 계획 보고서와 시안 비교를 만들어 주세요."

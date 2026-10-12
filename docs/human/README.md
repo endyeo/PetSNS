@@ -73,3 +73,11 @@ flutter test test/supabase_live_test.dart --dart-define-from-file=config/supabas
 ## 새 채팅에서 이어가기
 
 프로젝트를 연결하고 원하는 화면·동작을 설명하면 됩니다. AI는 루트 `AGENTS.md`에서 시작해 관련 코드와 테스트를 확인합니다.
+
+## 독립형 AI 개발 워크플로
+
+- `$plan`: PRD와 현재 코드를 읽어 HTML 계획을 만듭니다. 결정마다 승인·수정·보류와 메모를 남기고, 시안 비교와 회차별 승인 JSON 다운로드를 제공합니다.
+- `$verification`: 실제 웹 화면·실행 근거·개발자 검증·독립 QA·회차 이력을 기록합니다. 미실행이나 중대 문제가 있으면 완료를 막습니다.
+- `$issue-manager`: 조건부 완료에서 수용한 경미한 문제를 GitHub Issues에 등록합니다. 열린·닫힌 Issue와 등록 이력을 확인해 중복을 피합니다.
+
+각 스킬을 따로 호출할 수 있으며 문서 갱신에는 기존 `$document-sync`를 재사용합니다. [계획 보고서](task%20record/WORKFLOW-01/plan.html)에서 검토하고 [실제 검증 기록](task%20record/WORKFLOW-01/verification.html)에서 실행 범위를 확인하세요. 브라우저를 바꾸기 전에 승인 JSON을 내려받으세요. 테스트용 JSON은 실제 사용자 승인이 아닙니다.

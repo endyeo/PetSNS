@@ -1,0 +1,4 @@
+interface:
+  display_name: "PetSNS Verification"
+  short_description: "실제 웹 캡처와 실행 근거, 독립 QA 및 검증 이력 관리"
+  default_prompt: "$verification을 사용해 PetSNS 작업을 실제 화면과 독립 QA로 검증해 주세요."

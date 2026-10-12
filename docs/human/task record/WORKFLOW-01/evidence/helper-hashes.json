@@ -1,0 +1,30 @@
+[
+  {
+    "path": "contract.md",
+    "sha256": "148204b93dafcb8042b35c2c0ebc7c044c718cd6a1aa0ac4d8b404444e2361b8"
+  },
+  {
+    "path": "issues.mjs",
+    "sha256": "6709503c2c6c8dded497de71236328b9485b87583b186de333e0e9f62623a92a"
+  },
+  {
+    "path": "model.mjs",
+    "sha256": "0779c2ead78302a31420398defc3d5c7c85e48d29817299cad7f3c9c8ed72b50"
+  },
+  {
+    "path": "render.mjs",
+    "sha256": "ec256f14bf6cd838130299c36e6529e6c28aa7583b3171b4e115bd5db0baf42b"
+  },
+  {
+    "path": "review.css",
+    "sha256": "32d5d57ec9eebb3ed7b0b53e82c4638bab0a718446465033dadbb7fc06a04751"
+  },
+  {
+    "path": "review.js",
+    "sha256": "3df64659b596ddc81a0eb5ffd12349cb23892b00ba55db4afcdc14c902dac38f"
+  },
+  {
+    "path": "serve.mjs",
+    "sha256": "547d57a3324ef2f4318cca3738b95a6da58de0d4d3e9942c6f9bbb28f0cc2a57"
+  }
+]

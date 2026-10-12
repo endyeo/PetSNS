@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: only separate actors on current same build can complete
+ok 1 - only separate actors on current same build can complete
+  ---
+  duration_ms: 0.9387
+  type: 'test'
+  ...
+# Subtest: unrun/source-only/unclassified failure/major issues block completion
+ok 2 - unrun/source-only/unclassified failure/major issues block completion
+  ---
+  duration_ms: 0.3197
+  type: 'test'
+  ...
+# Subtest: latest QA run replaces current verdict but retains old run
+ok 3 - latest QA run replaces current verdict but retains old run
+  ---
+  duration_ms: 0.1494
+  type: 'test'
+  ...
+# Subtest: minor linked failure requires explicit issue acceptance
+ok 4 - minor linked failure requires explicit issue acceptance
+  ---
+  duration_ms: 2.272
+  type: 'test'
+  ...
+# Subtest: wrong repo, stale report/runs, corrupt history rejected
+ok 5 - wrong repo, stale report/runs, corrupt history rejected
+  ---
+  duration_ms: 0.3262
+  type: 'test'
+  ...
+# Subtest: re-export and new revision preserve stable issue marker
+ok 6 - re-export and new revision preserve stable issue marker
+  ---
+  duration_ms: 0.4436
+  type: 'test'
+  ...
+# Subtest: ledger records idempotently and rejects a conflicting or wrong repo URL
+ok 7 - ledger records idempotently and rejects a conflicting or wrong repo URL
+  ---
+  duration_ms: 1.8805
+  type: 'test'
+  ...
+# Subtest: proposal/version changes invalidate approvals
+ok 8 - proposal/version changes invalidate approvals
+  ---
+  duration_ms: 0.2888
+  type: 'test'
+  ...
+# Subtest: unsafe paths and duplicate identities rejected
+ok 9 - unsafe paths and duplicate identities rejected
+  ---
+  duration_ms: 0.2632
+  type: 'test'
+  ...
+# Subtest: reuse open and closed remote markers, stop incomplete searches and ambiguous outcomes
+ok 10 - reuse open and closed remote markers, stop incomplete searches and ambiguous outcomes
+  ---
+  duration_ms: 0.8745
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 73.44

@@ -1,0 +1,37 @@
+{
+  "executedAt": "2026-10-12T04:47:27.192Z",
+  "actor": "independent_qa",
+  "results": [
+    {
+      "name": "actual downloaded Plan rounds validate and preserve first round",
+      "result": "passed"
+    },
+    {
+      "name": "all source hashes and excerpts match repository bytes",
+      "result": "passed"
+    },
+    {
+      "name": "reserved IDs reject rendering",
+      "result": "passed"
+    },
+    {
+      "name": "actual download wrong revision and altered proposal reject validation",
+      "result": "passed"
+    },
+    {
+      "name": "queue allows only accepted minor conditional completion",
+      "result": "passed"
+    },
+    {
+      "name": "queue key stable across revision and registration ledger idempotent",
+      "result": "passed"
+    },
+    {
+      "name": "remote reconciliation rejects duplicate markers and missing ledger item",
+      "result": "passed"
+    }
+  ],
+  "limitations": [
+    "GitHub connector registration and live duplicate searches not run; fixtures do not represent user approval or actual PetSNS evidence."
+  ]
+}

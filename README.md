@@ -76,3 +76,9 @@ Run `flutter analyze` and relevant `flutter test` checks for code changes. Build
 - [Service plan](docs/human/service-plan.html), [screen guide](docs/human/ui-guide.html), and [feature PRD viewer](docs/human/feature-prd.html).
 
 Screen-guide notes live in browser storage. If a location/origin change hides notes, export JSON from the previous guide and import it into the new one.
+
+## Independent AI development workflow
+
+Repository skills: `$plan` creates a PRD/code-based HTML decision review with draft comparison and round JSON; `$verification` records actual web screenshots, developer checks and independent QA; `$issue-manager` registers accepted minor residual issues with duplicate checks and a ledger. Each skill can be called independently. Reuse `$document-sync` after verified changes.
+
+The [workflow Plan](docs/human/task%20record/WORKFLOW-01/plan.html) and [verification report](docs/human/task%20record/WORKFLOW-01/verification.html) include this implementation and executed checks. Run `node --test .agents/workflow/model.test.mjs` for the workflow logic. Render a report with `node .agents/workflow/render.mjs input.json output.html`; see [.agents/workflow/contract.md](.agents/workflow/contract.md) for input fields. HTML review state is stored in that browser; download JSON before changing origin. Review JSON is not an identity signature or permission to perform unrelated writes.

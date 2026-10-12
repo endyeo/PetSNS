@@ -1,0 +1,231 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PetSNS 작업 검토</title><style>:root{color-scheme:light;font-family:system-ui,"Malgun Gothic",sans-serif;color:#253634;background:#faf8f3;font-size:15px}*{box-sizing:border-box}body{margin:0}header,main,footer,nav{max-width:1120px;margin:auto;padding:22px}header{padding-top:40px}header small{color:#38665c}h1{font-size:30px;margin:10px 0}h2{font-size:22px}h3{font-size:18px;margin-top:0}p{line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}nav{display:flex;gap:8px;flex-wrap:wrap;padding-top:0;padding-bottom:8px}button,.button,select{font:inherit;border:1px solid #b9c8c0;background:white;color:#253634;border-radius:8px;padding:10px 14px;cursor:pointer}button[aria-selected=true],#save{background:#285a50;color:white}button:focus-visible,select:focus-visible,textarea:focus-visible,.button:focus-within{outline:3px solid #df8468;outline-offset:2px}.card{background:white;border:1px solid #dde4dd;border-radius:12px;padding:22px;margin-bottom:16px}.muted,small{color:#64746d}.tag{display:inline-block;border-radius:6px;background:#f4ead9;padding:4px 9px;margin:0 8px 8px 0}.blocked,.failed{color:#9a332e}.passed{color:#236452}.not-run{color:#72531e}textarea{width:100%;min-height:75px;font:inherit;border:1px solid #b9c8c0;border-radius:8px;padding:10px;margin-top:8px}.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px}.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}figure{margin:16px 0}img{display:block;width:100%;max-height:620px;object-fit:contain;border:1px solid #dde4dd;background:#f6f6f2}figcaption{margin-top:8px}label{display:block;margin:12px 0}input[type=checkbox]{width:18px;height:18px}input[type=file]{width:1px;position:absolute;opacity:0}footer{border-top:1px solid #dde4dd;display:flex;gap:12px;flex-wrap:wrap}footer p,footer small{width:100%;margin:0}footer .button{display:inline-block;margin:0}a{color:#285a50}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f5f6f3;padding:14px;border-radius:8px}details{margin:14px 0}li{line-height:1.65;margin:6px 0}@media(max-width:700px){.compare{grid-template-columns:1fr}header,main,footer,nav{padding:16px}h1{font-size:25px}button,.button{min-height:44px}.card{padding:16px}}
+</style><body><header><small>PetSNS · 독립 개발 워크플로</small><h1 id="title"></h1><p id="identity"></p></header><nav id="tabs" aria-label="보고서 탭"></nav><main id="content"></main><footer><button id="save">회차 저장·JSON 다운로드</button><label class="button">승인 JSON 가져오기<input id="import" type="file" accept="application/json"></label><p id="message" role="status"></p><small>선택은 이 브라우저에 저장됩니다. 이동 전 JSON을 내려받으세요. 저장 실패 시 다운로드를 중단합니다.</small></footer><script id="report-data" type="application/json">{"schemaVersion":1,"project":"PetSNS","taskId":"WORKFLOW-01","repository":"endyeo/PetSNS","revision":"e0663e1c055fda3c4882f250c764a40e7b1fa7fd","sources":[{"path":"PRD.md","sha256":"a7b83747954b06a9d8ea846f219b32d14682781c43436dc1db9d909d8b8cda16","excerpt":"# PetSNS Feature PRD and Acceptance Criteria\r\n\r\nBasis: repository code, existing test cases, and the service plan, reviewed on October 9, 2026. Supabase implementation and verification records T27/T28 were added on October 10, 2026.\n\r\n## How to use this document\r\n\r\nChoose one linked task PRD and implement or change only that behavior. Each task defines prerequisites, the user flow, rules, the result, and observable acceptance criteria. Dependencies must exist or be supplied as test fixtures; a task is not a separate application.\r\n\r\n**T01–T25 describe the current implementation as a baseline, not newly approved product decisions. T26 is a confirmed planning requirement missing from the code.** Acceptance criteria are checks to perform, not a claim that this review ran or passed tests. Resolve the decisions at the end before changing affected behavior.\n\nT27 records the completed development DB/RLS foundation. T28 connects actual Supabase login, logout, and verified session restoration. T29 connects guardian profile initialization and pet CRUD/Day 0; T30 connects daily journals and restrictive pet deletion. T31 connects private memory photos, Storage and recoverable cleanup; T32 adds private pet profile photos with atomic profile updates. Web hosting is intentionally deferred.\r\n\nCOMMON-UI-01 establishes global navigation styling, Material 3 surface tint removal, and design token consistency across components. HOME-UI-01 improves the home screen day profile header layout, D+ badge placement, and calendar cleanliness.\n\r\nEach linked file is one assignable feature PRD. Shared boundaries and unresolved decisions live here to avoid repeating them in every task. Existing Korean interface labels remain unchanged.\r\n\r\n## Shared boundaries\r\n\r\n- Scope: Flutter web and Android. Builds with Supabase settings, profile/release builds, and web builds on non-loopback hosts use server Auth. Unconfigured local debug builds retain demo authentication. Online pets, Day 0, journals, private memory and profile photos use Supabase; local JSON is preserved without automatic import. Other domains remain local; online membership writes remain pending. SDK Auth sessions use separate storage. Pets, journals and photos are reread on login/restart; real-time synchronization is not implemented. Profile photos are owner-only; future shared profiles require an explicit access policy.\r\n- All tasks except startup and authentication require a signed-in account. Personal profiles, photos, and journals are scoped to their owner; shared posts and room membership have their own rules below.\r\n- Successful stored changes survive reopening on the same storage/origin. A rejected or failed stored change reports an error and restores the previous in-memory data; an overlapping store mutation is rejected. Canceling an unsaved form does not create a record.\r\n- Meetup dates, deadlines, chat closure, and memory “today” use Korean time (KST). The pet birthday picker currently uses device-local today. Day 0 counts calendar days, with the starting date equal to 0.\r\n- Selected profile/memory photos are checked in the picker; chat photos are also checked by the store. The byte limit is `3 * 1024 * 1024` (3,145,728 bytes) per image after reading the selected file. Do not assume these validation layers are identical.\r\n- Completion requires checking the task's successful path, rejected inputs/access where specified, and persistence for changed stored data. Relevant code-change verification follows the `coding-principles` skill; this PRD does not duplicate its workflow.\r\n\r"},{"path":"docs/human/task record/HOME-UI-01/PRD.md","sha256":"abfecb5affd8ae053f604295d20e611e22f5b679b4b7ffbb0f2601c1f9fcdd5b","excerpt":"# PetSNS 홈 화면 반려동물 프로필 UI 개선 (HOME-UI-01)\n\n- **작업 ID**: HOME-UI-01\n- **대상 화면**: H · 홈 · 우리의 하루\n- **변경 요소**: H-02, H-03, H-04, H-05\n- **작업 범위**: UI 레이아웃 및 표시 정보 변경\n\n---\n\n## 1. 작업 목적\n\n주간 달력의 Day 표시를 반려동물 사진으로 옮기고, 추억 기록 버튼 위치 변경과 사진 위에 있는 텍스트(이름, 종, 생일)에서 생일을 제거한다.\n\n---\n\n## 2. 상세 변경 요구사항\n\n### 2.1 H-02 사진·가족 박스\n- 기존 사진 영역과 연결된 흰색 가족 정보 박스 구조를 기준으로 수정.\n- `'가족 1 / 2 마리'` 문구 제거.\n- 제거한 문구 위치에 **H-05**(페이지 인디케이터 도트) 배치.\n- 기존 표시되던 생일 정보는 화면에서 제거.\n- 생일 데이터 자체는 삭제하지 않고 유지.\n\n### 2.2 H-03 고정 추억 기록 버튼 & Day 표시\n- 사진 우측 하단에 `'추억 기록'` 버튼 위치 수정.\n- 선택된 반려동물의 기존 Day 0이 아닌 1 기준(Day 1)을 사용하여 사진 우측 상단에 `D+숫자`(예: `D+30`) 표시.\n- Day 미설정 시 기존 앱의 미설정 처리 정책(`'기준 설정'`) 적용 (임의의 숫자 미표시, 탭 시 설정 창 호출).\n- D+ 배지의 글자 색상은 검정색(`Colors.black`), 배경색은 앱 전체 배경색(`AppColors.canvas`, `#FAF8F3`)과 동일하게 적용.\n- 추억 기록 버튼의 기존 동작(해당 반려동물의 오늘 추억 작성) 유지.\n\n### 2.3 H-04 주간 달력\n- 오늘 날짜 아래 표시되던 작은 `Day 30` 등의 Day 문구 제거.\n- 기존 7일 주간 달력 구조 유지.\n- 날짜 선택 기능 유지.\n- 참여 약속 날짜의 노란색(`AppColors.anniversary`) 강조 표시 유지.\n- 날짜 선택 시 하단 추억 및 약속 미리보기 갱신 기능 유지.\n- 제거된 Day 정보는 H-03(사진 우측 상단)에서 확인 가능.\n\n### 2.4 H-05 사진 제스처 안내\n- 사진 좌우 제스처(스와이프/드래그) 기능 유지.\n- 반려동물 전환 시 이름, 종, D+숫자가 함께 갱신.\n- 기존 가이드의 '사진만 제스처로 이동, 프로필 글·버튼은 고정' 규칙 유지.\n- 제스처 안내 문구(`'좌우로 넘겨 보세요'`) 제거, 페이지 표시(인디케이터 점)는 기존 상태 유지하되 가족 정보 박스로 이동.\n\n---\n\n## 3. 완료 기준 (Acceptance Criteria) 확인\n\n| 항목 | 완료 기준 | 상태 | 검증 근거 |\n|---|---|:---:|---|\n| 1 | H-03 추억 기록 버튼이 사진의 우측 하단에 배치 | ✅ 통과 | 사진 배너 우측 하단 `FilledButton` 배치 확인 |\n| 2 | '가족 1 / 2 마리' 문구가 제거 | ✅ 통과 | 하단 흰색 가족 박스에서 텍스트 제거 확인 |\n| 3 | H-05가 안내 문구 없이 표시 | ✅ 통과 | 안내 문구 없이 페이지 인디케이터 도트만 가족 박스에 표시 확인 |\n| 4 | 생일 정보는 화면에서만 제거 | ✅ 통과 | 배너에서 생일 텍스트 제거, pet 데이터의 birthday 보존 확인 |\n| 5 | 사진 우측 상단에 D+숫자 표시 | ✅ 통과 | 사진 배너 우측 상단에 `D+31`, `D+2` 표시 확인 |\n| 6 | 글자 색상은 검정색 | ✅ 통과 | D+ 배지 텍스트 `Colors.black` 적용 확인 |\n| 7 | 배경색은 앱 전체 배경색과 동일 | ✅ 통과 | D+ 배지 배경 `AppColors.canvas` (`#FAF8F3`) 적용 확인 |\n| 8 | 추억 기록 버튼의 기존 기능 유지 | ✅ 통과 | 버튼 탭 시 해당 반려동물의 추억 작성 모달 정상 호출 |\n| 9 | H-04의 작은 Day 문구 제거 | ✅ 통과 | 주간 달력 날짜 아래 Day 문구 제거 확인 |\n| 10 | 주간 달력의 날짜 선택과 약속 강조 정상 동작 | ✅ 통과 | 날짜 선택 시 미리보기 갱신 및 약속 날짜 노란색 강조 정상 동작 |\n| 11 | 사진 좌우 제스처로 반려동물 변경 | ✅ 통과 | 드래그/스와이프로 모카 ↔ 루나 전환 정상 동작 |\n| 12 | 반려동물 변경 시 이름, 종, D+숫자 갱신 | ✅ 통과 | 모카(골든 리트리버, D+31) ↔ 루나(코리안 쇼트헤어, D+2) 정상 갱신 |\n| 13 | 사진, 버튼, 텍스트가 모바일/웹에서 겹치지 않음 | ✅ 통과 | 모바일(360px), 웹(1024px) 모두 레이아웃 오버랩 없음 확인 |\n| 14 | flutter analyze 및 관련 test 통과 | ✅ 통과 | `analyze_files` 0 errors, 전체 78개 테스트 통과 |\n\n---\n\n## 4. 완료 기준 스크린샷 증적\n"},{"path":"lib/screens/dashboard_tab.dart","sha256":"11a4c0b8554f1505a13fb65a52addf091859a61ef5164568f4f6cf8816dd1d7c","excerpt":"import 'package:flutter/material.dart';\r\nimport '../store.dart';\r\nimport '../design_system.dart';\r\nimport '../widgets/common.dart';\r\nimport 'home_content.dart';\r\nimport 'home_model.dart';\r\nimport '../home_week_calendar.dart';\r\nimport '../pet_profile_carousel.dart';\r\n\r\nclass DashboardTab extends StatelessWidget {\r\n  const DashboardTab({\r\n    super.key,\r\n    required this.model,\r\n    required this.hostContext,\r\n  });\r\n  final HomeModel model;\r\n  final BuildContext hostContext;\r\n  @override\r\n  Widget build(BuildContext context) =>\r\n      _DashboardTabContent(hostContext, model).render();\r\n}\r\n\r\nclass _DashboardTabContent extends HomeContent {\r\n  _DashboardTabContent(super.context, super.model);\r\n  Widget render() => dashboard();\r\n  Future\u003cvoid> recordPetMemory(RecordData pet) async {\r\n    setState(() {\r\n      selectedPetId = pet['id'];\r\n      editingMemories = false;\r\n      memoryDate = DateUtils.dateOnly(korea(s.clock()));\r\n      tab = 1;\r\n    });\r\n    await editMemoryPhoto(initialDate: memoryDate, petId: pet['id']);\r\n  }\r\n\r\n  Widget dashboard() => Align(\r\n    alignment: Alignment.topCenter,\r\n    child: ConstrainedBox(\r\n      constraints: const BoxConstraints(maxWidth: 520),\r\n      child: Column(\r\n        key: const ValueKey('home-dashboard'),\r\n        crossAxisAlignment: CrossAxisAlignment.start,\r\n        children: [\r\n          title('함께라서 더 좋은 하루 🐾', '평범한 오늘이, 소중한 추억이 되는 곳'),\r\n          if (selectedPet == null)\r\n            Container(\r\n              width: double.infinity,\r\n              padding: const EdgeInsets.all(28),\r\n              decoration: BoxDecoration(\r\n                color: AppColors.surface,\r\n                borderRadius: BorderRadius.circular(22),\r\n                border: Border.all(color: AppColors.cardBorder),\r\n              ),\r\n              child: Column(\r\n                children: [\r\n                  const Icon(Icons.pets_outlined, size: 44, color: muted),\r\n                  const SizedBox(height: 12),\r\n                  const Text('우리 가족을 먼저 소개해 주세요.'),\r\n                  const SizedBox(height: 16),\r\n                  FilledButton(\r\n                    onPressed: () => editOwned('pets'),\r\n                    child: const Text('반려동물 등록'),\r\n                  ),\r\n                ],\r\n              ),\r\n            )\r\n          else\r\n            PetProfileCarousel(\r\n              pets: owned('pets'),\r\n              selectedId: selectedPet!['id'],\r"},{"path":"lib/screens/home_model.dart","sha256":"cb17d166e75a19699c1e5c21fbe7b0e0e7502559283259a8ffa581eb7eaf829d","excerpt":"import 'package:flutter/material.dart';\r\nimport '../store.dart';\r\n\r\nclass HomeModel extends ChangeNotifier {\r\n  HomeModel(this.s) {\r\n    memoryDate = DateUtils.dateOnly(korea(s.clock()));\r\n    memoryMonth = DateTime(memoryDate.year, memoryDate.month);\r\n  }\r\n  final PetStore s;\r\n  int tab = 0;\r\n  String filter = '전체';\r\n  bool editingMemories = false;\r\n  bool showMeetingMap = false;\r\n  String meetingCategory = '전체';\r\n  int chatSection = 0;\r\n  String? selectedPetId;\r\n  late DateTime memoryDate;\r\n  DateTime? homeDate;\r\n  late DateTime memoryMonth;\r\n\r\n  void update(VoidCallback action) {\r\n    action();\r\n    notifyListeners();\r\n  }\r\n\r\n  List\u003cRecordData> owned(String key) =>\r\n      s.rows(key).where((r) => r['owner'] == s.user).toList();\r\n  RecordData? get selectedPet {\r\n    final pets = owned('pets');\r\n    final selected = pets.where((pet) => pet['id'] == selectedPetId);\r\n    return selected.isNotEmpty\r\n        ? selected.first\r\n        : pets.isEmpty\r\n        ? null\r\n        : pets.first;\r\n  }\r\n\r\n  List\u003cRecordData> get selectedPetMemories => owned(\r\n    'memories',\r\n  ).where((photo) => photo['petId'] == selectedPet?['id']).toList();\r\n  DateTime? get selectedOrigin => s.memoryOriginFor(selectedPet?['id']);\r\n  DateTime? get selectedFirstPhoto => s.firstPhotoDateFor(selectedPet?['id']);\r\n  void selectPet(String id) => update(() {\r\n    selectedPetId = id;\r\n    editingMemories = false;\r\n    memoryDate = DateUtils.dateOnly(korea(s.clock()));\r\n  });\r\n}\r\n"},{"path":".agents/skills/document-sync/SKILL.md","sha256":"7239936f942f03567d50b5356e4cb3c5d062230e7cf60ab2ad362e5854ffe4c9","excerpt":"---\nname: document-sync\ndescription: Keep PetSNS documentation aligned with verified code changes.\n---\n\n# Documentation Sync\n\nRun after a task is implemented and verified.\n\n## Rules\n\n1. Inspect changed files and actual test results.\n2. Update documentation only when behavior, architecture,\n   constraints, status, or verification changes.\n3. Do not create new documents by default.\n4. Preserve important technical decisions and test evidence.\n5. Do not claim completion without verification.\n6. Do not modify unrelated documentation.\n\n## Document Ownership\n\n- README.md:\n  Technical setup and concise current implementation status.\n\n- docs/human/README.md:\n  Korean summary of current features, pending work,\n  and important changes understandable to non-developers.\n\n- PRD.md:\n  Feature task index, shared requirements, and task status.\n\n- docs/prd/:\n  Detailed requirements, technical decisions,\n  boundaries, and verification evidence.\n\n- docs/human/ui-guide.html:\n  Update only when UI structure or element identifiers change.\n\n- docs/human/task record/:\n  Preserve completed UI task evidence.\n  Do not create a new task record unless required.\n\n## Completion Report\n\nIn Korean, briefly state:\n- What changed.\n- What was verified.\n- Which documents were updated, or why none were needed.\n"}],"kind":"verification","title":"PetSNS 개발 워크플로 구현 검증","runs":[{"id":"DEV-01","role":"developer","actor":"root","revision":"e0663e1c055fda3c4882f250c764a40e7b1fa7fd","executedAt":"2026-10-12T04:44:12.402Z","environment":{"url":"http://127.0.0.1:8765/docs/human/task%20record/WORKFLOW-01/plan-test.html","viewport":"1280x720","build":"workflow:76d0ded9c640192cc05ed30a71c988e367ce45bf33d0ec1d598e48a1462112e4"},"checks":[{"id":"NETWORK","title":"초기 로컬 연결","result":"not-run","observed":"제한된 실행 환경에서 브라우저가 서버에 연결하지 못함. 이후 로컬 서버 실행 권한을 확보하고 DEV-02에서 실제 검증. 이 항목의 시각은 이력 복기 기록 시각이며 최초 연결 시도 시각은 기록되지 않았다.","evidence":[],"issueIds":[]}],"issues":[]},{"id":"DEV-02","role":"developer","actor":"root","revision":"e0663e1c055fda3c4882f250c764a40e7b1fa7fd","executedAt":"2026-10-12T04:44:12.402Z","environment":{"url":"http://127.0.0.1:8765/docs/human/task%20record/WORKFLOW-01/plan-test.html","viewport":"1280x720","build":"workflow:76d0ded9c640192cc05ed30a71c988e367ce45bf33d0ec1d598e48a1462112e4"},"issues":[],"checks":[{"id":"AC1","title":"PRD·코드 기반 계획과 근거","result":"passed","observed":"PRD와 홈 PRD·현재 홈 코드·Docs Sync를 실제 읽고 경로/파일 해시/발췌를 계획 HTML에 포함했다.","evidence":[{"kind":"command","command":"node prepare-artifacts.mjs"}],"issueIds":[]},{"id":"AC2","title":"결정별 선택·메모·새로고침 보존","result":"passed","observed":"격리 테스트 보고서에서 D1 승인, D2 수정, D3 보류와 메모를 입력했고 새로고침 후 같은 값을 확인했다.","evidence":[{"kind":"screenshot","path":"evidence/plan-history.jpg","capturedAt":"2026-10-12T04:23:30.946Z"}],"issueIds":[]},{"id":"AC3","title":"회차별 승인 JSON과 불변 이력","result":"passed","observed":"실제로 다운로드된 1·2회차 JSON을 읽어 회차·history 및 과거 메모 보존을 확인했다. TEST JSON은 사용자의 실제 승인이 아니다.","evidence":[{"kind":"screenshot","path":"evidence/plan-history.jpg","capturedAt":"2026-10-12T04:23:30.946Z"},{"kind":"command","command":"Read downloaded WORKFLOW-01-TEST-plan-round-1.json and round-2.json"}],"issueIds":[]},{"id":"AC4","title":"시안 비교","result":"passed","observed":"이전 v1과 현재 v2 이미지·D2 제안 차이를 브라우저의 좌우 비교에서 확인했다.","evidence":[{"kind":"screenshot","path":"evidence/plan-compare.jpg","capturedAt":"2026-10-12T04:23:31.370Z"}],"issueIds":[]},{"id":"AC5","title":"오래된 승인 차단","result":"passed","observed":"실제 JSON 파일 가져오기에서 다른 revision은 Stale/wrong revision으로 거부됨. 모델 테스트에서 원문 변경·reportHash·runIds·history 손상 거부를 확인했다.","evidence":[{"kind":"command","command":"node --test .agents/workflow/model.test.mjs; browser filechooser stale-review.json"}],"issueIds":[]},{"id":"AC6","title":"완료 경계와 Issue 중복 방지","result":"passed","observed":"10개 모델 테스트 통과. 미실행/중대/같은 QA 실행자 차단, 경미한 문제 명시 수용, open/closed marker 재사용, 불완전 검색·충돌 차단을 검증했다. 실제 GitHub Issue 생성은 수행하지 않았다.","evidence":[{"kind":"command","command":"node --test .agents/workflow/model.test.mjs"}],"issueIds":[]},{"id":"SMOKE","title":"PetSNS 웹 화면 실제 캡처","result":"passed","observed":"기존 웹 빌드를 localhost:8080에서 열어 로그인 화면을 직접 확인·캡처했다. main.dart.js SHA-256=80005a9eb0f9e8d86695c4d03251ac74cbbcba84c1d4ad37cd95c3736b999d46. 최신 소스 빌드/인증·저장 기능 재검증은 이 화면 확인 범위에 포함되지 않는다.","evidence":[{"kind":"screenshot","path":"evidence/petsns-web.jpg","capturedAt":"2026-10-12T04:23:47.568Z"}],"issueIds":[]},{"id":"AC7","title":"Verification 결과 검토 및 독립 QA 탭","result":"passed","observed":"브라우저에서 합성 minor 테스트의 승인 disabled, 미수용 상태 조건부 export 거부, 수용 뒤 회차 저장 성공을 확인했다. 실제 문제/사용자 승인이 아니며 GitHub 등록에 사용하지 않았다. 독립 QA가 개발자·QA·화면·이력 탭 및 과거 회차 다운로드 버튼을 별도로 확인했다.","evidence":[{"kind":"screenshot","path":"evidence/verification-review.jpg","capturedAt":"2026-10-12T04:44:51.794Z"}],"issueIds":[]}]},{"id":"QA-WORKFLOW-01","role":"independent-qa","actor":"independent_qa","revision":"e0663e1c055fda3c4882f250c764a40e7b1fa7fd","executedAt":"2026-10-12T04:44:22.162Z","environment":{"url":"http://127.0.0.1:8765/docs/human/task%20record/WORKFLOW-01/plan-independent-qa.html","viewport":"1280x720","build":"workflow-stage at base e0663e1c055fda3c4882f250c764a40e7b1fa7fd; independent QA fixture; implementation files verified on 2026-10-12"},"checks":[{"id":"QA-PLAN-DECISIONS","title":"독립 Plan 결정별 승인/수정/보류와 보존","result":"passed","observed":"격리된 WORKFLOW-01-INDEPENDENT-QA에서 초기 세 결정 모두 보류 확인. D1 승인·D2 수정·D3 보류 및 메모를 UI로 설정하고 새로고침 후 유지 확인. 실제 사용자 승인 데이터에는 손대지 않음.","evidence":[{"kind":"screenshot","path":"evidence/qa-plan-states.jpg","capturedAt":"2026-10-12T04:20:16.636Z"}],"issueIds":[]},{"id":"QA-PLAN-COMPARE","title":"독립 Plan 두 시안과 버전별 승인 분리","result":"passed","observed":"v1/v2 시안 이미지를 비교 탭에서 동시에 확인. v2의 승인·수정은 v1에 전달되지 않으며 과거 시안 경고 확인.","evidence":[{"kind":"screenshot","path":"evidence/qa-plan-compare.jpg","capturedAt":"2026-10-12T04:23:28.071Z"}],"issueIds":[]},{"id":"QA-PLAN-ROUNDS","title":"독립 Plan 회차 JSON과 이력 불변","result":"passed","observed":"UI로 1·2회차 JSON 실제 다운로드. 두 파일의 schema/hash/history를 helper로 검증했고 2회차 history[0]는 1회차와 동일. 1회차 재다운로드 버튼의 성공 표시 확인. 브라우저 파일 다운로드 완료 경로 반환이 장시간 지연됨.","evidence":[{"kind":"screenshot","path":"evidence/qa-plan-history.jpg","capturedAt":"2026-10-12T04:23:37.481Z"},{"kind":"command","command":"node qa-artifacts/independent/checks.mjs"}],"issueIds":[]},{"id":"QA-SOURCES-ISSUE-MODEL","title":"독립 PRD/코드 근거와 Issue Manager 모델 검증","result":"passed","observed":"독립 checks.mjs 6개 통과. 원본 5개 파일 해시·발췌 일치, 다운로드 리비전·제안 변경 거부, 예약 ID 거부, 미수용/major/critical/미실행 queue 거부, 재리비전의 stable marker 및 ledger 멱등/URL 충돌 거부. 제공 모델 테스트 9개도 통과. GitHub 쓰기는 실행하지 않음.","evidence":[{"kind":"command","command":"node qa-artifacts/independent/checks.mjs"},{"kind":"command","command":"node --test workflow-stage/.agents/workflow/model.test.mjs"}],"issueIds":[]}],"issues":[]},{"id":"QA-WORKFLOW-02","role":"independent-qa","actor":"independent_qa","revision":"e0663e1c055fda3c4882f250c764a40e7b1fa7fd","executedAt":"2026-10-12T04:47:21.102Z","environment":{"url":"http://127.0.0.1:8765/docs/human/task%20record/WORKFLOW-01/verification-independent-qa.html","viewport":"1280x720","build":"workflow:76d0ded9c640192cc05ed30a71c988e367ce45bf33d0ec1d598e48a1462112e4"},"checks":[{"id":"QA-PLAN-DECISIONS","title":"독립 Plan 결정별 승인/수정/보류와 보존","result":"passed","observed":"격리된 WORKFLOW-01-INDEPENDENT-QA에서 초기 세 결정 모두 보류 확인. D1 승인·D2 수정·D3 보류 및 메모를 UI로 설정하고 새로고침 후 유지 확인. 실제 사용자 승인 데이터에는 손대지 않음.","evidence":[{"kind":"screenshot","path":"evidence/qa-plan-states.jpg","capturedAt":"2026-10-12T04:20:16.636Z"}],"issueIds":[]},{"id":"QA-PLAN-COMPARE","title":"독립 Plan 두 시안과 버전별 승인 분리","result":"passed","observed":"v1/v2 시안 이미지를 비교 탭에서 동시에 확인. v2의 승인·수정은 v1에 전달되지 않으며 과거 시안 경고 확인.","evidence":[{"kind":"screenshot","path":"evidence/qa-plan-compare.jpg","capturedAt":"2026-10-12T04:23:28.071Z"}],"issueIds":[]},{"id":"QA-PLAN-ROUNDS","title":"독립 Plan 회차 JSON과 이력 불변","result":"passed","observed":"UI로 1·2회차 JSON 실제 다운로드. 두 파일의 schema/hash/history를 helper로 검증했고 2회차 history[0]는 1회차와 동일. 1회차 재다운로드 버튼의 성공 표시 확인. 브라우저 파일 다운로드 완료 경로 반환이 장시간 지연됨.","evidence":[{"kind":"screenshot","path":"evidence/qa-plan-history.jpg","capturedAt":"2026-10-12T04:23:37.481Z"},{"kind":"command","command":"node qa-artifacts/independent/checks.mjs"}],"issueIds":[]},{"id":"QA-SOURCES-ISSUE-MODEL","title":"독립 PRD/코드 근거와 Issue Manager 모델 검증","result":"passed","observed":"독립 checks.mjs 7개 통과. 원본 5개 파일 해시·발췌 일치, 실제 다운로드 리비전·제안 변경 거부, 예약 ID 거부, 미수용/major/critical/미실행 queue 거부, 재리비전 stable marker 및 ledger 멱등/URL 충돌 거부, closed remote marker 재사용·불완전 검색/복수 marker/ledger 원격 누락 차단 및 동일 title 후보 검토 동작 확인. 최신 제공 모델 테스트 10개도 통과. GitHub 실제 검색·쓰기는 미실행. 확인한 helper 파일 해시는 helper-hashes.json에 별도 보존.","evidence":[{"kind":"command","command":"node qa-artifacts/independent/checks.mjs"},{"kind":"command","command":"node --test workflow-stage/.agents/workflow/model.test.mjs"}],"issueIds":[]},{"id":"QA-VERIFICATION-TABS","title":"독립 Verification QA/실제 화면/이력 탭","result":"passed","observed":"격리된 합성 테스트 보고서에서 개발자/독립 QA/실제 화면을 별도 탭으로 확인하고 QA·승인 이력에 두 회차 및 모든 실행이 표시됨. 합성 minor issue는 기능 검증 fixture이며 실제 잔여 문제로 간주하지 않음.","evidence":[{"kind":"screenshot","path":"evidence/qa-verification-qa-tab.jpg","capturedAt":"2026-10-12T04:44:58.099Z"},{"kind":"screenshot","path":"evidence/qa-verification-screens-tab.jpg","capturedAt":"2026-10-12T04:44:58.418Z"}],"issueIds":[]},{"id":"QA-VERIFICATION-REVIEW","title":"독립 Verification 조건부 승인 경계와 회차 UI","result":"passed","observed":"초기 보류/일반 승인 disabled 확인. 합성 minor 미수용 상태의 조건부 완료 저장은 Every minor issue needs explicit acceptance로 거부. 수용 후 1·2회차 저장 성공 및 history의 1회차 버튼 클릭이 회차 1 다운로드 상태 표시를 발생시켜 handler 정상 확인. 브라우저 다운로드 경로 도구의 장시간 지연으로 Verification 파일 바이트 독립 확인은 생략; Plan JSON 바이트는 실제 확인함.","evidence":[{"kind":"screenshot","path":"evidence/qa-verification-rejection.jpg","capturedAt":"2026-10-12T04:45:04.878Z"},{"kind":"screenshot","path":"evidence/qa-verification-history.jpg","capturedAt":"2026-10-12T04:45:17.246Z"}],"issueIds":[]},{"id":"QA-VERIFICATION-MISSING-QA","title":"독립 QA 기록 누락 시 실제 보고서 완료 차단","result":"passed","observed":"독립 QA 통합 전 실제 verification.html의 완료 차단 메시지와 승인/조건부 완료 옵션 disabled를 확인. 실제 보고서의 사용자 선택은 변경하지 않음.","evidence":[{"kind":"screenshot","path":"evidence/qa-verification-actual-blocked.jpg","capturedAt":"2026-10-12T04:45:25.308Z"}],"issueIds":[]}],"issues":[]}],"reportHash":"e4938a67e98f6dcc45891ae9963ba5acfc22c4c891554bb82651698d3797cea2"}</script><script type="module">const choices = ['approved', 'revise', 'hold'];
+function assert(condition, message) { if (!condition) throw new Error(message); }
+function nonempty(value) { return typeof value === 'string' && value.trim().length > 0; }
+function unique(items, label) {
+  assert(Array.isArray(items) && items.length > 0, `${label}: empty`);
+  assert(items.every(x => nonempty(x.id) && !['__proto__','constructor','prototype'].includes(x.id)) && new Set(items.map(x => x.id)).size === items.length, `${label}: duplicate/missing/reserved id`);
+}
+function safePath(value) {
+  return nonempty(value) && (/^https:\/\//i.test(value) || (!/^[a-z]+:|^[/\\]|(?:^|[/\\])\.\.(?:[/\\]|$)/i.test(value) && !/[<>]/.test(value)));
+}
+function validateReport(d) {
+  assert(d.schemaVersion === 1 && ['plan', 'verification'].includes(d.kind), 'Unsupported report');
+  for (const key of ['project', 'taskId', 'title']) assert(nonempty(d[key]), `Missing ${key}`);
+  assert(/^[\w.-]+\/[\w.-]+$/.test(d.repository), 'Invalid repository');
+  assert(/^[a-f\d]{40}$/i.test(d.revision), 'Expected exact Git revision');
+  assert(Array.isArray(d.sources) && d.sources.length > 0, 'Missing source evidence');
+  for (const s of d.sources) assert(nonempty(s.path) && /^[a-f\d]{64}$/i.test(s.sha256) && nonempty(s.excerpt), 'Invalid source evidence');
+  if (d.kind === 'plan') {
+    unique(d.versions, 'versions');
+    for (const v of d.versions) {
+      assert(nonempty(v.summary), 'Missing version summary');
+      unique(v.decisions, 'decisions');
+      for (const c of v.decisions) {
+        for (const k of ['title', 'proposal', 'reason', 'impact']) assert(nonempty(c[k]), `Missing decision ${k}`);
+        assert(typeof c.requiresExplicitApproval === 'boolean', 'Missing approval boundary');
+      }
+      assert(Array.isArray(v.acceptance) && v.acceptance.length > 0 && v.acceptance.every(nonempty), 'Missing acceptance criteria');
+      assert(Array.isArray(v.mockups) && v.mockups.every(x => nonempty(x.title) && safePath(x.path)), 'Unsafe draft path');
+    }
+  } else {
+    unique(d.runs, 'runs');
+    for (const r of d.runs) {
+      assert(['developer', 'independent-qa'].includes(r.role) && nonempty(r.actor), 'Invalid run actor/role');
+      assert(/^[a-f\d]{40}$/i.test(r.revision) && Number.isFinite(Date.parse(r.executedAt)), 'Invalid run revision/time');
+      assert(r.environment && /^https?:\/\//.test(r.environment.url) && nonempty(r.environment.viewport) && nonempty(r.environment.build), 'Missing runtime environment');
+      unique(r.checks, 'checks');
+      assert(Array.isArray(r.issues), 'Missing issues');
+      if (r.issues.length) unique(r.issues, 'issues');
+      for (const i of r.issues) {
+        assert(['minor', 'major', 'critical'].includes(i.severity), 'Invalid severity');
+        for (const k of ['title', 'location', 'actual', 'expected']) assert(nonempty(i[k]), `Missing issue ${k}`);
+        assert(Array.isArray(i.steps) && i.steps.length && i.steps.every(nonempty), 'Missing reproduction');
+      }
+      for (const c of r.checks) {
+        assert(nonempty(c.title) && nonempty(c.observed) && ['passed', 'failed', 'not-run'].includes(c.result), 'Invalid check');
+        assert(Array.isArray(c.evidence) && Array.isArray(c.issueIds), 'Missing check evidence/issue mapping');
+        assert(c.result === 'not-run' || c.evidence.length > 0, 'Executed check needs evidence');
+        for (const e of c.evidence) {
+          assert(['screenshot', 'command', 'source'].includes(e.kind), 'Invalid evidence kind');
+          if (e.kind === 'command') assert(nonempty(e.command), 'Missing executed command');
+          else assert(safePath(e.path), 'Unsafe evidence path');
+          if (e.kind === 'screenshot') assert(Number.isFinite(Date.parse(e.capturedAt)), 'Missing capture time');
+        }
+        assert(c.issueIds.every(id => r.issues.some(i => i.id === id)), 'Unknown linked issue');
+      }
+    }
+    const current = currentRuns(d);
+    const seen = new Map();
+    for (const r of current) for (const i of r.issues) {
+      assert(!seen.has(i.id) || JSON.stringify(seen.get(i.id)) === JSON.stringify(i), 'Conflicting issue ID');
+      seen.set(i.id, i);
+    }
+  }
+  return d;
+}
+function currentRuns(d) {
+  return ['developer', 'independent-qa'].map(role => d.runs.filter(r => r.role === role && r.revision === d.revision).at(-1)).filter(Boolean);
+}
+function readiness(d) {
+  const runs = currentRuns(d), issues = [...new Map(runs.flatMap(r => r.issues).map(i => [i.id, i])).values()];
+  const reasons = [];
+  if (runs.length !== 2) reasons.push('현재 리비전의 개발자 검증과 독립 QA가 모두 필요합니다.');
+  if (runs.length === 2 && (runs[0].actor === runs[1].actor || runs[0].environment.build !== runs[1].environment.build)) reasons.push('독립 실행자와 동일 빌드가 필요합니다.');
+  for (const r of runs) {
+    if (!r.checks.some(c => c.result !== 'not-run' && c.evidence.some(e => e.kind === 'screenshot'))) reasons.push(`${r.id}: 실제 화면 스크린샷이 없습니다.`);
+    for (const c of r.checks) {
+      if (c.result === 'not-run') reasons.push(`${r.id}/${c.id}: 미실행`);
+      if (c.result !== 'not-run' && !c.evidence.some(e => ['screenshot', 'command'].includes(e.kind))) reasons.push(`${r.id}/${c.id}: 실행 증거 없음`);
+      if (c.result === 'failed' && (!c.issueIds.length || c.issueIds.some(id => r.issues.find(i => i.id === id).severity !== 'minor'))) reasons.push(`${r.id}/${c.id}: 차단 실패`);
+    }
+  }
+  if (issues.some(i => i.severity !== 'minor')) reasons.push('중대 문제가 남아 있습니다.');
+  return {status: reasons.length ? 'blocked' : issues.length ? 'conditional-complete' : 'complete', reasons, issues, runIds: runs.map(r => r.id)};
+}
+function validateRound(d, r) {
+  assert(r && r.schemaVersion === 1 && r.kind === `${d.kind}-review`, 'Wrong review kind');
+  for (const k of ['project', 'taskId', 'repository', 'revision', 'reportHash']) assert(r[k] === d[k], `Stale/wrong ${k}`);
+  assert(Number.isInteger(r.round) && r.round > 0 && Number.isFinite(Date.parse(r.reviewedAt)), 'Invalid review round');
+  if (d.kind === 'plan') {
+    const v = d.versions.find(v => v.id === r.versionId);
+    assert(v && r.versionHash === v.versionHash, 'Wrong version fingerprint');
+    assert(Array.isArray(r.decisions) && r.decisions.length === v.decisions.length && new Set(r.decisions.map(c => c.id)).size === v.decisions.length, 'Wrong decision set');
+    for (const c of r.decisions) assert(v.decisions.some(x => x.id === c.id && x.proposalHash === c.proposalHash) && choices.includes(c.status) && typeof c.note === 'string', 'Invalid decision review');
+  } else {
+    const ready = readiness(d);
+    assert(JSON.stringify(r.runIds) === JSON.stringify(ready.runIds), 'Stale QA runs');
+    assert(['approved', 'conditional-complete', 'revise', 'hold'].includes(r.verdict), 'Invalid verdict');
+    assert(r.computedStatus === ready.status && typeof r.note === 'string', 'Wrong verification result');
+    assert(Array.isArray(r.acceptedIssueIds) && new Set(r.acceptedIssueIds).size === r.acceptedIssueIds.length && r.acceptedIssueIds.every(id => ready.issues.some(i => i.id === id && i.severity === 'minor')), 'Invalid issue acceptance');
+    if (r.verdict === 'approved') assert(ready.status === 'complete', 'Cannot approve incomplete verification');
+    if (r.verdict === 'conditional-complete') assert(ready.status === 'conditional-complete' && ready.issues.every(i => r.acceptedIssueIds.includes(i.id)), 'Every minor issue needs explicit acceptance');
+  }
+  return r;
+}
+function validateReview(d, review) {
+  validateRound(d, review);
+  assert(Array.isArray(review.history) && review.history.length === review.round, 'Missing round history');
+  review.history.forEach((r, i) => { assert(r.round === i + 1, 'Non-sequential history'); validateRound(d, r); });
+  const {history, ...latest} = review;
+  assert(JSON.stringify(latest) === JSON.stringify(review.history.at(-1)), 'Review/history mismatch');
+  return review;
+}
+
+const report = JSON.parse(document.getElementById('report-data').textContent);
+const key = `petsns.workflow.v1:${report.repository}:${report.taskId}:${report.kind}:${report.reportHash}`;
+let state = {drafts: {}, history: []}, storageError = false;
+const root = document.getElementById('content'), message = document.getElementById('message');
+const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const msg = text => { message.textContent = text; };
+const latestVersion = report.versions?.at(-1);
+let selected = latestVersion?.id, active = report.kind === 'plan' ? 'plan' : 'developer';
+function persist() {
+  try { localStorage.setItem(key, JSON.stringify(state)); storageError = false; return true; }
+  catch { storageError = true; msg('브라우저 저장 실패. 선택을 보존할 수 없습니다. 저장 공간·권한을 복구한 뒤 다시 저장하세요.'); return false; }
+}
+try {
+  const saved = JSON.parse(localStorage.getItem(key) || 'null');
+  if (saved) {
+    if (saved.history?.length) validateReview(report, {...saved.history.at(-1), history: saved.history});
+    assert(saved.drafts && typeof saved.drafts === 'object', 'Invalid drafts');
+    state = saved;
+  }
+} catch { storageError = true; msg('저장된 데이터가 유효하지 않거나 접근이 차단되었습니다. 확인된 JSON을 가져오거나 저장을 다시 시도하세요.'); }
+document.getElementById('title').textContent = report.title;
+document.getElementById('identity').textContent = `${report.taskId} · ${report.repository} · ${report.revision.slice(0, 12)} · ${report.kind === 'plan' ? '계획 검토' : '실제 검증'}`;
+const tabs = report.kind === 'plan' ? [['plan','계획·결정'],['compare','시안 비교'],['sources','PRD·코드 근거'],['history','승인 이력']] : [['developer','개발자 검증'],['qa','독립 QA'],['screens','실제 화면'],['review','결과 검토'],['history','QA·승인 이력'],['sources','PRD·코드 근거']];
+document.getElementById('tabs').innerHTML = tabs.map(([id,title]) => `<button role="tab" id="tab-${id}" data-tab="${id}">${title}</button>`).join('');
+document.getElementById('tabs').addEventListener('click', event => { if (event.target.dataset.tab) { active = event.target.dataset.tab; draw(); } });
+function draft(v) {
+  if (!state.drafts[v.id]) state.drafts[v.id] = Object.fromEntries(v.decisions.map(d => [d.id,{status:'hold',note:''}]));
+  return state.drafts[v.id];
+}
+function figures(mockups, label) {
+  return mockups.map(m => `<figure><img loading="lazy" src="${esc(m.path)}" alt="${esc(m.title)}"><figcaption>${esc(label)} · ${esc(m.title)}</figcaption></figure>`).join('') || '<p class="muted">이미지 시안 없음. 아래 결정 비교를 확인하세요.</p>';
+}
+function versionBody(v, editable) {
+  const entries = draft(v);
+  return `<p>${esc(v.summary)}</p>${figures(v.mockups, '계획 시안, 실제 앱 캡처 아님')}<h2>핵심 결정</h2>` + v.decisions.map(d => `<article class="card"><h3>${esc(d.id)} · ${esc(d.title)}</h3>${d.requiresExplicitApproval ? '<span class="tag">명시적 승인 필요</span>' : ''}<p>${esc(d.proposal)}</p><p><b>이유</b> ${esc(d.reason)}</p><p><b>영향</b> ${esc(d.impact)}</p>${editable ? `<label>결정 상태 <select data-decision="${esc(d.id)}">${[['approved','승인'],['revise','수정'],['hold','보류']].map(([id,label])=>`<option value="${id}" ${entries[d.id]?.status===id?'selected':''}>${label}</option>`).join('')}</select></label><label>수정 내용·메모<textarea data-note="${esc(d.id)}">${esc(entries[d.id]?.note || '')}</textarea></label>` : ''}</article>`).join('') + `<h2>완료 기준</h2><ul>${v.acceptance.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
+}
+function options(value) { return report.versions.map(v=>`<option value="${esc(v.id)}" ${v.id===value?'selected':''}>${esc(v.id)} · ${esc(v.summary)}</option>`).join(''); }
+function runBody(r) {
+  return `<article class="card"><h2>${esc(r.id)} · ${r.role === 'independent-qa' ? '독립 QA' : '개발자 검증'}</h2><p>${esc(r.actor)} · ${esc(r.executedAt)}<br>${esc(r.environment.url)} · ${esc(r.environment.viewport)}<br>빌드 ${esc(r.environment.build)} · ${esc(r.revision)}</p>${r.checks.map(c=>`<article class="card"><h3 class="${c.result}">${esc(c.title)} · ${{passed:'통과',failed:'실패','not-run':'미실행'}[c.result]}</h3><p>${esc(c.observed)}</p>${c.evidence.map(e=>e.kind==='screenshot'?figures([{title:`${c.title} · ${e.capturedAt}`,path:e.path}],'실제 화면 증거'): `<pre>${esc(e.command || e.path)}</pre>`).join('')}${c.issueIds.length?`<p>연결 문제: ${c.issueIds.map(esc).join(', ')}</p>`:''}</article>`).join('')}${r.issues.map(i=>`<p class="${i.severity==='minor'?'muted':'blocked'}">${esc(i.id)} · ${esc(i.severity)} · ${esc(i.title)}<br>관찰: ${esc(i.actual)}<br>기대: ${esc(i.expected)}</p>`).join('')}</article>`;
+}
+function draw() {
+  tabs.forEach(([id])=>document.getElementById(`tab-${id}`).setAttribute('aria-selected', String(id===active)));
+  if (active === 'plan') {
+    const v = report.versions.find(v=>v.id===selected);
+    root.innerHTML = `<div class="toolbar"><label>시안 회차 <select id="version">${options(selected)}</select></label><span class="tag">${v===latestVersion?'현재 시안':'과거 시안, 현재 구현 승인에 사용하지 않음'}</span></div>${versionBody(v,true)}`;
+    document.getElementById('version').onchange = e => { selected=e.target.value; draw(); };
+    root.querySelectorAll('[data-decision]').forEach(el=>el.onchange=()=>{draft(v)[el.dataset.decision].status=el.value;persist();});
+    root.querySelectorAll('[data-note]').forEach(el=>el.oninput=()=>{draft(v)[el.dataset.note].note=el.value;persist();});
+  } else if (active === 'compare') {
+    root.innerHTML = `<div class="compare">${[0,1].map((_,i)=>`<section><label>${i?'새 시안':'이전 시안'} <select id="compare-${i}">${options(i?latestVersion.id:report.versions[0].id)}</select></label><div id="version-${i}"></div></section>`).join('')}</div>`;
+    const update = i => { const v=report.versions.find(v=>v.id===document.getElementById(`compare-${i}`).value); document.getElementById(`version-${i}`).innerHTML=versionBody(v,false); };
+    for (let i=0;i<2;i++){update(i);document.getElementById(`compare-${i}`).onchange=()=>update(i);}
+  } else if (active === 'sources') {
+    root.innerHTML='<h2>실제 읽은 PRD·코드</h2>'+report.sources.map(s=>`<article class="card"><h3>${esc(s.path)}</h3><small>SHA-256 ${esc(s.sha256)}</small><pre>${esc(s.excerpt)}</pre></article>`).join('');
+  } else if (['developer','qa'].includes(active)) {
+    const role=active==='qa'?'independent-qa':'developer', r=currentRuns(report).find(r=>r.role===role);
+    root.innerHTML=r?runBody(r):'<article class="card blocked">현재 리비전의 실행 기록이 없습니다. 미검증입니다.</article>';
+  } else if (active === 'screens') {
+    root.innerHTML='<h2>실제 웹 화면</h2>'+currentRuns(report).map(r=>`<h3>${esc(r.id)} · ${esc(r.actor)}</h3>`+r.checks.flatMap(c=>c.evidence.filter(e=>e.kind==='screenshot').map(e=>({title:`${c.title} · ${e.capturedAt}`,path:e.path}))).map(m=>figures([m],'실행 캡처')).join('')).join('');
+  } else if (active === 'review') {
+    const ready=readiness(report), review=state.drafts.verification||{verdict:'hold',note:'',acceptedIssueIds:[]};
+    state.drafts.verification=review;
+    root.innerHTML=`<article class="card"><h2 class="${ready.status==='blocked'?'blocked':'passed'}">검증 결과: ${{blocked:'완료 차단',complete:'완료 가능','conditional-complete':'조건부 완료 가능'}[ready.status]}</h2>${ready.reasons.map(x=>`<p>${esc(x)}</p>`).join('')}<label>최종 결정 <select id="verdict">${[['approved','승인'],['conditional-complete','조건부 완료'],['revise','수정'],['hold','보류']].map(([id,label])=>`<option value="${id}" ${review.verdict===id?'selected':''} ${((id==='approved'&&ready.status!=='complete')||(id==='conditional-complete'&&ready.status!=='conditional-complete'))?'disabled':''}>${label}</option>`).join('')}</select></label><label>메모<textarea id="review-note">${esc(review.note)}</textarea></label>${ready.issues.map(i=>`<label><input data-issue="${esc(i.id)}" type="checkbox" ${review.acceptedIssueIds.includes(i.id)?'checked':''} ${i.severity!=='minor'?'disabled':''}> 경미한 문제 수용: ${esc(i.title)} (${esc(i.id)}, ${esc(i.severity)})</label>`).join('')}</article>`;
+    document.getElementById('verdict').onchange=e=>{review.verdict=e.target.value;persist();};
+    document.getElementById('review-note').oninput=e=>{review.note=e.target.value;persist();};
+    root.querySelectorAll('[data-issue]').forEach(el=>el.onchange=()=>{review.acceptedIssueIds=[...root.querySelectorAll('[data-issue]:checked')].map(x=>x.dataset.issue);persist();});
+  } else if (active === 'history') {
+    root.innerHTML='<h2>승인 회차 이력</h2>'+(!state.history.length?'<p>저장된 승인 회차 없음</p>':state.history.map(r=>`<article class="card"><h3>회차 ${r.round} · ${esc(r.reviewedAt)}</h3><p>${esc(r.versionId || r.verdict)}</p><pre>${esc(JSON.stringify(r.decisions || {verdict:r.verdict,acceptedIssueIds:r.acceptedIssueIds},null,2))}</pre><button data-download="${r.round}">이 회차 JSON 다운로드</button></article>`).join(''));
+    if(report.kind==='verification') root.innerHTML+='<h2>모든 QA·개발자 실행 이력</h2>'+report.runs.map(runBody).join('');
+    root.querySelectorAll('[data-download]').forEach(el=>el.onclick=()=>downloadRound(Number(el.dataset.download)));
+  }
+}
+function envelope() {
+  const common={schemaVersion:1,kind:`${report.kind}-review`,project:report.project,taskId:report.taskId,repository:report.repository,revision:report.revision,reportHash:report.reportHash,round:state.history.length+1,reviewedAt:new Date().toISOString()};
+  if(report.kind==='plan') {
+    const v=report.versions.find(v=>v.id===selected);
+    return {...common,versionId:v.id,versionHash:v.versionHash,decisions:v.decisions.map(c=>({id:c.id,proposalHash:c.proposalHash,...draft(v)[c.id]}))};
+  }
+  const ready=readiness(report), r=state.drafts.verification||{verdict:'hold',note:'',acceptedIssueIds:[]};
+  return {...common,runIds:ready.runIds,computedStatus:ready.status,...r};
+}
+function downloadRound(round) {
+  if(storageError && !persist()) return;
+  const entry=state.history[round-1], data={...entry,history:state.history.slice(0,round)};
+  validateReview(report,data);
+  const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})), a=document.createElement('a');
+  a.href=url;a.download=`${report.taskId}-${report.kind}-round-${round}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  msg(`회차 ${round} JSON을 다운로드했습니다.`);
+}
+document.getElementById('save').onclick=()=>{
+  try {
+    const entry=envelope();validateRound(report,entry);
+    const previous=state.history; state.history=[...previous,entry];
+    if(!persist()){state.history=previous;return;}
+    downloadRound(entry.round);if(active==='history')draw();
+  } catch(e){msg(`저장 불가: ${e.message}`);}
+};
+document.getElementById('import').onchange=async event=>{
+  const file=event.target.files[0];if(!file)return;
+  try {
+    const data=JSON.parse(await file.text());validateReview(report,data);
+    assert(data.round>=state.history.length,'이전 JSON으로 현재 이력을 덮어쓸 수 없습니다.');
+    state.history.forEach((r,i)=>assert(JSON.stringify(r)===JSON.stringify(data.history[i]),'기존 승인 이력과 충돌합니다.'));
+    const next={drafts:structuredClone(state.drafts),history:data.history};
+    for(const r of data.history) {
+      if(report.kind==='plan')next.drafts[r.versionId]=Object.fromEntries(r.decisions.map(c=>[c.id,{status:c.status,note:c.note}]));
+      else next.drafts.verification={verdict:r.verdict,note:r.note,acceptedIssueIds:r.acceptedIssueIds};
+    }
+    const previous=state;state=next;
+    if(!persist()){state=previous;return;}
+    if(report.kind==='plan')selected=data.versionId;
+    draw();msg(`회차 ${data.round}까지 가져왔습니다.`);
+  }catch(e){msg(`가져오기 거부: ${e.message}`);}
+  event.target.value='';
+};
+draw();
+</script></body></html>

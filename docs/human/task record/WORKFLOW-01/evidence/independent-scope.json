@@ -1,0 +1,22 @@
+{
+  "executedAt": "2026-10-12T04:44:22.164Z",
+  "actor": "independent_qa",
+  "petApp": {
+    "url": "http://127.0.0.1:8080/",
+    "screenshot": "petsns-login.jpg",
+    "capturedAt": "2026-10-12T04:43:33.571Z",
+    "viewport": "1280x720",
+    "observed": "실제 로그인 화면 렌더 확인",
+    "build": "existing deployed local build; latest source/build match not verified",
+    "notRun": [
+      "로그인 인증",
+      "로그인 후 데이터 CRUD·영속성",
+      "최신 소스 빌드 일치"
+    ]
+  },
+  "notRun": [
+    "GitHub 실제 issue 생성",
+    "GitHub live 중복 검색",
+    "storage quota/privacy failure injection"
+  ]
+}

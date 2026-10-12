@@ -1,0 +1,4 @@
+interface:
+  display_name: "PetSNS Issue Manager"
+  short_description: "수용한 경미한 문제를 중복 없이 GitHub Issues로 등록"
+  default_prompt: "$issue-manager를 사용해 검토한 조건부 완료 JSON의 경미한 문제를 등록해 주세요."

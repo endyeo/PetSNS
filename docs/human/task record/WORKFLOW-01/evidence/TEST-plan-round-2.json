@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "kind": "plan-review",
+  "project": "PetSNS",
+  "taskId": "WORKFLOW-01-TEST",
+  "repository": "endyeo/PetSNS",
+  "revision": "e0663e1c055fda3c4882f250c764a40e7b1fa7fd",
+  "reportHash": "ff4a7a7328ed4a8656ada9ac17059d096f746bada97f05916543d7c8d42c48d8",
+  "round": 2,
+  "reviewedAt": "2026-10-12T04:23:06.156Z",
+  "versionId": "v2",
+  "versionHash": "f11bff8c972a0de3866601fe7d650ed98b713676384d156e54e31d838a82642a",
+  "decisions": [
+    {
+      "id": "D1",
+      "proposalHash": "e60ebf87967d99bfa17c8ee626ee51172ae3011f89fd1e5e667f84f287f1512f",
+      "status": "approved",
+      "note": ""
+    },
+    {
+      "id": "D2",
+      "proposalHash": "7a0fbd572f9f64a5eb9cbcd32e310e1c52e9056bc253732263fd2667ba1e784b",
+      "status": "approved",
+      "note": "테스트용 2회차 메모"
+    },
+    {
+      "id": "D3",
+      "proposalHash": "49fe789cd6f4dc7c48c525fdc023d3c1fb43d39f886397fda551f0c21912d541",
+      "status": "hold",
+      "note": ""
+    }
+  ],
+  "history": [
+    {
+      "schemaVersion": 1,
+      "kind": "plan-review",
+      "project": "PetSNS",
+      "taskId": "WORKFLOW-01-TEST",
+      "repository": "endyeo/PetSNS",
+      "revision": "e0663e1c055fda3c4882f250c764a40e7b1fa7fd",
+      "reportHash": "ff4a7a7328ed4a8656ada9ac17059d096f746bada97f05916543d7c8d42c48d8",
+      "round": 1,
+      "reviewedAt": "2026-10-12T04:18:47.207Z",
+      "versionId": "v2",
+      "versionHash": "f11bff8c972a0de3866601fe7d650ed98b713676384d156e54e31d838a82642a",
+      "decisions": [
+        {
+          "id": "D1",
+          "proposalHash": "e60ebf87967d99bfa17c8ee626ee51172ae3011f89fd1e5e667f84f287f1512f",
+          "status": "approved",
+          "note": ""
+        },
+        {
+          "id": "D2",
+          "proposalHash": "7a0fbd572f9f64a5eb9cbcd32e310e1c52e9056bc253732263fd2667ba1e784b",
+          "status": "revise",
+          "note": "테스트용 수정 메모: JSON과 이력에 보존"
+        },
+        {
+          "id": "D3",
+          "proposalHash": "49fe789cd6f4dc7c48c525fdc023d3c1fb43d39f886397fda551f0c21912d541",
+          "status": "hold",
+          "note": ""
+        }
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "kind": "plan-review",
+      "project": "PetSNS",
+      "taskId": "WORKFLOW-01-TEST",
+      "repository": "endyeo/PetSNS",
+      "revision": "e0663e1c055fda3c4882f250c764a40e7b1fa7fd",
+      "reportHash": "ff4a7a7328ed4a8656ada9ac17059d096f746bada97f05916543d7c8d42c48d8",
+      "round": 2,
+      "reviewedAt": "2026-10-12T04:23:06.156Z",
+      "versionId": "v2",
+      "versionHash": "f11bff8c972a0de3866601fe7d650ed98b713676384d156e54e31d838a82642a",
+      "decisions": [
+        {
+          "id": "D1",
+          "proposalHash": "e60ebf87967d99bfa17c8ee626ee51172ae3011f89fd1e5e667f84f287f1512f",
+          "status": "approved",
+          "note": ""
+        },
+        {
+          "id": "D2",
+          "proposalHash": "7a0fbd572f9f64a5eb9cbcd32e310e1c52e9056bc253732263fd2667ba1e784b",
+          "status": "approved",
+          "note": "테스트용 2회차 메모"
+        },
+        {
+          "id": "D3",
+          "proposalHash": "49fe789cd6f4dc7c48c525fdc023d3c1fb43d39f886397fda551f0c21912d541",
+          "status": "hold",
+          "note": ""
+        }
+      ]
+    }
+  ]
+}
